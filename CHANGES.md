@@ -9,4 +9,6 @@
 
 ## $ 2014-03-06 RS $
 
-* initial commit
+* set up files and dirs;
+
+* initial commit;
