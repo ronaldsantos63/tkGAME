@@ -1,0 +1,126 @@
+
+msgid ""
+"_File"
+msgstr""
+"_Fichier"
+
+msgid ""
+"_Show"
+msgstr""
+"_Affichage"
+
+msgid ""
+"_Help"
+msgstr""
+"_Aide"
+
+msgid ""
+"_Quit"
+msgstr""
+"_Quitter"
+
+msgid ""
+"Show statusbar"
+msgstr""
+"Afficher la barre d'état"
+
+msgid ""
+"_About"
+msgstr""
+"À _propos de..."
+
+msgid ""
+"About"
+msgstr""
+"À propos de..."
+
+msgid ""
+"Ready."
+msgstr""
+"Prêt."
+
+msgid ""
+"All inits done. OK."
+msgstr""
+"Tout est paré. OK."
+
+msgid ""
+"Are you sure you want to quit this application?"
+msgstr""
+"Quitter l'application ?"
+
+msgid ""
+"Quit app?"
+msgstr""
+"Question"
+
+msgid ""
+"Game editors browser"
+msgstr""
+"Sélecteur de générateurs de jeux."
+
+msgid ""
+"tkGAME browser - browse game editors"
+msgstr""
+"tkGAME browser - sélecteur de générateurs de jeux"
+
+msgid ""
+"This project is licensed under the GNU "
+"General Public License v3.\n"
+"Please, see http://www.gnu.org/licenses/ "
+"for more detail."
+msgstr""
+"Ce projet est publié sous licence "
+"GNU General Public License v3.\n"
+"Veuillez consulter http://www.gnu.org/licenses/ "
+"pour plus d'information (site en anglais)."
+
+msgid ""
+""
+msgstr""
+""
+
+msgid ""
+""
+msgstr""
+""
+
+msgid ""
+""
+msgstr""
+""
+
+msgid ""
+""
+msgstr""
+""
+
+msgid ""
+""
+msgstr""
+""
+
+msgid ""
+""
+msgstr""
+""
+
+msgid ""
+""
+msgstr""
+""
+
+msgid ""
+""
+msgstr""
+""
+
+msgid ""
+""
+msgstr""
+""
+
+msgid ""
+""
+msgstr""
+""
