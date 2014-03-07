@@ -167,6 +167,6 @@ Our team grows rapidly.
 If you wish to join us, please read first **Contributors: getting
 started** wiki page at:
 
-https://github.com/tarball69/tkGAME/wiki/en%3Acontributors_getting_started
+https://github.com/tarball69/tkGAME/wiki/en%3Acontributors#getting-started
 
 Enjoy!
