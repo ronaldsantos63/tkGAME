@@ -24,7 +24,7 @@
 
     <module
         id="section_browser"
-        import="lib.widget.game_section_browser"
+        import="lib.widgets.game_section_browser"
     />
 
     <ttklabel
