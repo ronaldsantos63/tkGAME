@@ -129,10 +129,12 @@ class Application (tkRAD.RADApplication):
 
 
 
-# always launch app, anyway.
+# script launching (not imported)?
 
-Application().run()
+if __name__ == "__main__":
 
-# all is done OK
+    # launch app
 
-exit(0)
+    Application().run()
+
+# end if

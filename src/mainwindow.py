@@ -40,19 +40,19 @@ class MainWindow (tkRAD.RADXMLMainWindow):
             main window's inits;
         """
 
-        # init menu
+        # init menu - default is ^/xml/menu/topmenu.xml
 
         self.topmenu.xml_build()
 
-        # init GUI
+        # init GUI - default is ^/xml/widget/mainwindow.xml
 
         self.mainframe.xml_build()
 
-        # connect statusbar
+        # connect statusbar to stringvar control variable
 
         self.connect_statusbar("show_statusbar")
 
-        # connect events
+        # connect tkRAD simplified events
 
         self.events.connect_dict(
             {
