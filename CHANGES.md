@@ -13,7 +13,7 @@
 
 ## $ 2014-03-07 RS $
 
-* started wikiing a littre;
+* started wiki-ing a little;
 
 * now using `tkRAD` lib for app development;
 
