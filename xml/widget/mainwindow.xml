@@ -22,11 +22,22 @@
 -->
 <tkwidget>
 
-    <label
-        text="Hello good people!"
-        bg="yellow"
-        fg="blue"
-        font="serif 16 italic bold"
+    <module
+        id="section_browser"
+        import="lib.widget.game_section_browser"
+    />
+
+    <ttklabel
+        text="Please, select a game editor:"
+        anchor="center"
+        layout="pack"
+        resizable="width"
+    />
+
+    <widget
+        id="game_browser"
+        class="GameSectionBrowser"
+        module="section_browser"
         layout="pack"
         resizable="yes"
     />

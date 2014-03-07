@@ -50,6 +50,14 @@
     * started some translations from `en` (base english) to `fr_FR`
     (metropolitan french);
 
+* in `tkGAME/lib/` folder:
+
+    * added new `audio`, `editor`, `widget` folders (subpackages);
+
+    * added new `widget/game_section_browser.py`:
+
+        * implemented some bit of code;
+
 
 ## $ 2014-03-06 RS $
 

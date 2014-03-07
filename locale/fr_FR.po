@@ -76,9 +76,9 @@ msgstr""
 "pour plus d'information (site en anglais)."
 
 msgid ""
-""
+"Please, select a game editor:"
 msgstr""
-""
+"Veuillez sélectionner un type de jeu, SVP :"
 
 msgid ""
 ""
