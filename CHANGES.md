@@ -13,6 +13,8 @@
 
 ## $ 2014-03-07 RS $
 
+* started wikiing a littre;
+
 * now using `tkRAD` lib for app development;
 
 * in `tkgame_browser.py`:
