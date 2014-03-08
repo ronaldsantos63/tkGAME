@@ -81,14 +81,14 @@ msgstr""
 "Veuillez sélectionner un type de jeu, SVP :"
 
 msgid ""
-""
+"Home"
 msgstr""
-""
+"Accueil"
 
 msgid ""
-""
+"Go to parent"
 msgstr""
-""
+"Remonter d'un niveau"
 
 msgid ""
 ""

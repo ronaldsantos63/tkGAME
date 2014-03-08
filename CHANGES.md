@@ -6,10 +6,18 @@
 | Initials | Contributor | GitHub membership | Cool project | Current role | Previous role |
 |:--------:|:------------|:-----------------:|:------------:|:------------:|:-------------:|
 | RS | Raphaël Seban | **[tarball69] (https://github.com/tarball69)** | **[tkRAD] (https://github.com/tarball69/tkRAD)** | **developer** | author |
-|  | next? |  |  |  |
+|  | next? |  |  |  |  |
 
 
 # CHANGELOG
+
+
+## $ 2014-03-08 RS $
+
+* in `game_section_browser.py`:
+
+    * added some new code;
+
 
 ## $ 2014-03-07 RS $
 

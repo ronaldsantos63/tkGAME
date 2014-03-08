@@ -26,7 +26,11 @@
 
 import tkinter as TK
 
+import tkRAD
+
 from tkRAD.widgets.rad_frame import RADFrame
+
+from tkRAD.xml.rad_xml_widget import RADXMLWidget
 
 
 
@@ -54,18 +58,19 @@ class GameSectionBrowser (RADFrame):
 
         self.events.connect_dict(
             {
-                "NamedEvent": None,
+                "GameSectionNavBarGoHome": None,
+
+                "GameSectionNavBarGoParent": None,
             }
         )
 
     # def end
 
-
 # end class
 
 
 
-class GameSectionNavBar (RADFrame):
+class GameSectionNavBar (tkRAD.RADXMLFrame):
     r"""
         tkGAME game section browser subcomponent (navigation bar);
     """
@@ -75,26 +80,203 @@ class GameSectionNavBar (RADFrame):
             widget inits;
         """
 
-        TK.Label(self, text="debug:NavBar", bg="yellow").pack(**self.PACK_OPTIONS)
+        # inits
+
+        xml = """
+            <tkwidget>
+                <style
+                    id="navbar"
+                    compound="left"
+                    relief="flat"
+                />
+                <button
+                    name="btn_home"
+                    text="Home"
+                    image="^/images/browser/home.gif"
+                    command="@GameSectionNavBarGoHome"
+                    style="navbar"
+                    layout="pack"
+                    layout_options="side='left'"
+                />
+                <button
+                    name="btn_go_parent"
+                    text="Go to parent"
+                    image="^/images/browser/go_parent.gif"
+                    command="@GameSectionNavBarGoParent"
+                    style="navbar"
+                    layout="pack"
+                    layout_options="side='left'"
+                />
+            </tkwidget>
+        """
+
+        # build GUI
+
+        self.xml_build(xml)
 
     # end def
-
 
 # end class GameSectionNavBar
 
 
 
-class GameSectionView (RADFrame):
+class GameSectionView (RADXMLWidget, TK.ttk.Frame):
     r"""
         tkGAME game section browser subcomponent (data view);
     """
 
-    def init_widget (self, **kw):
+
+    CONFIG = {
+
+        # for subclass widget pre-configuration
+
+    } # end of CONFIG
+
+
+
+    # XML tree root element
+    # overrides RADXMLBase.DOCTYPE
+
+    DOCTYPE = "tksection"
+
+
+
+    # accepted XML child elements for XML container element
+
+    DTD = {
+
+        "item": ("none", ),
+
+        "section": ("section", "item"),
+
+        "tksection": ("section", "item"),
+
+    } # end of DTD
+
+
+
+    # XML file path parts for xml_build() automatic mode
+    # overrides RADXMLWidget.XML_RC
+
+    XML_RC = {
+
+        "dir": "^/xml/data",
+
+        "filename": "tkgame_sections",
+
+        "file_ext": ".xml",
+
+    } # end of XML_RC
+
+
+
+    def __init__ (self, master = None, **kw):
+
+        # default values
+
+        self.CONFIG = self.CONFIG.copy()
+
+        self.CONFIG.update(kw)
+
+        # super inits
+
+        TK.ttk.Frame.__init__(self, master)
+
+        self.configure(**self._only_tk(self.CONFIG))
+
+        self.tk_parent = master
+
+        RADXMLWidget.__init__(self, tk_owner = self, **self.CONFIG)
+
+    # end def
+
+
+
+    def _build_element_item (self, xml_tag, xml_element, tk_parent):
         r"""
-            widget inits;
+            building <item> XML element;
         """
 
-        TK.Label(self, text="debug:View", bg="red").pack(**self.PACK_OPTIONS)
+        # generic view item
+
+        self._build_view_item(xml_tag, xml_element, tk_parent)
+
+    # end def
+
+
+
+    def _build_element_section (self, xml_tag, xml_element, tk_parent):
+        r"""
+            building <section> XML element;
+        """
+
+        # generic view item
+
+        self._build_view_item(xml_tag, xml_element, tk_parent)
+
+    # end def
+
+
+
+    def _build_element_tksection (self, xml_tag, xml_element, tk_parent):
+        r"""
+            building <tksection> root element;
+        """
+
+        # param controls
+
+        if self.cast_parent(tk_parent):
+
+            # loop on XML element children
+
+            return self._loop_on_children(
+
+                xml_element, tk_parent, accept=self.DTD.get(xml_tag),
+            )
+
+        # end if
+
+        # failure
+
+        return False
+
+    # end def
+
+
+
+    def _build_view_item (self, xml_tag, xml_element, tk_parent):
+        r"""
+            protected method def;
+
+            builds any tkinter native widget along its class name;
+
+            returns True on build success, False otherwise;
+        """
+
+        # param controls
+
+        if self.cast_element(xml_element):
+
+            # set real classname
+
+            xml_element.set("class", "Button")
+
+            # must force XML attr module name
+
+            xml_element.set("module", "ttk.")
+
+            # build widget
+
+            return self._build_element_widget(
+
+                xml_tag,  xml_element,  tk_parent,
+            )
+
+        # end if
+
+        # failed
+
+        return False
 
     # end def
 
