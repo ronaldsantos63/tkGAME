@@ -12,6 +12,13 @@
 # CHANGELOG
 
 
+## $ 2014-03-09 RS $
+
+* in `game_section_browser.py`:
+
+    * added new code;
+
+
 ## $ 2014-03-08 RS $
 
 * in `game_section_browser.py`:
