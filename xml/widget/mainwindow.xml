@@ -35,7 +35,7 @@
     />
 
     <widget
-        id="game_browser"
+        name="game_section_browser"
         class="GameSectionBrowser"
         module="section_browser"
         layout="pack"

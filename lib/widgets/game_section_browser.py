@@ -54,84 +54,11 @@ class GameSectionBrowser (RADFrame):
 
         self.view = GameSectionView(self)
 
+        # layout inits
+
         self.navbar.pack(expand=0, fill=TK.X)
 
         self.view.pack(expand=1, fill=TK.BOTH)
-
-        # debug session
-
-        xml = """
-            <tksection>
-                <section
-                    text="Card Games"
-                    layout="pack"
-                >
-                    <item
-                        text="Klondike"
-                        layout="pack"
-                    />
-                    <section
-                        text="Toto"
-                        layout="pack"
-                    />
-                </section>
-                <section
-                    text="Tetris Games"
-                    layout="pack"
-                >
-                    <section
-                        text="toto1"
-                        layout="pack"
-                    >
-                        <item
-                            text="tutu1"
-                            layout="pack"
-                        />
-                        <item
-                            text="tutu2"
-                            layout="pack"
-                        />
-                        <item
-                            text="tutu3"
-                            layout="pack"
-                        />
-                    </section>
-                    <section
-                        text="toto2"
-                        layout="pack"
-                    >
-                    </section>
-                    <section
-                        text="toto3"
-                        layout="pack"
-                    >
-                    </section>
-                </section>
-                <section
-                    text="Arcade Games"
-                    layout="pack"
-                >
-                    <item
-                        text="Super Mario-like"
-                        layout="pack"
-                    />
-                    <item
-                        text="Defender-like"
-                        layout="pack"
-                    />
-                    <item
-                        text="Space invaders-like"
-                        layout="pack"
-                    />
-                    <item
-                        text="bourros!"
-                        layout="pack"
-                    />
-                </section>
-            </tksection>
-        """
-
-        self.view.xml_build(xml)
 
         # connect events
 
@@ -144,6 +71,23 @@ class GameSectionBrowser (RADFrame):
         )
 
     # def end
+
+
+
+    def show (self, filename=None, *args, **kw):
+        r"""
+            shows off section browser with its contents filled up;
+        """
+
+        # delayed build along with web mirrors data
+
+        self.after(100, self.view.web_build, filename)
+
+        # do *NOT* wait after HTTP response
+
+        self.update_idletasks()
+
+    # end def
 
 # end class
 
@@ -159,9 +103,20 @@ class GameSectionNavBar (tkRAD.RADXMLFrame):
             widget inits;
         """
 
-        # inits
+        # build GUI
 
-        xml = """
+        self.xml_build(self._get_xml_source())
+
+    # end def
+
+
+
+    def _get_xml_source (self, *args, **kw):
+        r"""
+            virtual method to be overridden in subclasses;
+        """
+
+        return """
             <tkwidget>
                 <button
                     text="Home"
@@ -183,10 +138,6 @@ class GameSectionNavBar (tkRAD.RADXMLFrame):
                 />
             </tkwidget>
         """
-
-        # build GUI
-
-        self.xml_build(xml)
 
     # end def
 
@@ -234,11 +185,16 @@ class GameSectionView (RADXMLWidget, TK.ttk.Frame):
 
     XML_RC = {
 
+        # expects ^/xml/data/tkgame_sections.xml
+        # as DEFAULT XML file
+
         "dir": "^/xml/data",
 
         "filename": "tkgame_sections",
 
         "file_ext": ".xml",
+
+        "mirror_url": "https://raw.github.com/tarball69/tkGAME/master",
 
     } # end of XML_RC
 
@@ -317,7 +273,7 @@ class GameSectionView (RADXMLWidget, TK.ttk.Frame):
 
             return self._loop_on_children(
 
-                xml_element, tk_parent, accept=self.DTD.get(xml_tag),
+                xml_element, tk_parent, accept = self.DTD.get(xml_tag),
             )
 
         # end if
@@ -414,12 +370,50 @@ class GameSectionView (RADXMLWidget, TK.ttk.Frame):
 
 
 
-    def _open_item (self, *args, **kw):
+    def _notify (self, text=None, delay=None):
+        r"""
+            raises notification events for an eventually existing
+            mainwindow's statusbar object;
+        """
+
+        # notification event
+
+        self.events.raise_event("StatusBarNotify", text, delay)
+
+    # end def
+
+
+
+    def _open_item (self, item_id=None, *args, **kw):
         r"""
             opening clicked item;
         """
 
-        print("Open item:", self._cvar.get())
+        # param inits
+
+        _widget = self.get_object_by_id(
+
+            tools.choose_str(
+
+                item_id,
+
+                self._cvar.get(),
+            )
+        )
+
+        _xml_element = getattr(_widget, "xml_element", None)
+
+        # acknowledge item opening
+
+        self.events.raise_event(
+
+            "{cname}OpenItem"
+            .format(cname = self.classname()),
+
+            widget = _widget,
+
+            xml_element = _xml_element,
+        )
 
     # end def
 
@@ -429,6 +423,14 @@ class GameSectionView (RADXMLWidget, TK.ttk.Frame):
         r"""
             opening clicked section;
         """
+
+        # safety inits
+
+        if not self.is_tree(self.get_xml_tree()):
+
+            return
+
+        # end if
 
         # param controls
 
@@ -476,7 +478,9 @@ class GameSectionView (RADXMLWidget, TK.ttk.Frame):
 
                 self._loop_on_children(
 
-                    _xml_element, self,
+                    xml_element = _xml_element,
+
+                    tk_parent = self,
 
                     accept = self.DTD.get(_xml_element.tag),
                 )
@@ -505,8 +509,29 @@ class GameSectionView (RADXMLWidget, TK.ttk.Frame):
                 .format(value = _xml_element.get("id"))
             )
 
-            self._parent_section_id = \
-                                _parent.get("id") if _parent else None
+            if _parent:
+
+                self._parent_section_id = _parent.get("id")
+
+            else:
+
+                self._parent_section_id = None
+
+            # end if
+
+            # acknowledge section opening
+
+            self.events.raise_event(
+
+                "{cname}OpenSection"
+                .format(cname = self.classname()),
+
+                widget = _widget,
+
+                xml_element = _xml_element,
+
+                parent_section_id = self._parent_section_id,
+            )
 
         # end if
 
@@ -542,5 +567,136 @@ class GameSectionView (RADXMLWidget, TK.ttk.Frame):
 
     # end def
 
+
+
+    def web_build (self, filename=None):
+        r"""
+            tries to build view from remote file before trying locally;
+        """
+
+        # param controls - XML markup parens?
+
+        if "<" not in str(filename):
+
+            import urllib.request as WEB
+
+            import os.path as OP
+
+            import re
+
+            # already an URL?
+
+            if str(filename).startswith("http"):
+
+                # URL inits
+
+                _url = str(filename)
+
+            else:
+
+                # build URL
+
+                _url = OP.join(
+
+                    self.XML_RC.get("mirror_url"),
+
+                    self.XML_RC.get("dir", "").lstrip("^/"),
+
+                    tools.choose_str(
+
+                        filename,
+
+                        self.XML_RC.get("filename"),
+
+                        "tkgame_sections",
+                    )
+                    + "."
+                    + tools.choose_str(
+
+                        self.XML_RC.get("file_ext"),
+
+                        "xml",
+
+                    ).strip(".")
+                )
+
+            # end if - URL
+
+            # notify event
+
+            self._notify(
+                _(
+                    "Trying to contact web mirror site. "
+                    "Please, wait..."
+                )
+            )
+
+            # reset filename
+
+            filename = None
+
+            # get web response to request
+
+            try:
+
+                _response = WEB.urlopen(_url)
+
+            except:
+
+                _response = None
+
+                # notify event
+
+                self._notify(
+                    _(
+                        "Unable to reach web mirror. "
+                        "Trying locally..."
+                    )
+                )
+
+            # end try
+
+            if _response:
+
+                # notify event
+
+                self._notify(_("Web mirror reached. OK."))
+
+                # get data
+
+                _data = _response.read()
+
+                # look for encoding in data
+
+                _encoding = re.search(
+
+                    r"\bencoding:\s*([\w\-]+)",
+
+                    str(_data)
+                )
+
+                if _encoding:
+
+                    _encoding = _encoding.group(0)
+
+                else:
+
+                    _encoding = "UTF-8"
+
+                # end if
+
+                # get clean data as XML script
+
+                filename = _data.decode(_encoding)
+
+            # end if - _response
+
+        # end if - markup "<"
+
+        # build GUI
+
+        self.xml_build(filename)
+
+    # end def
 
 # end class GameSectionView

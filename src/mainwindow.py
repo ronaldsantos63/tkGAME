@@ -57,8 +57,31 @@ class MainWindow (tkRAD.RADXMLMainWindow):
         self.events.connect_dict(
             {
                 "MenuHelpAbout": self._show_about_dialog,
+
+                "StatusBarInfo": self.statusbar.info,
+
+                "StatusBarNotify": self.statusbar.notify,
+
+                "GameSectionViewOpenItem": self._slot_open_item,
             }
         )
+
+        # run game section browser
+
+        self.mainframe.game_section_browser.show()
+
+    # end def
+
+
+
+    def _slot_open_item (self, *args, **kw):
+        r"""
+            tries to open a game editor executable, first looks
+            locally then looks on the web for dnl/installing if
+            missing locally;
+        """
+
+        print("MainWindow:_slot_open_item() called")
 
     # end def
 

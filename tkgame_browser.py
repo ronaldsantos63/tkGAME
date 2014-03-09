@@ -40,7 +40,7 @@ class Application (tkRAD.RADApplication):
 
         "name": _("tkGAME browser"),
 
-        "version": _("0.0.1a"),
+        "version": _("0.1a"),
 
         "description": _("Game editors browser"),
 

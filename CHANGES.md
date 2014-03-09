@@ -14,9 +14,23 @@
 
 ## $ 2014-03-09 RS $
 
+* now switching to:
+
+    Development Status :: 2 - Pre-Alpha
+
+* in `MainWindow`:
+
+    * implemented `GameSectionBrowser` widget in XML source code;
+
+    * now using `game_section_browser` object;
+
+    * missing only `open_item()` web/local procedure;
+
 * in `game_section_browser.py`:
 
-    * added new code;
+    * now estimated to 'fully implemented' state;
+
+    * all classes are operational and ready-to-use;
 
 
 ## $ 2014-03-08 RS $
