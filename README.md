@@ -43,7 +43,7 @@ along with this program.
 
 ## DEVELOPMENT STATUS
 
-Development Status :: 1 - Planning
+Development Status :: 2 - Pre-Alpha
 
 Software has been:
 
