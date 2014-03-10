@@ -801,129 +801,28 @@ class RADXMLWidgetBase (RX.RADXMLBase):
     def _tkRAD_command_support (self, attribute, **kw):
         r"""
             parses command string for many supports;
-
             supports event names (starting with '@');
-
             supports method names (starting with '^' or '.');
-
             supports global function names;
-
             no return value (void);
         """
 
-        # param controls
+        # $ 2014-03-10 RS $
+        # since v1.4: deferred tasks
+        # any *command XML attrs are deferred to after widget's
+        # creation;
+        # now supports widget in **kw;
 
-        if self._is_new(attribute):
+        self._queue.defer(
 
-            # strip erroneous parenthesis
-            # and args in command string
-            # e.g. "slot_move(3)" --> "slot_move"
+            "widget",
 
-            _cmd = re.sub(r"\(.*\)", r"", attribute.value)
+            self._tkRAD_deferred_command_support,
 
-            # events maechanism support
+            attribute,
 
-            if _cmd.startswith("@"):
-
-                # e.g. "@MyNewEvent" --> raise_event("MyNewEvent")
-
-                _cmd = (
-
-                    lambda *args, s=self.events, e=_cmd[1:], **kw:
-
-                        s.raise_event(e, *args, **kw)
-                )
-
-            # self.app methods support
-
-            elif _cmd.startswith("^") and hasattr(self, "app"):
-
-                # reset value
-
-                _cmd = _cmd.lstrip("^.@")
-
-                if hasattr(self.app, _cmd):
-
-                    # e.g. "^quit" --> self.app.quit
-
-                    _cmd = getattr(self.app, _cmd)
-
-                else:
-
-                    raise AttributeError(
-                        _(
-                            "Cannot link command '{cmd}' to "
-
-                            "'{app}' (self.app) "
-
-                            "- bad XML attribute "
-
-                            "or incorrect self.app"
-
-                        ).format(cmd = _cmd, app = repr(self.app))
-                    )
-
-                    # cancel command
-
-                    _cmd = None
-
-                # end if
-
-            # self.tk_owner methods support
-
-            elif _cmd.startswith(".") and hasattr(self, "tk_owner"):
-
-                # reset value
-
-                _cmd = _cmd.lstrip(".^@")
-
-                if hasattr(self.tk_owner, _cmd):
-
-                    # e.g. ".quit" --> self.tk_owner.quit
-
-                    _cmd = getattr(self.tk_owner, _cmd)
-
-                else:
-
-                    raise AttributeError(
-                        _(
-                            "Cannot link command '{cmd}' to "
-
-                            "'{tkowner}' (self.tk_owner) "
-
-                            "- bad XML attribute "
-
-                            "or incorrect self.tk_owner"
-
-                        ).format(
-
-                            cmd = _cmd, tkowner = repr(self.tk_owner)
-                        )
-                    )
-
-                    # cancel command
-
-                    _cmd = None
-
-                # end if
-
-            # global methods support
-
-            else:
-
-                # pray for value being a global method!
-
-                _cmd = eval(_cmd)
-
-            # end if
-
-            # parsed attribute inits
-
-            attribute.value = _cmd
-
-            self._tk_config(attribute, **kw)
-
-        # end if
+            **kw
+        )
 
     # end def
 
@@ -960,6 +859,170 @@ class RADXMLWidgetBase (RX.RADXMLBase):
             # parsed attribute inits
 
             attribute.value = self.set_stringvar(attribute.value)
+
+            self._tk_config(attribute, **kw)
+
+        # end if
+
+    # end def
+
+
+
+    def _tkRAD_deferred_command_support (self, attribute, *args, **kw):
+        r"""
+            parses command string for many supports;
+
+            supports event names (starting with '@');
+
+            supports method names (starting with '^' or '.');
+
+            supports global function names;
+
+            no return value (void);
+        """
+
+        # param controls
+
+        if self._is_new(attribute):
+
+            # strip erroneous parenthesis
+            # and args in command string
+            # e.g. "slot_move(3)" --> "slot_move"
+
+            _cmd = re.sub(r"\(.*\)", r"", attribute.value)
+
+            # $ 2014-03-10 RS $
+            # since v1.4: deferred task
+            # now widget is passed in callback **kw
+
+            _widget = kw.get("widget")
+
+            # events maechanism support
+
+            if _cmd.startswith("@"):
+
+                # e.g. "@EventName" --> raise_event("EventName")
+
+                _cmd = (
+
+                    lambda *args, _e=_cmd[1:],
+                                            _s=self.events, _w=_widget:
+
+                        _s.raise_event(_e, *args, widget=_w)
+                )
+
+            # self.app methods support
+
+            elif _cmd.startswith("^") and hasattr(self, "app"):
+
+                # reset value
+
+                _cmd = _cmd.lstrip("^.@")
+
+                if hasattr(self.app, _cmd):
+
+                    # e.g. "^quit" --> self.app.quit
+
+                    _cmd = (
+
+                        lambda  *args,
+                                _cb=getattr(self.app, _cmd),
+                                _w=_widget:
+
+                            _cb(*args, widget=_w)
+                    )
+
+                else:
+
+                    raise AttributeError(
+                        _(
+                            "In widget '{widget}': "
+                            "cannot link command '{cmd}' to "
+                            "'{app}' (self.app) "
+                            "- bad XML attribute "
+                            "or incorrect self.app"
+
+                        ).format(
+
+                            widget=repr(self),
+
+                            cmd=_cmd,
+
+                            app=repr(self.app),
+                        )
+                    )
+
+                    # cancel command
+
+                    _cmd = None
+
+                # end if
+
+            # self.slot_owner methods support
+
+            elif _cmd.startswith(".") and hasattr(self, "slot_owner"):
+
+                # reset value
+
+                _cmd = _cmd.lstrip(".^@")
+
+                if hasattr(self.slot_owner, _cmd):
+
+                    # e.g. ".quit" --> self.slot_owner.quit
+
+                    _cmd = (
+
+                        lambda  *args,
+                                _cb=getattr(self.slot_owner, _cmd),
+                                _w=_widget:
+
+                            _cb(*args, widget=_w)
+                    )
+
+                else:
+
+                    raise AttributeError(
+                        _(
+                            "In widget '{widget}': "
+                            "cannot link command '{cmd}' to "
+                            "'{owner}' (self.slot_owner) "
+                            "- bad XML attribute "
+                            "or incorrect owner"
+
+                        ).format(
+
+                            widget=repr(self),
+
+                            cmd=_cmd,
+
+                            owner=repr(self.slot_owner),
+                        )
+                    )
+
+                    # cancel command
+
+                    _cmd = None
+
+                # end if
+
+            # global methods support
+
+            else:
+
+                # pray for value being a global method!
+
+                _cmd = (
+
+                    lambda *args, _cb=eval(_cmd), _w=_widget:
+
+                        _cb(*args, widget=_w)
+                )
+
+            # end if
+
+            # parsed attribute inits
+
+            attribute.value = _cmd
 
             self._tk_config(attribute, **kw)
 

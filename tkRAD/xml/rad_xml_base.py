@@ -42,6 +42,8 @@ from ..core import tools
 
 from ..core import path as P
 
+from ..core import defer
+
 from ..widgets import rad_widget_base as RW
 
 from . import rad_xml_attribute as XA
@@ -125,6 +127,10 @@ class RADXMLBase (RW.RADWidgetBase):
         r"""
             class constructor;
         """
+
+        # protected member inits
+
+        self._queue = defer.DeferQueue()     # private queue
 
         # XML member inits
 
@@ -603,11 +609,15 @@ class RADXMLBase (RW.RADWidgetBase):
                         r"""
                             $ 2013-12-16 RS $
                             new support: using RADXMLAttribute by now;
+
+                            $ 2014-03-10 RS $
+                            since v1.4: deferred tasks
+                            do *NOT* flag on 'parsed' value(!)
                         """
 
                         # update parsing counter
 
-                        _attr_object.parsed = True
+                        #~ _attr_object.parsed = True
 
                     # end if
 
@@ -639,11 +649,15 @@ class RADXMLBase (RW.RADWidgetBase):
                 flatten() provides a 'flat' dict() object containing
                 simple (key, value) pairs;
                 all RADXMLAttribute extra data are lost at this point;
+
+                $ 2014-03-10 RS $
+                since v1.4: deferred tasks
+                do *NOT* flatten() dict any more(!)
             """
 
             # return parsed attributes
 
-            return _attrs.flatten()
+            return _attrs
 
         # end if
 
@@ -1592,7 +1606,15 @@ class RADXMLBase (RW.RADWidgetBase):
 
                 # start XML widget building
 
-                return self._build_element(_root, self.tk_owner)
+                _build_ok = self._build_element(_root, self.tk_owner)
+
+                # flush all deferred actions in queue
+
+                self._queue.flush_all()
+
+                # return building results
+
+                return _build_ok
 
             else:
 

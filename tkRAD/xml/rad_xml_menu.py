@@ -311,11 +311,21 @@ class RADXMLMenu (XW.RADXMLWidgetBase):
 
         # child menu inits
 
-        _new_menu = TK.Menu(tk_parent, **_moptions)
+        _new_menu = TK.Menu(tk_parent)
 
         # keep a copy aboard
 
         self._register_object_by_id(_new_menu, _attrs.get("id"))
+
+        # $ 2014-03-10 RS $
+        # since v1.4: deferred tasks
+        # flush widget section
+
+        self._queue.flush("widget", widget = _new_menu)
+
+        # configure menu
+
+        _new_menu.configure(**_moptions.flatten())
 
         # prepare child options
 
@@ -438,11 +448,21 @@ class RADXMLMenu (XW.RADXMLWidgetBase):
 
         # menu inits
 
-        _new_menu = TK.Menu(tk_parent, **_moptions)
+        _new_menu = TK.Menu(tk_parent)
 
         # keep a copy aboard
 
         self._register_object_by_id(_new_menu, _attrs.get("id"))
+
+        # $ 2014-03-10 RS $
+        # since v1.4: deferred tasks
+        # flush widget section
+
+        self._queue.flush("widget", widget = _new_menu)
+
+        # configure menu
+
+        _new_menu.configure(**_moptions.flatten())
 
         # attach new menu to parent widget
 
@@ -501,7 +521,12 @@ class RADXMLMenu (XW.RADXMLWidgetBase):
         return self._parse_xml_attributes(
 
             xml_element, tk_parent, xml_attrs = _attrs
-        )
+
+            # $ 2014-03-10 RS $
+            # since v1.4: deferred tasks
+            # must flatten() at last
+
+        ).flatten()
 
     # end def
 
@@ -536,6 +561,18 @@ class RADXMLMenu (XW.RADXMLWidgetBase):
 
             xml_element, tk_parent, xml_attrs = _coptions
         )
+
+        # $ 2014-03-10 RS $
+        # since v1.4: deferred tasks
+        # flush widget section
+        # notice: *NO* widget support here
+        # as child menu items do not support object refs;
+
+        self._queue.flush("widget")
+
+        # must flatten() at last
+
+        _coptions = _coptions.flatten()
 
         # keyboard accelerator inits
 
@@ -572,7 +609,7 @@ class RADXMLMenu (XW.RADXMLWidgetBase):
         # tkRAD >= v1.2
         # code optimization:
         # as "generic" has only one "id" item
-        # don't lose your time!
+        # don't waste your time!
 
         return dict(id = self.element_get_id(xml_element))
 
@@ -598,7 +635,12 @@ class RADXMLMenu (XW.RADXMLWidgetBase):
         return self._parse_xml_attributes(
 
             xml_element, tk_parent, xml_attrs = _attrs
-        )
+
+            # $ 2014-03-10 RS $
+            # since v1.4: deferred tasks
+            # must flatten() at last
+
+        ).flatten()
         """
 
     # end def
@@ -633,6 +675,11 @@ class RADXMLMenu (XW.RADXMLWidgetBase):
         return self._parse_xml_attributes(
 
             xml_element, tk_parent, xml_attrs = _moptions
+
+            # $ 2014-03-10 RS $
+            # since v1.4: deferred tasks
+            # do *NOT* flatten() here
+            # see build menu / tkmenu for more detail
         )
 
     # end def

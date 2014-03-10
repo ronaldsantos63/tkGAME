@@ -3,10 +3,109 @@
 
 ## CONTRIBUTORS
 
-    RS    Raphaël SEBAN
+| Initials | Contributor | GitHub membership | Cool project | Current role | Previous role |
+|:--------:|:------------|:-----------------:|:------------:|:------------:|:-------------:|
+| CW | Cyril Walle | **[GrosSacASac] (https://github.com/GrosSacASac)** | **[WebSpree] (https://github.com/GrosSacASac/WebSpree)** | **education counselor** | - |
+| DA | Dale Athanasias | **[daleathan] (https://github.com/daleathan)** | **[widget-tour-py3] (https://github.com/daleathan/widget-tour-py3)** | **wiki contributor** | - |
+| RS | Raphaël Seban | **[tarball69] (https://github.com/tarball69)** | **[tkRAD] (https://github.com/tarball69/tkRAD/wiki)** | **developer** | author |
+|  | who's next? |  |  |  |  |
 
 
 ## CHANGELOG
+
+
+### $ 2014-03-10 RS $
+
+* `DeferredTriggerQueue` is **inappropriate name**: now renamed
+anywhere to `DeferQueue` as for deferred actions queue buffer;
+
+* `triggers` have been replaced by `actions` in comments;
+
+* in `RADXMLBase`:
+
+    * renamed `self._dt_queue` to simply `self._queue`;
+
+* **not so simple** to find the good naming convention(!);
+
+* in `RADXMLBase`, `RADXMLWidgetBase`, `RADXMLWidget`, `RADXMLMenu`:
+
+    * started implementing **deferred tasks** new concept;
+
+* in `RADXMLBase`: updated code OK;
+
+* in `RADXMLWidgetBase`:
+
+    * in `_tkRAD_command_support` and
+    `_tkRAD_deferred_command_support`:
+
+        * updated code OK;
+
+* in `RADXMLWidget`, `RADXMLMenu`: updated code anywhere needed OK;
+
+* all has been tested OK at this time;
+
+* looking for new ideas before tagging v1.4...
+
+* in `RADXMLWidget`:
+
+    * added new `_init_attributes_flat()`:
+
+        * now fully implemented;
+
+    * updated code elsewhere;
+
+* in `RADWidgetBase`:
+
+    * added new class member `self.slot_owner` for
+    **tkRAD.command.support**;
+
+    * by now, it is possible to separate `self.tk_owner` from
+    `self.slot_owner`: useful for e.g. `RADXMLFrame`;
+
+    * **compatibility**: by default `self.slot_owner = self.tk_owner`;
+
+* updated `RADXMLWidgetBase`, `RADXMLWidget`, `RADXMLFrame`:
+
+    * now support `self.slot_owner` natively;
+
+
+### $ 2014-03-09 RS $
+
+* **tkRAD v1.4** new idea: now implementing deferred triggers for
+XML attrs parsing;
+
+* added new `tkRAD/core/defer.py`:
+
+    * class name is now `DeferredTriggerQueue`;
+
+    * get app-wide `DeferredTriggerQueue` instance with
+    `get_deferred_trigger_queue()` or with its shortcut name
+    `get_dt_queue()`;
+
+    * now fully implemented OK;
+
+* in `RADXMLBase`:
+
+    * added new class member `self._dt_queue`: private instance of
+    `DeferredTriggerQueue`;
+
+    * in `xml_build()`: added support for `self._dt_queue`;
+
+
+### $ 2014-03-08 DA $
+
+* pull request:
+
+    * simplified grammar and spelling in `README.md` file;
+
+
+### $ 2014-03-08 RS $
+
+* added new collaborators:
+
+    * **Cyril Walle**: education counselor;
+
+    * **Dale Athanasias**: wiki contributor;
 
 
 ### $ 2014-03-03 RS $
