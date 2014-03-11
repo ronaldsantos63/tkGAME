@@ -54,15 +54,17 @@ msgid ""
 msgstr""
 "Question"
 
+# APP description
 msgid ""
-"Game editors browser"
+"Gabe - Game Browser"
 msgstr""
-"Sélecteur de générateurs de jeux."
+"Gabe - Sélecteur de jeux"
 
+# APP title
 msgid ""
-"tkGAME browser - browse game editors"
+"Gabe - browse games and editors"
 msgstr""
-"tkGAME browser - sélecteur de générateurs de jeux"
+"Gabe - Jeux et éditeurs de jeux"
 
 msgid ""
 "This project is licensed under the GNU "
@@ -108,6 +110,18 @@ msgid ""
 "Web mirror reached. OK."
 msgstr""
 "Site web miroir atteint. OK."
+
+# GAME sections
+
+msgid ""
+"Games"
+msgstr""
+"Jeux"
+
+msgid ""
+"Game Editors"
+msgstr""
+"Éditeurs de jeux"
 
 msgid ""
 "Arcade Games"

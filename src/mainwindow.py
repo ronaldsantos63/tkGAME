@@ -4,6 +4,8 @@
 """
     tkGAME - all-in-one Game library for Tkinter
 
+    Gabe - Game Browser
+
     Copyright (c) 2014+ Raphaël Seban <motus@laposte.net>
 
     This program is free software: you can redistribute it and/or

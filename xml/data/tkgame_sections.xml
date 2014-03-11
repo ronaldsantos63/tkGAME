@@ -22,55 +22,139 @@
 -->
 <tksection>
     <!--
-            ARCADE GAMES SECTION
+            MAIN SECTION: Games
     -->
     <section
-        text="Arcade Games"
+        text="Games"
         image=""
         compound="top"
         layout="pack"
         layout_options="side='left'"
         resizable="yes"
     >
-        <item
-            text="Tetris-like Games"
+        <!--
+                ARCADE GAMES SECTION
+        -->
+        <section
+            text="Arcade Games"
             image=""
             compound="top"
             layout="pack"
             layout_options="side='left'"
             resizable="yes"
-        />
-        <item
-            text="Scrolling Arcade Games"
+        >
+            <item
+                text="Tetris-like Games"
+                image=""
+                compound="top"
+                layout="pack"
+                layout_options="side='left'"
+                resizable="yes"
+            />
+            <item
+                text="Scrolling Arcade Games"
+                image=""
+                compound="top"
+                layout="pack"
+                layout_options="side='left'"
+                resizable="yes"
+            />
+        </section><!-- Arcade Games -->
+
+        <!--
+                REFLEXION GAMES SECTION
+        -->
+        <section
+            text="Reflexion Games"
             image=""
             compound="top"
             layout="pack"
             layout_options="side='left'"
             resizable="yes"
-        />
-    </section>
+        >
+        </section><!-- Reflexion Games -->
+
+        <!--
+                CARD GAMES SECTION
+        -->
+        <section
+            text="Card Games"
+            image=""
+            compound="top"
+            layout="pack"
+            layout_options="side='left'"
+            resizable="yes"
+        >
+        </section><!-- Card Games -->
+
+    </section><!-- MAIN SECTION: Games -->
+
     <!--
-            REFLEXION GAMES SECTION
+            MAIN SECTION: Game Editors
     -->
     <section
-        text="Reflexion Games"
+        text="Game Editors"
         image=""
         compound="top"
         layout="pack"
         layout_options="side='left'"
         resizable="yes"
     >
-    </section>
-    <!--
-            CARD GAMES SECTION
-    -->
-    <section
-        text="Card Games"
-        image=""
-        compound="top"
-        layout="pack"
-        layout_options="side='left'"
-        resizable="yes"
-    >
-    </section>
+        <!--
+                ARCADE GAMES SECTION
+        -->
+        <section
+            text="Arcade Games"
+            image=""
+            compound="top"
+            layout="pack"
+            layout_options="side='left'"
+            resizable="yes"
+        >
+            <item
+                text="Tetris-like Games"
+                image=""
+                compound="top"
+                layout="pack"
+                layout_options="side='left'"
+                resizable="yes"
+            />
+            <item
+                text="Scrolling Arcade Games"
+                image=""
+                compound="top"
+                layout="pack"
+                layout_options="side='left'"
+                resizable="yes"
+            />
+        </section><!-- Arcade Games -->
+
+        <!--
+                REFLEXION GAMES SECTION
+        -->
+        <section
+            text="Reflexion Games"
+            image=""
+            compound="top"
+            layout="pack"
+            layout_options="side='left'"
+            resizable="yes"
+        >
+        </section><!-- Reflexion Games -->
+
+        <!--
+                CARD GAMES SECTION
+        -->
+        <section
+            text="Card Games"
+            image=""
+            compound="top"
+            layout="pack"
+            layout_options="side='left'"
+            resizable="yes"
+        >
+        </section><!-- Card Games -->
+
+    </section><!-- MAIN SECTION: Game Editors -->
+
 </tksection>

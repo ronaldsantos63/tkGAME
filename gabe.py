@@ -4,6 +4,8 @@
 """
     tkGAME - all-in-one Game library for Tkinter
 
+    Gabe - Game Browser
+
     Copyright (c) 2014+ Raphaël Seban <motus@laposte.net>
 
     This program is free software: you can redistribute it and/or
@@ -30,21 +32,21 @@ import tkRAD
 
 class Application (tkRAD.RADApplication):
     r"""
-        tkGAME - all-in-one Game library for Tkinter;
+        Gabe - Game Browser
 
-        This is the game editors browser app;
+        This is the generic game browser app;
     """
 
 
     APP = {
 
-        "name": _("tkGAME browser"),
+        "name": _("Gabe"),
 
         "version": _("0.1a"),
 
-        "description": _("Game editors browser"),
+        "description": _("Gabe - Game Browser"),
 
-        "title": _("tkGAME browser - browse game editors"),
+        "title": _("Gabe - browse games and editors"),
 
         "author": _("Raphaël SEBAN <motus@laposte.net>"),
 

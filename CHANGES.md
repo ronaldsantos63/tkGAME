@@ -12,6 +12,11 @@
 # CHANGELOG
 
 
+## $ 2014-03-11 RS $
+
+* renamed `tkgame_browser.py` to `gabe.py` (Gabe - Game Browser);
+
+
 ## $ 2014-03-09 RS $
 
 * now switching to:
