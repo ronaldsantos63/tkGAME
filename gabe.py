@@ -28,6 +28,10 @@
 
 import tkRAD
 
+# debugging session
+
+tkRAD.i18n.switch_off()
+
 
 
 class Application (tkRAD.RADApplication):
