@@ -11,8 +11,8 @@ tkGAME - all-in-one Game library for Tkinter.
 software development along with the Tkinter traditional GUI widgets
 set.
 
-It also handles a game browser (named 'Gabe') and aims to offer
-WYSIWYG game designing editors to end users.
+It also handles a game browser &ndash;&nbsp;**Gabe**&nbsp;&ndash;
+and aims to offer WYSIWYG game designing editors to end users.
 
 
 ## LICENSE
