@@ -27,12 +27,14 @@
         import="lib.widgets.game_section_browser"
     />
 
+<!--
     <ttklabel
         text="Please, select a game editor:"
         anchor="center"
         layout="pack"
         resizable="width"
     />
+-->
 
     <widget
         name="game_section_browser"
