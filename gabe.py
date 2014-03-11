@@ -37,7 +37,6 @@ class Application (tkRAD.RADApplication):
         This is the generic game browser app;
     """
 
-
     APP = {
 
         "name": _("Gabe"),
@@ -125,7 +124,6 @@ class Application (tkRAD.RADApplication):
         self.mainwindow.run()
 
     # end def
-
 
 # end class Application
 
