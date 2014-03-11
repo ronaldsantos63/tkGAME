@@ -434,8 +434,6 @@ class GameSectionView (RADXMLWidget, TK.ttk.Frame):
             opening clicked section;
         """
 
-        print("open section", section_id, home, args, kw)
-
         # safety inits
 
         if not self.is_tree(self.get_xml_tree()):
