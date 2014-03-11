@@ -30,7 +30,7 @@ import tkRAD
 
 # debugging session
 
-tkRAD.i18n.switch_off()
+#~ tkRAD.i18n.switch_off()
 
 
 
