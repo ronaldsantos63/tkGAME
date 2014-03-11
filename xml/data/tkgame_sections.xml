@@ -26,7 +26,7 @@
     -->
     <section
         text="Games"
-        image=""
+        image="^/images/section/games.gif"
         compound="top"
         layout="pack"
         layout_options="side='left'"
@@ -94,7 +94,7 @@
     -->
     <section
         text="Game Editors"
-        image=""
+        image="^/images/section/game-editors.gif"
         compound="top"
         layout="pack"
         layout_options="side='left'"
