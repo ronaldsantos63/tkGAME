@@ -16,6 +16,16 @@
 
 * renamed `tkgame_browser.py` to `gabe.py` (Gabe - Game Browser);
 
+* in `gabe.py`: updated code along new situation;
+
+* in `tkGAME/lib/widgets/game_section_browser.py`:
+
+    * added lots of new features;
+
+    * now works fine with tkRAD v1.4;
+
+* in `tkGAME/xml/data/tkgame_sections.xml`: updated data OK;
+
 
 ## $ 2014-03-09 RS $
 
