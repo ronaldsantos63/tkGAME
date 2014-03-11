@@ -220,7 +220,7 @@ class GameSectionView (RADXMLWidget, TK.ttk.Frame):
 
         self._cvar = TK.StringVar()
 
-        RADXMLWidget.__init__(self, tk_owner = self, **self.CONFIG)
+        RADXMLWidget.__init__(self, tk_owner=self, **self.CONFIG)
 
     # end def
 
@@ -333,6 +333,16 @@ class GameSectionView (RADXMLWidget, TK.ttk.Frame):
 
                 _widget.xml_element = xml_element
 
+                # $ 2014-03-11 RS $
+                # since tkRAD v1.4: deferred tasks
+                # flush widget section
+
+                self._queue.flush("widget", widget=_widget)
+
+                # ensure values
+
+                _attrs = _attrs.flatten()
+
                 # register object
 
                 self._register_object_by_id(_widget, _attrs.get("id"))
@@ -423,6 +433,8 @@ class GameSectionView (RADXMLWidget, TK.ttk.Frame):
         r"""
             opening clicked section;
         """
+
+        print("open section", section_id, home, args, kw)
 
         # safety inits
 
