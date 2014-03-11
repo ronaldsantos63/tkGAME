@@ -38,10 +38,14 @@
             <item
                 text="Tetris-like Games"
                 image="tetris-like-games.gif"
+                src=""
+                dest=""
             />
             <item
                 text="Scrolling Arcade Games"
                 image="scrolling-arcade-games.gif"
+                src=""
+                dest=""
             />
         </section><!-- Arcade Games -->
 
@@ -82,10 +86,14 @@
             <item
                 text="Tetris-like Games"
                 image="tetris-like-games.gif"
+                src=""
+                dest=""
             />
             <item
                 text="Scrolling Arcade Games"
                 image="scrolling-arcade-games.gif"
+                src=""
+                dest=""
             />
         </section><!-- Arcade Games -->
 
