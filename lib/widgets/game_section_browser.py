@@ -24,6 +24,8 @@
 
 # lib imports
 
+import os.path as OP
+
 import tkinter as TK
 
 import tkinter.messagebox as MB
@@ -31,6 +33,8 @@ import tkinter.messagebox as MB
 import tkRAD
 
 from tkRAD.core import tools
+
+from tkRAD.core import path as P
 
 from tkRAD.widgets.rad_frame import RADFrame
 
@@ -150,21 +154,16 @@ class GameSectionView (RADXMLWidget, TK.ttk.Frame):
         tkGAME game section browser subcomponent (data view);
     """
 
-
     CONFIG = {
 
         # for subclass widget pre-configuration
 
     } # end of CONFIG
 
-
-
     # XML tree root element
     # overrides RADXMLBase.DOCTYPE
 
     DOCTYPE = "tksection"
-
-
 
     # accepted XML child elements for XML container element
 
@@ -178,7 +177,11 @@ class GameSectionView (RADXMLWidget, TK.ttk.Frame):
 
     } # end of DTD
 
+    # Images dir and fallback
 
+    IMAGES_DIR = "^/images/section"
+
+    IMAGE_UNKNOWN = "unknown.gif"
 
     # XML file path parts for xml_build() automatic mode
     # overrides RADXMLWidget.XML_RC
@@ -207,6 +210,11 @@ class GameSectionView (RADXMLWidget, TK.ttk.Frame):
         self.CONFIG = self.CONFIG.copy()
 
         self.CONFIG.update(kw)
+
+        self.IMAGE_UNKNOWN = P.normalize(
+
+            OP.join(self.IMAGES_DIR, self.IMAGE_UNKNOWN)
+        )
 
         # super inits
 
@@ -303,7 +311,21 @@ class GameSectionView (RADXMLWidget, TK.ttk.Frame):
 
             _attrs = self._init_attributes(
 
-                xml_tag, xml_element, tk_parent
+                xml_tag, xml_element, tk_parent,
+
+                # default attrs (overridable)
+
+                addon_attrs = dict(
+                    text="Game",
+                    image="unknown",
+                    compound=TK.TOP,
+                    font="sans 10 bold",
+                    relief=TK.FLAT,
+                    offrelief=TK.FLAT,
+                    layout="pack",
+                    layout_options="side='left'",
+                    resizable="yes",
+                )
             )
 
             # widget inits
@@ -318,9 +340,7 @@ class GameSectionView (RADXMLWidget, TK.ttk.Frame):
 
                     tk_parent,
 
-                    relief=TK.FLAT,
-
-                    offrelief=TK.FLAT,
+                    # mandatory attrs (not overridable)
 
                     indicatoron=0,
 
@@ -542,6 +562,52 @@ class GameSectionView (RADXMLWidget, TK.ttk.Frame):
 
                 parent_section_id = self._parent_section_id,
             )
+
+        # end if
+
+    # end def
+
+
+
+    def _parse_attr_image (self, attribute, **kw):
+        r"""
+            image attribute;
+
+            no return value (void);
+        """
+
+        # param controls
+
+        if self._is_unparsed(attribute):
+
+            # inits
+
+            _list = [
+
+                attribute.value,
+
+                OP.join(self.IMAGES_DIR, attribute.value),
+
+                self.IMAGE_UNKNOWN,
+            ]
+
+            for _path in _list:
+
+                _path = P.normalize(_path)
+
+                if OP.isfile(_path):
+
+                    break
+
+                # end if
+
+            # end for
+
+            # parsed attribute inits
+
+            attribute.value = self.set_image(_path)
+
+            self._tk_config(attribute)
 
         # end if
 

@@ -26,38 +26,22 @@
     -->
     <section
         text="Games"
-        image="^/images/section/games.gif"
-        compound="top"
-        layout="pack"
-        layout_options="side='left'"
-        resizable="yes"
+        image="games.gif"
     >
         <!--
                 ARCADE GAMES SECTION
         -->
         <section
             text="Arcade Games"
-            image=""
-            compound="top"
-            layout="pack"
-            layout_options="side='left'"
-            resizable="yes"
+            image="arcade-games.gif"
         >
             <item
                 text="Tetris-like Games"
-                image=""
-                compound="top"
-                layout="pack"
-                layout_options="side='left'"
-                resizable="yes"
+                image="tetris-like-games.gif"
             />
             <item
                 text="Scrolling Arcade Games"
-                image=""
-                compound="top"
-                layout="pack"
-                layout_options="side='left'"
-                resizable="yes"
+                image="scrolling-arcade-games.gif"
             />
         </section><!-- Arcade Games -->
 
@@ -66,11 +50,7 @@
         -->
         <section
             text="Reflexion Games"
-            image=""
-            compound="top"
-            layout="pack"
-            layout_options="side='left'"
-            resizable="yes"
+            image="reflexion-games.gif"
         >
         </section><!-- Reflexion Games -->
 
@@ -79,11 +59,7 @@
         -->
         <section
             text="Card Games"
-            image=""
-            compound="top"
-            layout="pack"
-            layout_options="side='left'"
-            resizable="yes"
+            image="card-games.gif"
         >
         </section><!-- Card Games -->
 
@@ -94,38 +70,22 @@
     -->
     <section
         text="Game Editors"
-        image="^/images/section/game-editors.gif"
-        compound="top"
-        layout="pack"
-        layout_options="side='left'"
-        resizable="yes"
+        image="game-editors.gif"
     >
         <!--
                 ARCADE GAMES SECTION
         -->
         <section
             text="Arcade Games"
-            image=""
-            compound="top"
-            layout="pack"
-            layout_options="side='left'"
-            resizable="yes"
+            image="arcade-games.gif"
         >
             <item
                 text="Tetris-like Games"
-                image=""
-                compound="top"
-                layout="pack"
-                layout_options="side='left'"
-                resizable="yes"
+                image="tetris-like-games.gif"
             />
             <item
                 text="Scrolling Arcade Games"
-                image=""
-                compound="top"
-                layout="pack"
-                layout_options="side='left'"
-                resizable="yes"
+                image="scrolling-arcade-games.gif"
             />
         </section><!-- Arcade Games -->
 
@@ -134,11 +94,7 @@
         -->
         <section
             text="Reflexion Games"
-            image=""
-            compound="top"
-            layout="pack"
-            layout_options="side='left'"
-            resizable="yes"
+            image="reflexion-games.gif"
         >
         </section><!-- Reflexion Games -->
 
@@ -147,11 +103,7 @@
         -->
         <section
             text="Card Games"
-            image=""
-            compound="top"
-            layout="pack"
-            layout_options="side='left'"
-            resizable="yes"
+            image="card-games.gif"
         >
         </section><!-- Card Games -->
 
