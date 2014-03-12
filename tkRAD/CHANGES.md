@@ -14,37 +14,49 @@
 ## CHANGELOG
 
 
+### $ 2014-03-12 RS $
+
+* tagged and released **tkRAD v1.4.1 - Refer And Defer**;
+
+* in `RADXMLWidget`:
+
+    * fixed v1.4 deferred `_init_attributes()` inconsistency:
+
+        * now works **as in tkRAD < v1.4**:
+
+            * `self._init_attributes()` is again for **immediate
+            attrs** parsing;
+
+            * `self._init_deferred_attributes()` is now for
+            **deferred attrs** parsing;
+
+            * `self._init_attributes_flat()` is kept for
+            compatibility reasons with tkRAD v1.4;
+
+
+### $ 2014-03-11 RS $
+
+* in `core/i18n.py`:
+
+    * added new `switch_on()`, new `switch_off()`:
+
+        * now fully implemented;
+
+        * ease up debugging sessions by switching i18n support
+        ON/OFF on-the-fly;
+
+Example:
+
+```python
+import tkRAD
+
+tkRAD.i18n.switch_off()
+```
+
+
 ### $ 2014-03-10 RS $
 
-* `DeferredTriggerQueue` is **inappropriate name**: now renamed
-anywhere to `DeferQueue` as for deferred actions queue buffer;
-
-* `triggers` have been replaced by `actions` in comments;
-
-* in `RADXMLBase`:
-
-    * renamed `self._dt_queue` to simply `self._queue`;
-
-* **not so simple** to find the good naming convention(!);
-
-* in `RADXMLBase`, `RADXMLWidgetBase`, `RADXMLWidget`, `RADXMLMenu`:
-
-    * started implementing **deferred tasks** new concept;
-
-* in `RADXMLBase`: updated code OK;
-
-* in `RADXMLWidgetBase`:
-
-    * in `_tkRAD_command_support` and
-    `_tkRAD_deferred_command_support`:
-
-        * updated code OK;
-
-* in `RADXMLWidget`, `RADXMLMenu`: updated code anywhere needed OK;
-
-* all has been tested OK at this time;
-
-* looking for new ideas before tagging v1.4...
+* tagged and released **tkRAD v1.4 - Tasmania Sunset**.
 
 * in `RADXMLWidget`:
 
@@ -53,6 +65,10 @@ anywhere to `DeferQueue` as for deferred actions queue buffer;
         * now fully implemented;
 
     * updated code elsewhere;
+
+* updated `RADXMLWidgetBase`, `RADXMLWidget`, `RADXMLFrame`:
+
+    * now support `self.slot_owner` natively;
 
 * in `RADWidgetBase`:
 
@@ -64,15 +80,45 @@ anywhere to `DeferQueue` as for deferred actions queue buffer;
 
     * **compatibility**: by default `self.slot_owner = self.tk_owner`;
 
-* updated `RADXMLWidgetBase`, `RADXMLWidget`, `RADXMLFrame`:
+* looking for new ideas before tagging v1.4...
 
-    * now support `self.slot_owner` natively;
+* all has been tested OK at this time;
+
+* in `RADXMLWidget`, `RADXMLMenu`: updated code anywhere needed OK;
+
+* in `RADXMLWidgetBase`:
+
+    * in `_tkRAD_command_support` and
+    `_tkRAD_deferred_command_support`:
+
+        * updated code OK;
+
+* in `RADXMLBase`: updated code OK;
+
+* in `RADXMLBase`, `RADXMLWidgetBase`, `RADXMLWidget`, `RADXMLMenu`:
+
+    * started implementing **deferred tasks** new concept;
+
+* **not so simple** to find the good naming convention(!);
+
+* in `RADXMLBase`:
+
+    * renamed `self._dt_queue` to simply `self._queue`;
+
+* `triggers` have been replaced by `actions` in comments;
+
+* `DeferredTriggerQueue` is **inappropriate name**: now renamed
+anywhere to `DeferQueue` as for deferred actions queue buffer;
 
 
 ### $ 2014-03-09 RS $
 
-* **tkRAD v1.4** new idea: now implementing deferred triggers for
-XML attrs parsing;
+* in `RADXMLBase`:
+
+    * added new class member `self._dt_queue`: private instance of
+    `DeferredTriggerQueue`;
+
+    * in `xml_build()`: added support for `self._dt_queue`;
 
 * added new `tkRAD/core/defer.py`:
 
@@ -84,12 +130,8 @@ XML attrs parsing;
 
     * now fully implemented OK;
 
-* in `RADXMLBase`:
-
-    * added new class member `self._dt_queue`: private instance of
-    `DeferredTriggerQueue`;
-
-    * in `xml_build()`: added support for `self._dt_queue`;
+* **tkRAD v1.4** new idea: now implementing deferred triggers for
+XML attrs parsing;
 
 
 ### $ 2014-03-08 DA $
@@ -110,7 +152,7 @@ XML attrs parsing;
 
 ### $ 2014-03-03 RS $
 
-* tagging **tkRAD v1.3 - The Full Monty**.
+* tagged and released **tkRAD v1.3 - The Full Monty**.
 
 * in `RADXMLWidget`:
 
@@ -655,7 +697,7 @@ apply with XML attr `style="tkstyle_id"`?
 
 ### $ 2014-02-16 RS $
 
-* generating tag for `tkRAD v1.1`;
+* tagged and released `tkRAD v1.1 - Blinking Radiobutton`;
 
 * in `TODO.md`:
 

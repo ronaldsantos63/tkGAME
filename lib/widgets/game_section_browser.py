@@ -309,7 +309,7 @@ class GameSectionView (RADXMLWidget, TK.ttk.Frame):
 
             # attr inits
 
-            _attrs = self._init_attributes(
+            _attrs = self._init_deferred_attributes(
 
                 xml_tag, xml_element, tk_parent,
 

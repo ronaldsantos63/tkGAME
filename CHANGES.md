@@ -12,6 +12,15 @@
 # CHANGELOG
 
 
+## $ 2014-03-12 RS $
+
+* upgraded `tkGAME/tkRAD` lib to **tkRAD v1.4.1**;
+
+* in `tkGAME/lib/widgets/game_section_browser.py`:
+
+    * updated code along new tkRAD version for best use;
+
+
 ## $ 2014-03-11 RS $
 
 * renamed `tkgame_browser.py` to `gabe.py` (Gabe - Game Browser);
