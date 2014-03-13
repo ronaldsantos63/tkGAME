@@ -26,12 +26,14 @@
     -->
     <section
         text="Games"
+        image="games.gif"
     >
         <!--
                 ARCADE GAMES SECTION
         -->
         <section
             text="Arcade Games"
+            image="arcade-games.gif"
         >
             <item
                 text="Tetris-like Games"
