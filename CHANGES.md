@@ -22,11 +22,6 @@
 
             * now fully implemented;
 
-        * added new feature in `_parse_attr_image()`:
-
-            * now tries to extract missing filename from XML attr
-            'text';
-
 
 ## $ 2014-03-12 RS $
 

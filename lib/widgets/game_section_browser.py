@@ -24,7 +24,11 @@
 
 # lib imports
 
+import re
+
 import os.path as OP
+
+import urllib.request as WEB
 
 import tkinter as TK
 
@@ -604,28 +608,6 @@ class GameSectionView (RADXMLWidget, TK.ttk.Frame):
 
         if self._is_unparsed(attribute):
 
-            # empty attribute?
-
-            if not attribute.value:
-
-                # try to extract from attr text
-
-                attribute.value = tools.str_complete(
-
-                    "{}.gif",
-
-                    re.sub(
-
-                        r"\W+", r"-",
-
-                        tools.choose_str(attrs.get("text"))
-                    )
-                )
-
-                print("new path:", attribute.value)
-
-            # end if
-
             # inits
 
             _list = [
@@ -699,12 +681,6 @@ class GameSectionView (RADXMLWidget, TK.ttk.Frame):
         # param controls - XML markup parens?
 
         if "<" not in str(filename):
-
-            import urllib.request as WEB
-
-            import os.path as OP
-
-            import re
 
             # already an URL?
 
