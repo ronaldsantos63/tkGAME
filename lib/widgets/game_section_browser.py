@@ -366,6 +366,12 @@ class GameSectionView (RADXMLWidget, TK.ttk.Frame):
                     widget=_widget,
 
                     xml_element=xml_element,
+
+                    # useless genuine data
+                    xml_attr=None,
+                    xml_attrs=None,
+                    addon_attrs=None,
+                    attrs=None,
                 )
 
                 # ensure values
@@ -447,7 +453,7 @@ class GameSectionView (RADXMLWidget, TK.ttk.Frame):
             opening clicked section;
         """
 
-        print("open section!", args, kw)
+        #~ print("open section!", args, kw)
 
         # safety inits
 
@@ -645,7 +651,7 @@ class GameSectionView (RADXMLWidget, TK.ttk.Frame):
             shows root section;
         """
 
-        self._open_section(home=True)
+        self._open_section(home = True)
 
     # end def
 
