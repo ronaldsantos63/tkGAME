@@ -64,7 +64,7 @@ class MainWindow (tkRAD.RADXMLMainWindow):
 
                 "StatusBarNotify": self.statusbar.notify,
 
-                "GameSectionViewOpenItem": self._slot_open_item,
+                "GameSectionBrowserOpenItem": self._slot_open_item,
             }
         )
 
@@ -83,7 +83,7 @@ class MainWindow (tkRAD.RADXMLMainWindow):
             missing locally;
         """
 
-        print("MainWindow:_slot_open_item() called")
+        print("MainWindow:_slot_open_item() called", args, kw)
 
     # end def
 

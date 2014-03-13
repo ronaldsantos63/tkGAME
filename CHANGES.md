@@ -22,6 +22,8 @@
 
             * now fully implemented;
 
+        * optimized code for `_open_item()` and `_open_section()`;
+
 
 ## $ 2014-03-12 RS $
 

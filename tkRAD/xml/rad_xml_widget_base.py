@@ -895,7 +895,7 @@ class RADXMLWidgetBase (RX.RADXMLBase):
             # since v1.4: deferred task
             # now widget is passed in callback **kw
 
-            _widget = kw.get("widget")
+            kw = tools.dict_only_keys(kw, "widget", "xml_element")
 
             # events maechanism support
 
@@ -906,9 +906,9 @@ class RADXMLWidgetBase (RX.RADXMLBase):
                 _cmd = (
 
                     lambda *args, _e=_cmd[1:],
-                                            _s=self.events, _w=_widget:
+                                            _s=self.events, kw=kw:
 
-                        _s.raise_event(_e, *args, widget=_w)
+                        _s.raise_event(_e, *args, **kw)
                 )
 
             # self.app methods support
@@ -974,9 +974,9 @@ class RADXMLWidgetBase (RX.RADXMLBase):
 
                         lambda  *args,
                                 _cb=getattr(self.slot_owner, _cmd),
-                                _w=_widget:
+                                kw=kw:
 
-                            _cb(*args, widget=_w)
+                            _cb(*args, **kw)
                     )
 
                 else:

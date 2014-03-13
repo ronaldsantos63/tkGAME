@@ -315,7 +315,7 @@ class GameSectionView (RADXMLWidget, TK.ttk.Frame):
 
             # attr inits
 
-            _attrs = self._init_deferred_attributes(
+            _attributes = self._init_deferred_attributes(
 
                 xml_tag, xml_element, tk_parent,
 
@@ -336,7 +336,7 @@ class GameSectionView (RADXMLWidget, TK.ttk.Frame):
 
             # widget inits
 
-            _widget = self.get_object_by_id(_attrs.get("id"))
+            _widget = self.get_object_by_id(_attributes.get("id"))
 
             if not _widget:
 
@@ -352,26 +352,32 @@ class GameSectionView (RADXMLWidget, TK.ttk.Frame):
 
                     variable=self._cvar,
 
-                    value=_attrs.get("id"),
+                    value=_attributes.get("id"),
                 )
-
-                # store data in widget
-
-                _widget.xml_element = xml_element
 
                 # $ 2014-03-11 RS $
                 # since tkRAD v1.4: deferred tasks
                 # flush widget section
 
-                self._queue.flush("widget", widget=_widget)
+                self._queue.flush(
+
+                    "widget",
+
+                    widget=_widget,
+
+                    xml_element=xml_element,
+                )
 
                 # ensure values
 
-                _attrs = _attrs.flatten()
+                _attributes = _attributes.flatten()
 
                 # register object
 
-                self._register_object_by_id(_widget, _attrs.get("id"))
+                self._register_object_by_id(
+
+                    _widget, _attributes.get("id")
+                )
 
                 # strip out unwanted
 
@@ -390,7 +396,7 @@ class GameSectionView (RADXMLWidget, TK.ttk.Frame):
 
             # set layout
 
-            self._set_layout(_widget, _attrs, tk_parent)
+            self._set_layout(_widget, _attributes, tk_parent)
 
             # succeeded
 
@@ -420,45 +426,28 @@ class GameSectionView (RADXMLWidget, TK.ttk.Frame):
 
 
 
-    def _open_item (self, item_id=None, *args, **kw):
+    def _open_item (self, *args, **kw):
         r"""
             opening clicked item;
         """
-
-        # param inits
-
-        _widget = self.get_object_by_id(
-
-            tools.choose_str(
-
-                item_id,
-
-                self._cvar.get(),
-            )
-        )
-
-        _xml_element = getattr(_widget, "xml_element", None)
 
         # acknowledge item opening
 
         self.events.raise_event(
 
-            "{cname}OpenItem"
-            .format(cname = self.classname()),
-
-            widget = _widget,
-
-            xml_element = _xml_element,
+            "GameSectionBrowserOpenItem", *args, **kw
         )
 
     # end def
 
 
 
-    def _open_section (self, section_id=None, home=False, *args, **kw):
+    def _open_section (self, *args, **kw):
         r"""
             opening clicked section;
         """
+
+        print("open section!", args, kw)
 
         # safety inits
 
@@ -468,35 +457,43 @@ class GameSectionView (RADXMLWidget, TK.ttk.Frame):
 
         # end if
 
-        # param controls
+        # param inits
 
-        if home:
+        # $ 2014-03-13 RS $
+        # CAUTION:
+        # do *NOT* change this
 
-            _widget = self
+        _xml_element = tools.choose(
+
+            kw.get("xml_element"),
+
+            dict(id=None),
+        )
+
+        _section_id = tools.choose_str(
+
+            kw.get("section_id"),
+
+            _xml_element.get("id"),
+        )
+
+        # 'home' requested?
+
+        if kw.get("home"):
 
             _xml_element = self.get_xml_tree().getroot()
 
-            self._parent_section_id = None
+        elif not self.is_element(_xml_element):
 
-        else:
-
-            _widget = self.get_object_by_id(
-
-                tools.choose_str(
-
-                    section_id,
-
-                    self._cvar.get(),
-                )
-            )
-
-            _xml_element = getattr(_widget, "xml_element", None)
+            _xml_element = self.get_element_by_id(_section_id)
 
         # end if
 
-        if _widget and _xml_element and len(_xml_element):
+        if _xml_element and len(_xml_element):
 
-            # inits
+            # member inits
+
+            self._parent_section_id = None
 
             self._cvar.set("")
 
@@ -528,6 +525,7 @@ class GameSectionView (RADXMLWidget, TK.ttk.Frame):
                     _("Error"),
 
                     _("An exception has raised:\n{error}")
+
                     .format(error=str(e)),
 
                     parent=self,
@@ -542,6 +540,7 @@ class GameSectionView (RADXMLWidget, TK.ttk.Frame):
             _parent = self.get_xml_tree().find(
 
                 ".//*[@id='{value}']/.."
+
                 .format(value = _xml_element.get("id"))
             )
 
@@ -549,24 +548,22 @@ class GameSectionView (RADXMLWidget, TK.ttk.Frame):
 
                 self._parent_section_id = _parent.get("id")
 
-            else:
-
-                self._parent_section_id = None
-
             # end if
+
+            # update keywords
+
+            kw.update(
+
+                parent_section_id = self._parent_section_id,
+
+                xml_element = _xml_element,
+            )
 
             # acknowledge section opening
 
             self.events.raise_event(
 
-                "{cname}OpenSection"
-                .format(cname = self.classname()),
-
-                widget = _widget,
-
-                xml_element = _xml_element,
-
-                parent_section_id = self._parent_section_id,
+                "GameSectionBrowserOpenSection", *args, **kw
             )
 
         # end if
