@@ -12,6 +12,22 @@
 # CHANGELOG
 
 
+## $ 2014-03-13 RS $
+
+* in `tkGAME/lib/widgets/game_section_browser.py`:
+
+    * in `GameSectionView`:
+
+        * added new `_parse_attr_dest()`:
+
+            * now fully implemented;
+
+        * added new feature in `_parse_attr_image()`:
+
+            * now tries to extract missing filename from XML attr
+            'text';
+
+
 ## $ 2014-03-12 RS $
 
 * upgraded `tkGAME/tkRAD` lib to **tkRAD v1.4.1**;

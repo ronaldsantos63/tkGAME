@@ -239,9 +239,11 @@ class GameSectionView (RADXMLWidget, TK.ttk.Frame):
             building <item> XML element;
         """
 
-        # action inits
+        # attrs inits
 
         xml_element.attrib.setdefault("command", "._open_item")
+
+        xml_element.attrib.setdefault("dest", "game")
 
         # generic view item
 
@@ -569,7 +571,29 @@ class GameSectionView (RADXMLWidget, TK.ttk.Frame):
 
 
 
-    def _parse_attr_image (self, attribute, **kw):
+    def _parse_attr_dest (self, attribute, **kw):
+        r"""
+            item destination attribute;
+
+            no return value (void);
+        """
+
+        # parsed attribute inits
+
+        kw.update(
+
+            default = "game",
+
+            values = ("editor", ),
+        )
+
+        self._fix_values(attribute, **kw)
+
+    # end def
+
+
+
+    def _parse_attr_image (self, attribute, attrs, **kw):
         r"""
             image attribute;
 
@@ -579,6 +603,28 @@ class GameSectionView (RADXMLWidget, TK.ttk.Frame):
         # param controls
 
         if self._is_unparsed(attribute):
+
+            # empty attribute?
+
+            if not attribute.value:
+
+                # try to extract from attr text
+
+                attribute.value = tools.str_complete(
+
+                    "{}.gif",
+
+                    re.sub(
+
+                        r"\W+", r"-",
+
+                        tools.choose_str(attrs.get("text"))
+                    )
+                )
+
+                print("new path:", attribute.value)
+
+            # end if
 
             # inits
 
