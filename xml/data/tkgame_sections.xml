@@ -38,7 +38,7 @@
             <item
                 text="Tetris-like Games"
                 image="tetris-like-games.gif"
-                src=""
+                src="^/games/tetris/tetris.py"
             />
             <item
                 text="Scrolling Arcade Games"

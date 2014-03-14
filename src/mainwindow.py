@@ -70,7 +70,7 @@ class MainWindow (tkRAD.RADXMLMainWindow):
 
         # run game section browser
 
-        self.mainframe.game_section_browser.show()
+        self.mainframe.game_section_browser.show("local_sections")
 
     # end def
 
@@ -84,6 +84,10 @@ class MainWindow (tkRAD.RADXMLMainWindow):
         """
 
         print("MainWindow:_slot_open_item() called", args, kw)
+
+        print("attrs.src:", kw.get("attrs").get("src"))
+
+        print("xml_element.src:", kw.get("xml_element").get("src"))
 
     # end def
 

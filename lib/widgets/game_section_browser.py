@@ -89,7 +89,7 @@ class GameSectionBrowser (RADFrame):
 
         # delayed build along with web mirrors data
 
-        self.after(100, self.view.web_build, filename)
+        self.after(100, self.view.web_build, filename, *args, **kw)
 
         # do *NOT* wait after HTTP response
 
@@ -368,10 +368,10 @@ class GameSectionView (RADXMLWidget, TK.ttk.Frame):
                     xml_element=xml_element,
 
                     # useless genuine data
-                    xml_attr=None,
-                    xml_attrs=None,
-                    addon_attrs=None,
-                    attrs=None,
+                    #~ xml_attr=None,
+                    #~ xml_attrs=None,
+                    #~ addon_attrs=None,
+                    #~ attrs=None,
                 )
 
                 # ensure values
