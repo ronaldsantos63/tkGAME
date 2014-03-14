@@ -64,6 +64,8 @@ class MainWindow (tkRAD.RADXMLMainWindow):
 
                 "StatusBarNotify": self.statusbar.notify,
 
+                "GameSectionBrowserOpenSection": None,          # TODO?
+
                 "GameSectionBrowserOpenItem": self._slot_open_item,
             }
         )

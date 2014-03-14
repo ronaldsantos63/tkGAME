@@ -247,7 +247,7 @@ class GameSectionView (RADXMLWidget, TK.ttk.Frame):
 
         xml_element.attrib.setdefault("command", "._open_item")
 
-        xml_element.attrib.setdefault("dest", "game")
+        xml_element.attrib.setdefault("type", "game")
 
         # generic view item
 
@@ -467,8 +467,6 @@ class GameSectionView (RADXMLWidget, TK.ttk.Frame):
             opening clicked section;
         """
 
-        #~ print("open section!", args, kw)
-
         # safety inits
 
         if not self.is_tree(self.get_xml_tree()):
@@ -522,7 +520,9 @@ class GameSectionView (RADXMLWidget, TK.ttk.Frame):
             for _w in self.winfo_children():
 
                 _w.pack_forget()
+
                 _w.grid_forget()
+
                 _w.place_forget()
 
             # end for
@@ -695,13 +695,9 @@ class GameSectionView (RADXMLWidget, TK.ttk.Frame):
             tries to build view from remote file before trying locally;
         """
 
-        print("web_build filename:", filename)
-
         # param controls - XML markup parens?
 
         if "<" not in str(filename):
-
-            print("NOT an XML source code:", filename)
 
             # already an URL?
 
@@ -745,14 +741,10 @@ class GameSectionView (RADXMLWidget, TK.ttk.Frame):
 
             self._notify(
                 _(
-                    "Trying to contact web mirror site. "
+                    "Trying to contact mirror web site. "
                     "Please, wait..."
                 )
             )
-
-            # reset filename
-
-            #~ filename = None
 
             # get web response to request
 
@@ -774,8 +766,6 @@ class GameSectionView (RADXMLWidget, TK.ttk.Frame):
                 )
 
             # end try
-
-            print("response:", _response)
 
             if _response:
 
@@ -808,19 +798,13 @@ class GameSectionView (RADXMLWidget, TK.ttk.Frame):
 
                 # get clean data as XML script
 
-                print("changing filename:", filename)
-
                 filename = _data.decode(_encoding)
-
-                print("filename changed to:", filename)
 
             # end if - _response
 
         # end if - markup "<"
 
         # build GUI
-
-        print("Opening file:", filename)
 
         self.xml_build(filename)
 

@@ -93,7 +93,7 @@ msgstr""
 "Remonter d'un niveau"
 
 msgid ""
-"Trying to contact web mirror site. "
+"Trying to contact mirror web site. "
 "Please, wait..."
 msgstr""
 "Tentative de connexion au site web miroir, "
