@@ -20,6 +20,7 @@
 
     * yet two fixed values: `editor` and `game` (default);
 
+* optimized all over `game_section_browser.py` script;
 
 
 ## $ 2014-03-13 RS $

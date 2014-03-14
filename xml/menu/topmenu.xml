@@ -38,8 +38,9 @@
     <menu label="_Show">
         <checkbutton
             label="Show statusbar"
-            variable="show_statusbar"
+            accelerator="Ctrl+T"
             command="@ToggleStatusbar"
+            variable="show_statusbar"
         />
     </menu>
 
@@ -49,6 +50,7 @@
     <menu label="_Help">
         <command
             label="_About"
+            accelerator="Ctrl+?"
             command="@MenuHelpAbout"
         />
     </menu>
