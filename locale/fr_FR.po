@@ -114,6 +114,11 @@ msgstr""
 # GAME sections
 
 msgid ""
+"Game"
+msgstr""
+"Jeu"
+
+msgid ""
 "Games"
 msgstr""
 "Jeux"

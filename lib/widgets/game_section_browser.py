@@ -153,6 +153,9 @@ class GameSectionNavBar (tkRAD.RADXMLFrame):
 
 
 
+# FIXME: upgrade TK.ttk.Frame to lib.GameScrollView
+
+
 class GameSectionView (RADXMLWidget, TK.ttk.Frame):
     r"""
         tkGAME game section browser subcomponent (data view);
@@ -182,6 +185,11 @@ class GameSectionView (RADXMLWidget, TK.ttk.Frame):
             "resizable": "yes",
         },
 
+        "group": {
+
+            "layout_options": "side='top'",
+        },
+
         "item": {
 
             "command": "._open_item",
@@ -208,11 +216,13 @@ class GameSectionView (RADXMLWidget, TK.ttk.Frame):
 
     DTD = {
 
+        "group": ("section", "item"),
+
         "item": ("none", ),
 
-        "section": ("section", "item"),
+        "section": ("section", "item", "group"),
 
-        "tksection": ("section", "item"),
+        "tksection": ("section", "item", "group"),
 
     } # end of DTD
 
@@ -268,6 +278,19 @@ class GameSectionView (RADXMLWidget, TK.ttk.Frame):
         self._cvar = TK.StringVar()
 
         RADXMLWidget.__init__(self, tk_owner=self, **self.CONFIG)
+
+    # end def
+
+
+
+    def _build_element_group (self, xml_tag, xml_element, tk_parent):
+        r"""
+            building <group> root element;
+        """
+
+        # generic view item
+
+        self._build_view_item(xml_tag, xml_element, tk_parent)
 
     # end def
 
@@ -351,20 +374,32 @@ class GameSectionView (RADXMLWidget, TK.ttk.Frame):
 
             if not _widget:
 
-                # new widget
+                # item group?
 
-                _widget = TK.Radiobutton(
+                if xml_tag == "group":
 
-                    tk_parent,
+                    # new widget
 
-                    # mandatory attrs (not overridable)
+                    _widget = TK.Frame(tk_parent)
 
-                    indicatoron=0,
+                else:
 
-                    variable=self._cvar,
+                    # new widget
 
-                    value=_attributes.get("id"),
-                )
+                    _widget = TK.Radiobutton(
+
+                        tk_parent,
+
+                        # mandatory attrs (not overridable)
+
+                        indicatoron=0,
+
+                        variable=self._cvar,
+
+                        value=_attributes.get("id"),
+                    )
+
+                # end if
 
                 # $ 2014-03-11 RS $
                 # since tkRAD v1.4: deferred tasks
@@ -414,6 +449,21 @@ class GameSectionView (RADXMLWidget, TK.ttk.Frame):
             # set layout
 
             self._set_layout(_widget, _attributes, tk_parent)
+
+            # group -> children
+
+            if xml_tag == "group":
+
+                # loop on XML element children
+
+                return self._loop_on_children(
+
+                    xml_element, _widget,
+
+                    accept = self.DTD.get(xml_tag),
+                )
+
+            # end if
 
             # succeeded
 
