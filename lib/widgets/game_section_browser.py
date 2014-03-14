@@ -418,6 +418,20 @@ class GameSectionView (RADXMLWidget, TK.ttk.Frame):
 
 
 
+    def _info (self, text=None):
+        r"""
+            raises info events for an eventually existing
+            mainwindow's statusbar object;
+        """
+
+        # notification event
+
+        self.events.raise_event("StatusBarInfo", text)
+
+    # end def
+
+
+
     def _notify (self, text=None, delay=None):
         r"""
             raises notification events for an eventually existing
@@ -578,9 +592,9 @@ class GameSectionView (RADXMLWidget, TK.ttk.Frame):
 
 
 
-    def _parse_attr_dest (self, attribute, **kw):
+    def _parse_attr_type (self, attribute, **kw):
         r"""
-            item destination attribute;
+            item type attribute;
 
             no return value (void);
         """
@@ -681,9 +695,13 @@ class GameSectionView (RADXMLWidget, TK.ttk.Frame):
             tries to build view from remote file before trying locally;
         """
 
+        print("web_build filename:", filename)
+
         # param controls - XML markup parens?
 
         if "<" not in str(filename):
+
+            print("NOT an XML source code:", filename)
 
             # already an URL?
 
@@ -734,7 +752,7 @@ class GameSectionView (RADXMLWidget, TK.ttk.Frame):
 
             # reset filename
 
-            filename = None
+            #~ filename = None
 
             # get web response to request
 
@@ -756,6 +774,8 @@ class GameSectionView (RADXMLWidget, TK.ttk.Frame):
                 )
 
             # end try
+
+            print("response:", _response)
 
             if _response:
 
@@ -788,13 +808,19 @@ class GameSectionView (RADXMLWidget, TK.ttk.Frame):
 
                 # get clean data as XML script
 
+                print("changing filename:", filename)
+
                 filename = _data.decode(_encoding)
+
+                print("filename changed to:", filename)
 
             # end if - _response
 
         # end if - markup "<"
 
         # build GUI
+
+        print("Opening file:", filename)
 
         self.xml_build(filename)
 

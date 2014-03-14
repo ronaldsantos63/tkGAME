@@ -12,6 +12,16 @@
 # CHANGELOG
 
 
+## $ 2014-03-14 RS $
+
+* making tests;
+
+* renamed XML attrs `dest` --> `type`:
+
+    * yet two fixed values: `editor` and `game` (default);
+
+
+
 ## $ 2014-03-13 RS $
 
 * in `tkGAME/lib/widgets/game_section_browser.py`:
