@@ -164,6 +164,41 @@ class GameSectionView (RADXMLWidget, TK.ttk.Frame):
 
     } # end of CONFIG
 
+    # default XML attrs
+    # overrides RADXMLWidget.ATTRS
+
+    ATTRS = {
+
+        "common": {
+
+            "id": None,
+            "image": "unknown",
+            "compound": TK.TOP,
+            "font": "sans 10 bold",
+            "relief": TK.FLAT,
+            "offrelief": TK.FLAT,
+            "layout": "pack",
+            "layout_options": "side='left'",
+            "resizable": "yes",
+        },
+
+        "item": {
+
+            "command": "._open_item",
+            "main": "main.py",
+            "src": None,
+            "text": "Game",
+            "type": "game",
+        },
+
+        "section": {
+
+            "command": "._open_section",
+            "text": "Section",
+        },
+
+    } # end of ATTRS
+
     # XML tree root element
     # overrides RADXMLBase.DOCTYPE
 
@@ -243,12 +278,6 @@ class GameSectionView (RADXMLWidget, TK.ttk.Frame):
             building <item> XML element;
         """
 
-        # attrs inits
-
-        xml_element.attrib.setdefault("command", "._open_item")
-
-        xml_element.attrib.setdefault("type", "game")
-
         # generic view item
 
         self._build_view_item(xml_tag, xml_element, tk_parent)
@@ -261,10 +290,6 @@ class GameSectionView (RADXMLWidget, TK.ttk.Frame):
         r"""
             building <section> XML element;
         """
-
-        # action inits
-
-        xml_element.attrib.setdefault("command", "._open_section")
 
         # generic view item
 
@@ -317,21 +342,7 @@ class GameSectionView (RADXMLWidget, TK.ttk.Frame):
 
             _attributes = self._init_deferred_attributes(
 
-                xml_tag, xml_element, tk_parent,
-
-                # default attrs (overridable)
-
-                addon_attrs = dict(
-                    text="Game",
-                    image="unknown",
-                    compound=TK.TOP,
-                    font="sans 10 bold",
-                    relief=TK.FLAT,
-                    offrelief=TK.FLAT,
-                    layout="pack",
-                    layout_options="side='left'",
-                    resizable="yes",
-                )
+                xml_tag, xml_element, tk_parent
             )
 
             # widget inits
@@ -587,6 +598,36 @@ class GameSectionView (RADXMLWidget, TK.ttk.Frame):
             )
 
         # end if
+
+    # end def
+
+
+
+    def _parse_attr_main (self, attribute, **kw):
+        r"""
+            main Python exe script attribute;
+
+            no return value (void);
+        """
+
+        # parsed attribute inits
+
+        self._tkRAD_any_value_support(attribute, **kw)  # -----------------FIXME?
+
+    # end def
+
+
+
+    def _parse_attr_src (self, attribute, **kw):
+        r"""
+            zip archive remote src attribute;
+
+            no return value (void);
+        """
+
+        # parsed attribute inits
+
+        self._tkRAD_any_value_support(attribute, **kw)  # -----------------FIXME?
 
     # end def
 
