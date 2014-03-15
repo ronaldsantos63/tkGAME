@@ -14,6 +14,20 @@
 
 ## $ 2014-03-14 RS $
 
+* added new `tkGAME.lib.game_scroll_view.GameScrollView` class:
+
+    * now almost fully implemented;
+
+* now `tkGAME.lib.game_section_browser.GameSectionView` class
+inherits new `GameScrollView` class;
+
+* making some more tests;
+
+* **Gabe** is slowly becoming some kind of interesting stuff... :)
+
+
+## $ 2014-03-14 RS $
+
 * making tests;
 
 * renamed XML attrs `dest` --> `type`:

@@ -70,9 +70,37 @@ class MainWindow (tkRAD.RADXMLMainWindow):
             }
         )
 
+        # bind tkevents
+
+        self.bind_all("<Button-4>", self._slot_mouse_scrollup)
+
+        self.bind_all("<Button-5>", self._slot_mouse_scrolldown)
+
         # run game section browser
 
         self.mainframe.game_section_browser.show("local_sections")
+
+    # end def
+
+
+
+    def _slot_mouse_scrolldown (self, *args, **kw):
+        r"""
+            raises tkRAD event instead;
+        """
+
+        self.events.raise_event("MouseWheelScrollDown", *args, **kw)
+
+    # end def
+
+
+
+    def _slot_mouse_scrollup (self, *args, **kw):
+        r"""
+            raises tkRAD event instead;
+        """
+
+        self.events.raise_event("MouseWheelScrollUp", *args, **kw)
 
     # end def
 

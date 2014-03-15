@@ -30,9 +30,11 @@ import os.path as OP
 
 import urllib.request as WEB
 
+
 import tkinter as TK
 
 import tkinter.messagebox as MB
+
 
 import tkRAD
 
@@ -42,7 +44,8 @@ from tkRAD.core import path as P
 
 from tkRAD.widgets.rad_frame import RADFrame
 
-from tkRAD.xml.rad_xml_widget import RADXMLWidget
+
+from .game_scroll_view import GameScrollView
 
 
 
@@ -153,19 +156,10 @@ class GameSectionNavBar (tkRAD.RADXMLFrame):
 
 
 
-# FIXME: upgrade TK.ttk.Frame to lib.GameScrollView
-
-
-class GameSectionView (RADXMLWidget, TK.ttk.Frame):
+class GameSectionView (GameScrollView):
     r"""
         tkGAME game section browser subcomponent (data view);
     """
-
-    CONFIG = {
-
-        # for subclass widget pre-configuration
-
-    } # end of CONFIG
 
     # default XML attrs
     # overrides RADXMLWidget.ATTRS
@@ -180,6 +174,9 @@ class GameSectionView (RADXMLWidget, TK.ttk.Frame):
             "font": "sans 10 bold",
             "relief": TK.FLAT,
             "offrelief": TK.FLAT,
+            "width": "200",
+            "height": "180",
+            "wraplength": "180",
             "layout": "pack",
             "layout_options": "side='left'",
             "resizable": "yes",
@@ -249,37 +246,6 @@ class GameSectionView (RADXMLWidget, TK.ttk.Frame):
         "mirror_url": "https://raw.github.com/tarball69/tkGAME/master",
 
     } # end of XML_RC
-
-
-
-    def __init__ (self, master = None, **kw):
-
-        # default values
-
-        self.CONFIG = self.CONFIG.copy()
-
-        self.CONFIG.update(kw)
-
-        self.IMAGE_UNKNOWN = P.normalize(
-
-            OP.join(self.IMAGES_DIR, self.IMAGE_UNKNOWN)
-        )
-
-        # super inits
-
-        TK.ttk.Frame.__init__(self, master)
-
-        self.configure(**self._only_tk(self.CONFIG))
-
-        self.tk_parent = master
-
-        self._parent_section_id = None
-
-        self._cvar = TK.StringVar()
-
-        RADXMLWidget.__init__(self, tk_owner=self, **self.CONFIG)
-
-    # end def
 
 
 
@@ -578,7 +544,7 @@ class GameSectionView (RADXMLWidget, TK.ttk.Frame):
 
             # clear children
 
-            for _w in self.winfo_children():
+            for _w in self.viewport.container.winfo_children():
 
                 _w.pack_forget()
 
@@ -594,10 +560,12 @@ class GameSectionView (RADXMLWidget, TK.ttk.Frame):
 
                     xml_element = _xml_element,
 
-                    tk_parent = self,
+                    tk_parent = self.viewport.container,
 
                     accept = self.DTD.get(_xml_element.tag),
                 )
+
+                self.viewport.container.update_idletasks()
 
             except Exception as e:
 
@@ -781,14 +749,44 @@ class GameSectionView (RADXMLWidget, TK.ttk.Frame):
 
 
 
+    def init_widget (self, **kw):
+        r"""
+            widget main inits;
+        """
+
+        # super class inits
+
+        super().init_widget(**kw)
+
+        # default values
+
+        self.IMAGE_UNKNOWN = P.normalize(
+
+            OP.join(self.IMAGES_DIR, self.IMAGE_UNKNOWN)
+        )
+
+        # member inits
+
+        self.slot_owner = self
+
+        self.tk_owner = self.viewport.container
+
+        self._parent_section_id = None
+
+        self._cvar = TK.StringVar()
+
+    # end def
+
+
+
     def web_build (self, filename=None):
         r"""
             tries to build view from remote file before trying locally;
         """
 
-        # param controls - XML markup parens?
+        # not an XML source code?
 
-        if "<" not in str(filename):
+        if not self.is_xml(filename):
 
             # already an URL?
 
@@ -893,7 +891,7 @@ class GameSectionView (RADXMLWidget, TK.ttk.Frame):
 
             # end if - _response
 
-        # end if - markup "<"
+        # end if - not XML?
 
         # build GUI
 
