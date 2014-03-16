@@ -12,7 +12,14 @@
 # CHANGELOG
 
 
-## $ 2014-03-14 RS $
+## $ 2014-03-16 RS $
+
+* in `tkGAME.src.MainWindow`:
+
+    * implementing `_slot_open_item()`;
+
+
+## $ 2014-03-15 RS $
 
 * added new `tkGAME.lib.game_scroll_view.GameScrollView` class:
 

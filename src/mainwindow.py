@@ -30,12 +30,147 @@ from tkinter import messagebox as MB
 
 import tkRAD
 
+from tkRAD.core import tools
+
 
 
 class MainWindow (tkRAD.RADXMLMainWindow):
     r"""
-        application's main window;
+        Gabe application's main window class;
     """
+
+
+
+    def __open_item (self, xml_element):
+        r"""
+            trying to open game/editor along with XML attrs;
+        """
+
+        # param controls
+
+        if self.mainframe.cast_element(xml_element):
+
+            # inits
+
+            # main: python executable
+
+            _main = tools.choose_str(
+
+                xml_element.get("main"),
+
+                "main.py",
+            )
+
+            # src: remote zip archive
+
+            _src = tools.choose_str(
+
+                xml_element.get("src"),
+            )
+
+            # type: 'game' or 'editor'
+
+            _type = tools.choose_str(
+
+                xml_element.get("type"),
+
+                "game",
+            )
+
+            print("main:", _main, "src:", _src, "type:", _type)
+
+        # end if - xml_element
+
+    # end def
+
+
+
+    def _show_about_dialog (self, *args, **kw):
+        r"""
+            tkRAD event slot method;
+            shows off 'About...' dialog box;
+        """
+
+        # show 'About...' dialog box
+
+        MB.showinfo(
+
+            _("About"),
+
+            ("{name} v{version}\n\n"
+
+            "{description}\n\n"
+
+            "Copyright {copyright}\n\n"
+
+            "{license_short}"
+
+            ).format(**self.app.APP),
+
+            parent=self,
+        )
+
+    # end def
+
+
+
+    def _slot_mouse_scrolldown (self, *args, **kw):
+        r"""
+            raises tkRAD event instead;
+        """
+
+        self.events.raise_event("MouseWheelScrollDown", *args, **kw)
+
+    # end def
+
+
+
+    def _slot_mouse_scrollup (self, *args, **kw):
+        r"""
+            raises tkRAD event instead;
+        """
+
+        self.events.raise_event("MouseWheelScrollUp", *args, **kw)
+
+    # end def
+
+
+
+    def _slot_open_item (self, *args, **kw):
+        r"""
+            tries to open a game editor executable, first looks
+            locally then looks on the web for dnl/installing if
+            missing locally;
+        """
+
+        try:
+
+            self.__open_item(kw.get("xml_element"))
+
+        except Exception as e:
+
+            MB.showerror(
+
+                _("Error"),
+
+                _(
+                    "An error has occurred while trying "
+
+                    "to open an item:\n{error}"
+
+                ).format(error=str(e)),
+
+                parent=self,
+            )
+
+            # FIXME: report error to remote DB?
+            #~ apport(...???...)
+
+        # end try
+
+    # end def
+
+
 
     def init_widget (self, **kw):
         r"""
@@ -81,74 +216,5 @@ class MainWindow (tkRAD.RADXMLMainWindow):
         self.mainframe.game_section_browser.show("local_sections")
 
     # end def
-
-
-
-    def _slot_mouse_scrolldown (self, *args, **kw):
-        r"""
-            raises tkRAD event instead;
-        """
-
-        self.events.raise_event("MouseWheelScrollDown", *args, **kw)
-
-    # end def
-
-
-
-    def _slot_mouse_scrollup (self, *args, **kw):
-        r"""
-            raises tkRAD event instead;
-        """
-
-        self.events.raise_event("MouseWheelScrollUp", *args, **kw)
-
-    # end def
-
-
-
-    def _slot_open_item (self, *args, **kw):
-        r"""
-            tries to open a game editor executable, first looks
-            locally then looks on the web for dnl/installing if
-            missing locally;
-        """
-
-        print("MainWindow:_slot_open_item() called", args, kw)
-
-        print("attrs.src:", kw.get("attrs").get("src"))
-
-        print("xml_element.src:", kw.get("xml_element").get("src"))
-
-    # end def
-
-
-
-    def _show_about_dialog (self, *args, **kw):
-        r"""
-            tkRAD event slot method;
-            shows off 'About...' dialog box;
-        """
-
-        # show 'About...' dialog box
-
-        MB.showinfo(
-
-            _("About"),
-
-            "{name} v{version}\n\n"
-
-            "{description}\n\n"
-
-            "Copyright {copyright}\n\n"
-
-            "{license_short}"
-
-            .format(**self.app.APP),
-
-            parent=self,
-        )
-
-    # end def
-
 
 # end class MainWindow
