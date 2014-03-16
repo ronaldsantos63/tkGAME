@@ -54,7 +54,22 @@ class MainWindow (tkRAD.RADXMLMainWindow):
 
         _src = item_attrs["src"]
 
-        print("downloading package:", _src)
+        # got remote zip archive?
+
+        if tools.is_pstr(_src):
+
+            print("downloading package:", _src)
+
+        else:
+
+            # error
+
+            raise ValueError(
+
+                _("no remote ZIP archive to download")
+            )
+
+        # end if - _src
 
     # end def
 
@@ -258,7 +273,7 @@ class MainWindow (tkRAD.RADXMLMainWindow):
                 _(
                     "An error has occurred while trying "
 
-                    "to open an item:\n{error}"
+                    "to open an item:\n\n{error}"
 
                 ).format(error=str(e)),
 
