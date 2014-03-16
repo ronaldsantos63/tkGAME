@@ -204,13 +204,13 @@ class GameFileDownloadDialog (TK.Toplevel):
 
         super().__init__()
 
-        # transient parent inits
-
-        self.transient(master)
-
         # WM protocol inits
 
         self.protocol("WM_DELETE_WINDOW", self._close_dialog)
+
+        # transient parent inits
+
+        self.transient(master)
 
         # other inits
 
@@ -223,6 +223,18 @@ class GameFileDownloadDialog (TK.Toplevel):
         self.__download_box = GameFileDownloadBox(self, **kw)
 
         self.__download_box.pack()
+
+        # making a modal dialog window
+
+        # notice: must put it at the end of __init__ or when show()
+
+        if master:
+
+            self.grab_set()
+
+            master.wait_window(self)
+
+        # end if
 
     # end def
 
