@@ -26,9 +26,13 @@
 
 # lib imports
 
+import os.path as OP
+
 from tkinter import messagebox as MB
 
 import tkRAD
+
+from tkRAD.core import path as P
 
 from tkRAD.core import tools
 
@@ -38,6 +42,83 @@ class MainWindow (tkRAD.RADXMLMainWindow):
     r"""
         Gabe application's main window class;
     """
+
+    def __get_item_attrs (self, xml_element):
+        r"""
+            trying to retrieve item's specific XML attributes;
+        """
+
+        # get attrs dict
+
+        _attrs = {
+
+            # main: python executable
+
+            "main": tools.choose_str(
+
+                xml_element.get("main"),
+
+                "main.py",
+            ),
+
+            # package: game/editor own directory
+
+            "package": tools.choose_str(
+
+                xml_element.get("package"),
+
+                "misc",
+            ),
+
+            # src: remote zip archive
+
+            "src": tools.choose_str(
+
+                xml_element.get("src"),
+            ),
+
+            # type: 'game' or 'editor'
+
+            "type": tools.choose_str(
+
+                xml_element.get("type"),
+
+                "game",
+            ),
+
+            # target directories
+
+            "dirs": {
+
+                "game": "^/games",
+
+                "editor": "^/editors",
+            },
+
+        } # end of attrs dict
+
+        # build package dir path
+
+        _attrs["package_dir"] = P.normalize(
+
+            OP.join(
+
+                _attrs["dirs"].get(_attrs["type"]),
+
+                _attrs["package"],
+            )
+        )
+
+        # build executable script path
+
+        _attrs["exe_path"] = OP.join(
+
+            _attrs["package_dir"], _attrs["main"]
+        )
+
+        return _attrs
+
+    # end def
 
 
 
@@ -52,32 +133,25 @@ class MainWindow (tkRAD.RADXMLMainWindow):
 
             # inits
 
-            # main: python executable
+            _attrs = self.__get_item_attrs(xml_element)
 
-            _main = tools.choose_str(
+            # rebuild package dir path
 
-                xml_element.get("main"),
+            _dir =
 
-                "main.py",
-            )
+            # package installed?
 
-            # src: remote zip archive
+            if OP.is_dir(_dir):
 
-            _src = tools.choose_str(
+                # try to run "main" executable
 
-                xml_element.get("src"),
-            )
+                self.__run_script(OP.join(_dir, _attrs["main"]))
 
-            # type: 'game' or 'editor'
+            else:
 
-            _type = tools.choose_str(
+                # ask for download
 
-                xml_element.get("type"),
-
-                "game",
-            )
-
-            print("main:", _main, "src:", _src, "type:", _type)
+                self.__download_package(xml_element)
 
         # end if - xml_element
 

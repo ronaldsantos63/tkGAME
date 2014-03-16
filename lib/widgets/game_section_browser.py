@@ -191,6 +191,7 @@ class GameSectionView (GameScrollView):
 
             "command": "._open_item",
             "main": "main.py",
+            "package": "misc",
             "src": None,
             "text": "Game",
             "type": "game",
@@ -631,6 +632,36 @@ class GameSectionView (GameScrollView):
         # parsed attribute inits
 
         self._tkRAD_any_value_support(attribute, **kw)  # -----------------FIXME?
+
+    # end def
+
+
+
+    def _parse_attr_package (self, attribute, **kw):
+        r"""
+            item own directory attribute;
+
+            no return value (void);
+        """
+
+        # param controls
+
+        if self._is_new(attribute):
+
+            # parsed attribute inits
+
+            attribute.value = tools.choose_str(
+
+                tools.normalize_id(attribute.value),
+
+                "misc",
+            )
+
+            attribute.update_xml_element()
+
+            attribute.parsed = True
+
+        # end if
 
     # end def
 
