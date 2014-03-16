@@ -16,7 +16,15 @@
 
 * in `tkGAME.src.MainWindow`:
 
-    * implementing `_slot_open_item()`;
+    * implementing `_slot_open_item()` and affiliates;
+
+    * added
+    new `__download_package()`,
+    new `__get_item_attrs()`,
+    new `__open_item()`,
+    new `__run_script()`:
+
+        * almost fully implemented;
 
 
 ## $ 2014-03-15 RS $
@@ -30,7 +38,7 @@ inherits new `GameScrollView` class;
 
 * making some more tests;
 
-* **Gabe** is slowly becoming some kind of interesting stuff... :)
+* **Gabe** is slowly becoming some kind of interesting stuff;
 
 
 ## $ 2014-03-14 RS $

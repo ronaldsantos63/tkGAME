@@ -43,6 +43,23 @@ class MainWindow (tkRAD.RADXMLMainWindow):
         Gabe application's main window class;
     """
 
+
+
+    def __download_package (self, item_attrs):
+        r"""
+             tries to download zip archive and install it locally;
+        """
+
+        # inits
+
+        _src = item_attrs["src"]
+
+        print("downloading package:", _src)
+
+    # end def
+
+
+
     def __get_item_attrs (self, xml_element):
         r"""
             trying to retrieve item's specific XML attributes;
@@ -135,25 +152,36 @@ class MainWindow (tkRAD.RADXMLMainWindow):
 
             _attrs = self.__get_item_attrs(xml_element)
 
-            # rebuild package dir path
-
-            _dir =
-
             # package installed?
 
-            if OP.is_dir(_dir):
+            if OP.isdir(_attrs["package_dir"]):
 
                 # try to run "main" executable
 
-                self.__run_script(OP.join(_dir, _attrs["main"]))
+                self.__run_script(_attrs)
 
             else:
 
                 # ask for download
 
-                self.__download_package(xml_element)
+                self.__download_package(_attrs)
 
         # end if - xml_element
+
+    # end def
+
+
+
+    def __run_script (self, item_attrs):
+        r"""
+             tries to launch executable Python script;
+        """
+
+        # inits
+
+        _exe_path = item_attrs["exe_path"]
+
+        print("running script:", _exe_path)
 
     # end def
 
@@ -239,6 +267,7 @@ class MainWindow (tkRAD.RADXMLMainWindow):
 
             # FIXME: report error to remote DB?
             #~ apport(...???...)
+            raise
 
         # end try
 
