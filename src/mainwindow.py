@@ -36,6 +36,8 @@ from tkRAD.core import path as P
 
 from tkRAD.core import tools
 
+from lib.widgets import game_file_download_box as FDB
+
 
 
 class MainWindow (tkRAD.RADXMLMainWindow):
@@ -58,7 +60,45 @@ class MainWindow (tkRAD.RADXMLMainWindow):
 
         if tools.is_pstr(_src):
 
-            print("downloading package:", _src)
+            # ask user for downloading zip archive
+
+            _response = MB.askquestion(
+
+                _("Download"),
+
+                _(
+                    "Package is missing locally.\n"
+                    "Download it from the web?"
+                ),
+
+                parent=self,
+            )
+
+            # user is OK to download package
+
+            if _response == MB.YES:
+
+                # download in temporary file
+
+                _tempfile = FDB.download(url=_src, tk_owner=self)
+
+                # TODO: verify ZIP archive
+
+                # TODO: unzip archive into target package dir
+
+                # TODO: run script if OK
+
+            else:
+
+                MB.showinfo(
+                    _("Info"),
+
+                    _("Package download aborted."),
+
+                    parent=self,
+                )
+
+            # end if
 
         else:
 

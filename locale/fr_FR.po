@@ -1,4 +1,6 @@
 
+# Menus
+
 msgid ""
 "_File"
 msgstr""
@@ -54,7 +56,19 @@ msgid ""
 msgstr""
 "Question"
 
+msgid ""
+"OK"
+msgstr""
+"OK"
+
+msgid ""
+"Cancel"
+msgstr""
+"Annuler"
+
+
 # APP description
+
 msgid ""
 "Gabe - Game Browser"
 msgstr""
@@ -111,6 +125,61 @@ msgid ""
 msgstr""
 "Site web miroir atteint. OK."
 
+msgid ""
+"Download"
+msgstr""
+"Téléchargement"
+
+msgid ""
+"Downloading:"
+msgstr""
+"Téléchargement de :"
+
+msgid ""
+"Package is missing locally.\n"
+"Download it from the web?"
+msgstr""
+"Le logiciel n'est pas installé.\n"
+"Le télécharger depuis internet ?"
+
+msgid ""
+"Info"
+msgstr""
+"Information"
+
+msgid ""
+"Package download aborted."
+msgstr""
+"Téléchargement annulé."
+
+msgid ""
+"no remote ZIP archive to download"
+msgstr""
+"aucune archive ZIP à télécharger"
+
+msgid ""
+"An error has occurred while trying "
+"to open an item:\n\n{error}"
+msgstr""
+"Une erreur est survenue :\n\n{error}"
+
+msgid ""
+""
+msgstr""
+""
+
+msgid ""
+""
+msgstr""
+""
+
+msgid ""
+""
+msgstr""
+""
+
+
+
 # GAME sections
 
 msgid ""
@@ -152,11 +221,6 @@ msgid ""
 "Scrolling Arcade Games"
 msgstr""
 "Jeux genre Super Mario Bros(tm)"
-
-msgid ""
-""
-msgstr""
-""
 
 msgid ""
 ""

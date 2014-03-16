@@ -14,6 +14,13 @@
 
 ## $ 2014-03-16 RS $
 
+* maybe should I create `RADDialogWindow` + `RADXMLDialogWindow`
+classes with modal features? Dialogs are essential to apps, in fact.
+
+* added new `tkGAME.lib.widgets.game_file_download_box`:
+
+    * filled up many, many code...
+
 * in `tkGAME.src.MainWindow`:
 
     * implementing `_slot_open_item()` and affiliates;

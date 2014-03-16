@@ -3,6 +3,8 @@
 <!--
     tkGAME - all-in-one Game library for Tkinter
 
+    Gabe - Game Browser
+
     Copyright (c) 2014+ Raphaël Seban <motus@laposte.net>
 
     This program is free software: you can redistribute it and/or
@@ -26,15 +28,6 @@
         id="section_browser"
         import="lib.widgets.game_section_browser"
     />
-
-<!--
-    <ttklabel
-        text="Please, select a game editor:"
-        anchor="center"
-        layout="pack"
-        resizable="width"
-    />
--->
 
     <widget
         name="game_section_browser"
