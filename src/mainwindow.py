@@ -80,7 +80,12 @@ class MainWindow (tkRAD.RADXMLMainWindow):
 
                 # download in temporary file
 
-                _tempfile = FDB.download(url=_src, tk_owner=self)
+                _tempfile = FDB.download(
+
+                    url=_src, to_file="toto", tk_owner=self
+                )
+
+                print("mainwindow::temp_file:", _tempfile)
 
                 # TODO: verify ZIP archive
 

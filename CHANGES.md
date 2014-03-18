@@ -14,6 +14,12 @@
 
 ## $ 2014-03-18 RS $
 
+* in `tkGAME.lib.widgets.game_file_download_box`:
+
+    * in `GameFileDownloadDialog`:
+
+        * upgraded code along
+        `tkRAD.widgets.rad_dialog.RADButtonsDialog` class def;
 
 
 ## $ 2014-03-16 RS $

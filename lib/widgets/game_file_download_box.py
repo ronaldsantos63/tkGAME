@@ -34,6 +34,8 @@ import tkRAD
 
 from tkRAD.core import tools
 
+from tkRAD.core import path as P
+
 import tkRAD.widgets.rad_dialog as DLG
 
 
@@ -171,13 +173,39 @@ class GameFileDownloadBox (tkRAD.RADXMLFrame):
 
         print("download: FIXME!")
 
+        # param controls
+
+        if not tools.is_pstr(url):
+
+            raise TypeError(
+
+                _("expected plain string of chars in URL parameter.")
+            )
+
+            return None
+
+        # end if
+
+        if tools.is_pstr(to_file):
+
+            to_file = P.normalize(to_file)
+
+        # end if
+
+        # stop animations
+
         self.progressbar.stop()
 
         self.progressbar.configure(mode="determinate")
 
+        # display some info
+
         _cvar = self.get_stringvar("remote_url")
 
-        _cvar.set(str(url))
+        _cvar.set(P.shorten_path(url, limit=64))
+
+        # TODO download process
+        #
 
         return to_file
 
@@ -249,8 +277,6 @@ class GameFileDownloadDialog (DLG.RADButtonsDialog):
         to_file = self.container.download(url, to_file)
 
         self.show()
-
-        print("to file:", to_file)
 
         return to_file
 
