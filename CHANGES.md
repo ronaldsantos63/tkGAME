@@ -12,6 +12,10 @@
 # CHANGELOG
 
 
+## $ 2014-03-18 RS $
+
+
+
 ## $ 2014-03-16 RS $
 
 * maybe should I create `RADDialogWindow` + `RADXMLDialogWindow`

@@ -34,7 +34,7 @@ import tkRAD
 
 from tkRAD.core import tools
 
-#~ import tkRAD.widgets.rad_dialog_window as DLG
+import tkRAD.widgets.rad_dialog as DLG
 
 
 
@@ -44,6 +44,8 @@ def download (url, to_file=None, tk_owner=None, **kw):
     r"""
         tries to download file set in @url, put it in @to_file and
         shows progressbar in dialog box;
+
+        returns target file path;
     """
 
     # only a subcomponent?
@@ -54,6 +56,8 @@ def download (url, to_file=None, tk_owner=None, **kw):
 
         _box = GameFileDownloadBox(tk_owner, **kw)
 
+        return _box.download(url, to_file)
+
     # must show in dialog window
 
     else:
@@ -62,15 +66,15 @@ def download (url, to_file=None, tk_owner=None, **kw):
 
         _dlg = GameFileDownloadDialog(tk_owner, **kw)
 
-        # get file download box
-
-        _box = _dlg.get_download_box()
+        return _dlg.download(url, to_file)
 
     # end if
 
-    return _box.download(url, to_file)
-
 # end def
+
+
+
+# ===========================   CLASS DEF   ============================
 
 
 
@@ -119,6 +123,7 @@ class GameFileDownloadBox (tkRAD.RADXMLFrame):
                         layout_options="row=0, column=1"
                     />
                     <ttkbutton
+                        name="button"
                         text="Cancel"
                         command="@GameFileDownloadBoxCancel"
                         layout="grid"
@@ -141,17 +146,11 @@ class GameFileDownloadBox (tkRAD.RADXMLFrame):
 
         self.xml_build(_source)
 
-        self.configure(padding="5px")
-
-        _cvar = self.get_stringvar("remote_url")
-
-        _cvar.set("say captain, say what, say captain, say what, say captain, say what you want?")
-
         # make some animations
 
         self.progressbar.start()
 
-        # connecting people :)
+        # connecting people
 
         self.events.connect(
 
@@ -172,6 +171,14 @@ class GameFileDownloadBox (tkRAD.RADXMLFrame):
 
         print("download: FIXME!")
 
+        self.progressbar.stop()
+
+        self.progressbar.configure(mode="determinate")
+
+        _cvar = self.get_stringvar("remote_url")
+
+        _cvar.set(str(url))
+
         return to_file
 
     # end def
@@ -185,77 +192,67 @@ class GameFileDownloadBox (tkRAD.RADXMLFrame):
 
         print("cancel download asked!")
 
+        self.button.configure(text=_("Resume"))
+
     # end def
+
 
 # end class GameFileDownloadBox
 
 
 
-# FIXME: should be a tkRAD.widgets.RADDialogWindow
+# ===========================   CLASS DEF   ============================
 
-class GameFileDownloadDialog (TK.Toplevel):
+
+
+class GameFileDownloadDialog (DLG.RADButtonsDialog):
     r"""
         Web remote file downloader dialog window class;
     """
 
-    def __init__ (self, master=None, **kw):
 
-        # super class inits
 
-        super().__init__()
+    def _slot_button_abandon (self, tk_event=None, *args, **kw):
+        r"""
+            tries to quit dialog;
+        """
 
-        # WM protocol inits
-
-        self.protocol("WM_DELETE_WINDOW", self._close_dialog)
-
-        # transient parent inits
-
-        self.transient(master)
-
-        # other inits
-
-        self.resizable(width=False, height=False)
-
-        self.minsize(width=20, height=20)
-
-        # widget inits
-
-        self.__download_box = GameFileDownloadBox(self, **kw)
-
-        self.__download_box.pack()
-
-        # making a modal dialog window
-
-        # notice: must put it at the end of __init__ or when show()
-
-        if master:
-
-            self.grab_set()
-
-            master.wait_window(self)
-
-        # end if
+        self._slot_quit_dialog(tk_event, *args, **kw)
 
     # end def
 
 
 
-    def _close_dialog (self, *args, **kw):
-
-        print("close dialog!")
-
-        self.destroy()
-
-    # end if
-
-
-
-    def get_download_box (self):
+    def init_widget (self, **kw):
         r"""
-            returns private file download box subcomponent;
+            widget main inits;
         """
 
-        return self.__download_box
+        self.set_contents(GameFileDownloadBox(self, **kw))
+
+        self.set_buttons("Abandon")
+
+    # end def
+
+
+
+    def download (self, url, to_file=None):
+        r"""
+            tries to download file from @url into @to_file or into a
+            temp file if omitted;
+
+            returns target file path;
+        """
+
+        self._slot_pending_task_on()
+
+        to_file = self.container.download(url, to_file)
+
+        self.show()
+
+        print("to file:", to_file)
+
+        return to_file
 
     # end def
 

@@ -439,6 +439,8 @@ class RADDialog (RW.RADWidgetBase, TK.Toplevel):
             no return value (void);
         """
 
+        print("slot button cancel")
+
         # cancel pending tasks (hook method)
 
         if self.cancel_dialog(tk_event, *args, **kw):
@@ -504,6 +506,8 @@ class RADDialog (RW.RADWidgetBase, TK.Toplevel):
             makes some controls before quitting this dialog window;
         """
 
+        print("slot quit dialog")
+
         # got some pending operations?
 
         if self.get_pending_task():
@@ -521,7 +525,9 @@ class RADDialog (RW.RADWidgetBase, TK.Toplevel):
                 parent=self,
             )
 
-            if _response == TK.YES:
+            print(_response, MB.YES, MB.NO)
+
+            if _response == MB.YES:
 
                 self._slot_button_cancel()
 
