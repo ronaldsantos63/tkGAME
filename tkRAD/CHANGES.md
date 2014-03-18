@@ -16,6 +16,12 @@
 
 ### $ 2014-03-18 RS $
 
+* in `tkRAD.core.path`:
+
+    * added new `shorten_path()`:
+
+        * now fully implemented;
+
 * thought of **tkRAD v1.5** new release name: maybe **Sugar Extra**?
 
 * in `tkRAD/widgets/rad_dialog.py`:
@@ -23,6 +29,10 @@
     * added new class `RADButtonsDialog`:
 
         * now fully implemented;
+
+    * in `RADDialog._slot_quit_dialog()`:
+
+        * fixed bug: _response is `MB.YES` *NOT* `TK.YES`;
 
 example:
 
