@@ -158,26 +158,66 @@ msgstr""
 "aucune archive ZIP à télécharger"
 
 msgid ""
+"Error"
+msgstr""
+"Attention"
+
+msgid ""
 "An error has occurred while trying "
 "to open an item:\n\n{error}"
 msgstr""
 "Une erreur est survenue :\n\n{error}"
 
+
+# GameFileDownloadBox / RADDialog / RADButtonsDialog
+
 msgid ""
-""
+"expected plain string of chars in URL parameter."
 msgstr""
-""
+"l'URL doit être une chaîne de caractères non vide."
+
+msgid ""
+"Resume"
+msgstr""
+"Reprendre"
+
+msgid ""
+"Caught exception"
+msgstr""
+"Erreur"
+
+msgid ""
+"An exception has occurred:\n\n{msg}"
+msgstr""
+"Une erreur est survenue :\n\n{msg}"
+
+msgid ""
+"dialog's window state should be one of {slist}."
+msgstr""
+"l'état d'affichage de la fenêtre de dialogue "
+"doit figurer parmi {slist}."
+
+msgid ""
+"Please confirm"
+msgstr""
+"Veuillez confirmer"
+
+msgid ""
+"Some important tasks are still running.\n"
+"Should I try to cancel them?"
+msgstr""
+"Des opérations importantes sont en cours.\n"
+"Faut-il essayer de les annuler ?"
+
+msgid ""
+"unsupported window state '{w_state}'."
+msgstr""
+"l'état d'affichage '{w_state}' n'est pas pris en charge."
 
 msgid ""
 ""
 msgstr""
 ""
-
-msgid ""
-""
-msgstr""
-""
-
 
 
 # GAME sections

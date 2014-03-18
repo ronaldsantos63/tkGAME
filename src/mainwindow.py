@@ -82,7 +82,7 @@ class MainWindow (tkRAD.RADXMLMainWindow):
 
                 _tempfile = FDB.download(
 
-                    url=_src, to_file="toto", tk_owner=self
+                    url=_src, to_file="^/games/toto", tk_owner=self
                 )
 
                 print("mainwindow::temp_file:", _tempfile)
