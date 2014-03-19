@@ -25,15 +25,12 @@
 # lib imports
 
 import os.path as OP
-
 import urllib.request as WEB
 
 import tkinter as TK
 
 import tkRAD
-
 from tkRAD.core import tools
-
 from tkRAD.core import path as P
 
 import tkRAD.widgets.rad_dialog as DLG
@@ -56,9 +53,7 @@ def download (url, to_file=None, tk_owner=None, **kw):
 
         # get file download box
 
-        _box = GameDownloadBox(tk_owner, **kw)
-
-        return _box.download(url, to_file)
+        return GameDownloadBox(tk_owner, **kw).download(url, to_file)
 
     # must show in dialog window
 
@@ -66,9 +61,7 @@ def download (url, to_file=None, tk_owner=None, **kw):
 
         # dialog window inits
 
-        _dlg = GameDownloadDialog(tk_owner, **kw)
-
-        return _dlg.download(url, to_file)
+        return GameDownloadDialog(tk_owner, **kw).download(url, to_file)
 
     # end if
 
@@ -85,75 +78,127 @@ class GameDownloadBox (tkRAD.RADXMLFrame):
         Web remote file downloader dialog box class;
     """
 
-    def init_widget (self, **kw):
+
+
+    def _cancel_download (self, tk_event=None, *args, **kw):
         r"""
-            widget main inits;
+            cancelling pending download operation;
         """
 
-        # XML source code inits
+        print("cancel download asked!", tk_event, args, kw)
 
-        _xml = """
-            <tkwidget>
-                <ttklabel
-                    text="Downloading:"
-                    layout="pack"
-                    resizable="width"
-                />
-                <ttklabel
-                    textvariable="remote_url"
-                    padding="0px 3px"
-                    layout="pack"
-                    resizable="width"
-                />
-                <ttkframe
-                    layout="pack"
-                    resizable="width"
-                >
-                    <ttkprogressbar
-                        name="progressbar"
-                        mode="indeterminate"
-                        orient="horizontal"
-                        layout="grid"
-                        layout_options="row=0, column=0"
-                        resizable="width"
-                    />
-                    <ttkframe
-                        width="5"
-                        layout="grid"
-                        layout_options="row=0, column=1"
-                    />
-                    <ttkbutton
-                        name="button"
-                        layout="grid"
-                        layout_options="row=0, column=2"
-                    />
-                </ttkframe>
-            </tkwidget>
+        # reset button
+
+        self.button.configure(
+
+            text=_("Resume"), command=self._resume_download,
+        )
+
+        # TODO: cancellation
+
+        # ================================================================ FIXME
+
+        # raise event once all done OK
+
+        self.events.raise_event(
+
+            "GameDownloadBoxCancelled", widget=self,
+        )
+
+    # end def
+
+
+
+    def _resume_download (self, tk_event=None, *args, **kw):
+        r"""
+            resuming interrupted download process;
         """
 
-        # build GUI
+        print("resume download", tk_event, args, kw)
 
-        _source = tools.choose_str(
+        # reset button
 
-            kw.get("filename"),
+        self.button.configure(
 
-            kw.get("xml"),
-
-            _xml,
+            text=_("Cancel"), command=self._cancel_download,
         )
 
-        self.xml_build(_source)
+        # raise event BEFORE starting up
 
-        # make some animations
+        self.events.raise_event(
 
-        self.progressbar.start()
-
-        # connecting people
-
-        self.events.connect(
-
-            "GameDownloadBoxCancel", self._cancel_download
+            "GameDownloadBoxResumingNow", widget=self,
         )
+
+        # TODO: resuming download op
+
+        # ================================================================ FIXME
+
+        _to_file, _headers = WEB.urlretrieve(
+
+            url=self.source_url,
+
+            filename=self.target_path,
+
+            reporthook=self._update_progressbar,
+        )
+
+    # end def
+
+
+
+    def _update_progressbar (self, block_count, block_size, file_size):
+        r"""
+            updates progressbar value along params;
+        """
+
+        # param inits
+
+        _bcount = tools.ensure_int(block_count)
+
+        _bsize = tools.ensure_int(block_size)
+
+        _fsize = tools.ensure_int(file_size)
+
+        # do we know file size?
+
+        if _fsize > 0:
+
+            # update options
+
+            _options = dict(
+
+                mode="determinate",
+
+                maximum=_fsize,
+
+                value=_bcount * _bsize,
+            )
+
+            self.progressbar.stop()
+
+        # indeterminate file size
+
+        else:
+
+            # update options
+
+            _options = dict(
+
+                mode="indeterminate",
+
+                maximum=10,
+
+                value=0,
+            )
+
+            self.progressbar.start()
+
+        # end if
+
+        # update progressbar
+
+        self.progressbar.configure(orient="horizontal", **_options)
 
     # end def
 
@@ -186,17 +231,15 @@ class GameDownloadBox (tkRAD.RADXMLFrame):
 
         # end if
 
-        # stop animations
-
-        self.progressbar.stop()
-
-        self.progressbar.configure(mode="determinate")
-
         # display some info
 
         _cvar = self.get_stringvar("remote_url")
 
         _cvar.set(P.shorten_path(url, limit=64))
+
+        # update display
+
+        self.update_idletasks()
 
         # process inits
 
@@ -204,11 +247,9 @@ class GameDownloadBox (tkRAD.RADXMLFrame):
 
         self.source_url = url
 
-        # ===================================================================FIXME
-
         # 'resume' download from start
 
-        self._resume_download()
+        self.after(10, self._resume_download)
 
         return self.target_path
 
@@ -216,47 +257,63 @@ class GameDownloadBox (tkRAD.RADXMLFrame):
 
 
 
-    def _resume_download (self, tk_event=None, *args, **kw):
+    def init_widget (self, **kw):
         r"""
-            resuming interrupted download process;
+            widget main inits;
         """
 
-        print("resume download", tk_event, args, kw)
+        # internal XML source code (overridable)
 
-        self.button.configure(
-
-            text=_("Cancel"),
-
-            command=self._cancel_download,
-        )
-
-        self.events.raise_event(
-
-            "GameDownloadBoxResumingNow", widget=self,
-        )
-
-    # end def
-
-
-
-    def _cancel_download (self, tk_event=None, *args, **kw):
-        r"""
-            cancelling pending download operation;
+        _xml = """
+            <tkwidget>
+                <ttklabel
+                    text="Downloading:"
+                    layout="pack"
+                    resizable="width"
+                />
+                <ttklabel
+                    textvariable="remote_url"
+                    padding="0px 3px"
+                    layout="pack"
+                    resizable="width"
+                />
+                <ttkframe
+                    layout="pack"
+                    resizable="width"
+                >
+                    <ttkprogressbar
+                        name="progressbar"
+                        layout="grid"
+                        layout_options="row=0, column=0"
+                        resizable="width"
+                    />
+                    <ttkframe
+                        width="5"
+                        layout="grid"
+                        layout_options="row=0, column=1"
+                    />
+                    <ttkbutton
+                        name="button"
+                        layout="grid"
+                        layout_options="row=0, column=2"
+                    />
+                </ttkframe>
+            </tkwidget>
         """
 
-        print("cancel download asked!", tk_event, args, kw)
+        # build GUI
 
-        self.button.configure(
+        self.xml_build(
 
-            text=_("Resume"),
+            tools.choose_str(
 
-            command=self._resume_download,
+                kw.get("filename"), kw.get("xml"), _xml,
+            )
         )
 
-        self.events.raise_event(
+        # force progressbar to be horizontal
 
-            "GameDownloadBoxCancellingNow", widget=self,
-        )
+        self._update_progressbar(0, 0, 0)
 
     # end def
 
@@ -287,6 +344,24 @@ class GameDownloadDialog (DLG.RADButtonsDialog):
 
 
 
+    def download (self, url, to_file=None):
+        r"""
+            tries to download file from @url into @to_file or into a
+            temp file if omitted;
+
+            returns target file path;
+        """
+
+        to_file = self.container.download(url, to_file)
+
+        self.show()
+
+        return to_file
+
+    # end def
+
+
+
     def init_widget (self, **kw):
         r"""
             widget main inits;
@@ -296,25 +371,15 @@ class GameDownloadDialog (DLG.RADButtonsDialog):
 
         self.set_buttons("Abandon")
 
-    # end def
+        self.events.connect_dict(
+            {
+                "GameDownloadBoxResumingNow":
+                    self._slot_pending_task_on,
 
-
-
-    def download (self, url, to_file=None):
-        r"""
-            tries to download file from @url into @to_file or into a
-            temp file if omitted;
-
-            returns target file path;
-        """
-
-        self._slot_pending_task_on()
-
-        to_file = self.container.download(url, to_file)
-
-        self.show()
-
-        return to_file
+                "GameDownloadBoxCancelled":
+                    self._slot_pending_task_off,
+            }
+        )
 
     # end def
 
