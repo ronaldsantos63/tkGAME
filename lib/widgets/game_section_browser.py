@@ -870,7 +870,7 @@ class GameSectionView (GameScrollView):
 
             try:
 
-                _response = WEB.urlopen(_url)
+                _response = WEB.urlopen(_url, data=None, timeout=5)
 
             except:
 

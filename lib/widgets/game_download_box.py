@@ -26,6 +26,7 @@
 
 import os.path as OP
 import urllib.request as WEB
+import concurrent.futures as ASYNC
 
 import tkinter as TK
 
@@ -85,62 +86,15 @@ class GameDownloadBox (tkRAD.RADXMLFrame):
             cancelling pending download operation;
         """
 
-        print("cancel download asked!", tk_event, args, kw)
+        # try to cancel thread
 
-        # reset button
+        self.thread.cancel()
 
-        self.button.configure(
-
-            text=_("Resume"), command=self._resume_download,
-        )
-
-        # TODO: cancellation
-
-        # ================================================================ FIXME
-
-        # raise event once all done OK
+        # cancelled OK
 
         self.events.raise_event(
 
             "GameDownloadBoxCancelled", widget=self,
-        )
-
-    # end def
-
-
-
-    def _resume_download (self, tk_event=None, *args, **kw):
-        r"""
-            resuming interrupted download process;
-        """
-
-        print("resume download", tk_event, args, kw)
-
-        # reset button
-
-        self.button.configure(
-
-            text=_("Cancel"), command=self._cancel_download,
-        )
-
-        # raise event BEFORE starting up
-
-        self.events.raise_event(
-
-            "GameDownloadBoxResumingNow", widget=self,
-        )
-
-        # TODO: resuming download op
-
-        # ================================================================ FIXME
-
-        _to_file, _headers = WEB.urlretrieve(
-
-            url=self.source_url,
-
-            filename=self.target_path,
-
-            reporthook=self._update_progressbar,
         )
 
     # end def
@@ -233,25 +187,66 @@ class GameDownloadBox (tkRAD.RADXMLFrame):
 
         # display some info
 
-        _cvar = self.get_stringvar("remote_url")
+        self.label_url.configure(
 
-        _cvar.set(P.shorten_path(url, limit=64))
+            text=P.shorten_path(url, limit=64),
+        )
 
         # update display
 
         self.update_idletasks()
 
-        # process inits
+        # clean up temp files
 
-        self.target_path = to_file
+        WEB.urlcleanup()
 
-        self.source_url = url
+        # set async procedure
 
-        # 'resume' download from start
+        with ASYNC.ThreadPoolExecutor(max_workers=1) as executor:
 
-        self.after(10, self._resume_download)
+            # back to the future!
 
-        return self.target_path
+            self.thread = executor.submit(
+
+                WEB.urlretrieve,
+
+                url,
+
+                filename=to_file,
+
+                reporthook=self._update_progressbar,
+            )
+
+            # get return values
+
+            try:
+
+                # return values for WEB.urlretrieve()
+
+                to_file, _headers = self.thread.result()
+
+            except Exception as e:
+
+                # reset file path
+
+                to_file = None
+
+                # display some info
+
+                self.label_url.configure(
+
+                    text="Error: {}".format(str(e)),
+
+                    foreground="red",
+                )
+
+                raise
+
+            # end try
+
+        # end with
+
+        return to_file
 
     # end def
 
@@ -272,7 +267,7 @@ class GameDownloadBox (tkRAD.RADXMLFrame):
                     resizable="width"
                 />
                 <ttklabel
-                    textvariable="remote_url"
+                    name="label_url"
                     padding="0px 3px"
                     layout="pack"
                     resizable="width"
@@ -293,7 +288,8 @@ class GameDownloadBox (tkRAD.RADXMLFrame):
                         layout_options="row=0, column=1"
                     />
                     <ttkbutton
-                        name="button"
+                        text="Cancel"
+                        command="@GameDownloadBoxCancel"
                         layout="grid"
                         layout_options="row=0, column=2"
                     />
@@ -315,6 +311,13 @@ class GameDownloadBox (tkRAD.RADXMLFrame):
 
         self._update_progressbar(0, 0, 0)
 
+        # connecting people
+
+        self.events.connect(
+
+            "GameDownloadBoxCancel", self._cancel_download
+        )
+
     # end def
 
 
@@ -326,17 +329,19 @@ class GameDownloadBox (tkRAD.RADXMLFrame):
 
 
 
-class GameDownloadDialog (DLG.RADButtonsDialog):
+class GameDownloadDialog (DLG.RADDialog):
     r"""
         Web remote file downloader dialog window class;
     """
 
 
 
-    def _slot_button_abandon (self, tk_event=None, *args, **kw):
+    def _slot_download_cancelled (self, tk_event=None, *args, **kw):
         r"""
             tries to quit dialog;
         """
+
+        self._slot_pending_task_off()
 
         self._slot_quit_dialog(tk_event, *args, **kw)
 
@@ -369,16 +374,9 @@ class GameDownloadDialog (DLG.RADButtonsDialog):
 
         self.set_contents(GameDownloadBox(self, **kw))
 
-        self.set_buttons("Abandon")
+        self.events.connect(
 
-        self.events.connect_dict(
-            {
-                "GameDownloadBoxResumingNow":
-                    self._slot_pending_task_on,
-
-                "GameDownloadBoxCancelled":
-                    self._slot_pending_task_off,
-            }
+            "GameDownloadBoxCancelled", self._slot_download_cancelled
         )
 
     # end def

@@ -21,6 +21,14 @@
 * started implementing `GameDownloadBox.download()` probably with
 threading features;
 
+* @18:45 --> used `concurrent.futures.ThreadPoolExecutor()` async
+thread features + `urllib.request.urlretrieve()` web features:
+
+    * now implemented OK;
+
+* will soon have to test with real remote file to retrieve from the
+web (what about big ZIP archive?);
+
 
 ## $ 2014-03-18 RS $
 

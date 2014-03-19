@@ -177,9 +177,9 @@ msgstr""
 "l'URL doit être une chaîne de caractères non vide."
 
 msgid ""
-"Resume"
+"Abandon"
 msgstr""
-"Reprendre"
+"Abandonner"
 
 msgid ""
 "Caught exception"

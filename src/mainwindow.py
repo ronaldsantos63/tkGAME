@@ -103,7 +103,7 @@ class MainWindow (tkRAD.RADXMLMainWindow):
                     parent=self,
                 )
 
-            # end if
+            # end if - MB.response
 
         else:
 
