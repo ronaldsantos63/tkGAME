@@ -12,6 +12,16 @@
 # CHANGELOG
 
 
+## $ 2014-03-19 RS $
+
+* renamed `GameFileDownloadDialog` to `GameDownloadDialog`;
+
+* renamed `GameFileDownloadBox` to `GameDownloadBox`;
+
+* started implementing `GameDownloadBox.download()` probably with
+threading features;
+
+
 ## $ 2014-03-18 RS $
 
 * in `tkGAME.lib.widgets.game_file_download_box`:

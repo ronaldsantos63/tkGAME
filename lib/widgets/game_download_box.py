@@ -56,7 +56,7 @@ def download (url, to_file=None, tk_owner=None, **kw):
 
         # get file download box
 
-        _box = GameFileDownloadBox(tk_owner, **kw)
+        _box = GameDownloadBox(tk_owner, **kw)
 
         return _box.download(url, to_file)
 
@@ -66,7 +66,7 @@ def download (url, to_file=None, tk_owner=None, **kw):
 
         # dialog window inits
 
-        _dlg = GameFileDownloadDialog(tk_owner, **kw)
+        _dlg = GameDownloadDialog(tk_owner, **kw)
 
         return _dlg.download(url, to_file)
 
@@ -80,7 +80,7 @@ def download (url, to_file=None, tk_owner=None, **kw):
 
 
 
-class GameFileDownloadBox (tkRAD.RADXMLFrame):
+class GameDownloadBox (tkRAD.RADXMLFrame):
     r"""
         Web remote file downloader dialog box class;
     """
@@ -111,8 +111,6 @@ class GameFileDownloadBox (tkRAD.RADXMLFrame):
                 >
                     <ttkprogressbar
                         name="progressbar"
-                        length="5cm"
-                        maximum="10"
                         mode="indeterminate"
                         orient="horizontal"
                         layout="grid"
@@ -126,8 +124,6 @@ class GameFileDownloadBox (tkRAD.RADXMLFrame):
                     />
                     <ttkbutton
                         name="button"
-                        text="Cancel"
-                        command="@GameFileDownloadBoxCancel"
                         layout="grid"
                         layout_options="row=0, column=2"
                     />
@@ -156,7 +152,7 @@ class GameFileDownloadBox (tkRAD.RADXMLFrame):
 
         self.events.connect(
 
-            "GameFileDownloadBoxCancel", self._cancel_download
+            "GameDownloadBoxCancel", self._cancel_download
         )
 
     # end def
@@ -170,8 +166,6 @@ class GameFileDownloadBox (tkRAD.RADXMLFrame):
 
             returns target file path;
         """
-
-        print("download: FIXME!")
 
         # param controls
 
@@ -204,28 +198,70 @@ class GameFileDownloadBox (tkRAD.RADXMLFrame):
 
         _cvar.set(P.shorten_path(url, limit=64))
 
-        # TODO download process
-        #
+        # process inits
 
-        return to_file
+        self.target_path = to_file
+
+        self.source_url = url
+
+        # ===================================================================FIXME
+
+        # 'resume' download from start
+
+        self._resume_download()
+
+        return self.target_path
 
     # end def
 
 
 
-    def _cancel_download (self, *args, **kw):
+    def _resume_download (self, tk_event=None, *args, **kw):
+        r"""
+            resuming interrupted download process;
+        """
+
+        print("resume download", tk_event, args, kw)
+
+        self.button.configure(
+
+            text=_("Cancel"),
+
+            command=self._cancel_download,
+        )
+
+        self.events.raise_event(
+
+            "GameDownloadBoxResumingNow", widget=self,
+        )
+
+    # end def
+
+
+
+    def _cancel_download (self, tk_event=None, *args, **kw):
         r"""
             cancelling pending download operation;
         """
 
-        print("cancel download asked!")
+        print("cancel download asked!", tk_event, args, kw)
 
-        self.button.configure(text=_("Resume"))
+        self.button.configure(
+
+            text=_("Resume"),
+
+            command=self._resume_download,
+        )
+
+        self.events.raise_event(
+
+            "GameDownloadBoxCancellingNow", widget=self,
+        )
 
     # end def
 
 
-# end class GameFileDownloadBox
+# end class GameDownloadBox
 
 
 
@@ -233,7 +269,7 @@ class GameFileDownloadBox (tkRAD.RADXMLFrame):
 
 
 
-class GameFileDownloadDialog (DLG.RADButtonsDialog):
+class GameDownloadDialog (DLG.RADButtonsDialog):
     r"""
         Web remote file downloader dialog window class;
     """
@@ -256,7 +292,7 @@ class GameFileDownloadDialog (DLG.RADButtonsDialog):
             widget main inits;
         """
 
-        self.set_contents(GameFileDownloadBox(self, **kw))
+        self.set_contents(GameDownloadBox(self, **kw))
 
         self.set_buttons("Abandon")
 
@@ -283,4 +319,4 @@ class GameFileDownloadDialog (DLG.RADButtonsDialog):
     # end def
 
 
-# end class GameFileDownloadDialog
+# end class GameDownloadDialog

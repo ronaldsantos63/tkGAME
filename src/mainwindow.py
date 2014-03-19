@@ -36,7 +36,7 @@ from tkRAD.core import path as P
 
 from tkRAD.core import tools
 
-from lib.widgets import game_file_download_box as FDB
+import lib.widgets.game_download_box as DNL
 
 
 
@@ -80,7 +80,7 @@ class MainWindow (tkRAD.RADXMLMainWindow):
 
                 # download in temporary file
 
-                _tempfile = FDB.download(
+                _tempfile = DNL.download(
 
                     url=_src, to_file="^/games/toto", tk_owner=self
                 )
