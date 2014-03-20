@@ -26,7 +26,6 @@
 
 import os.path as OP
 import urllib.request as WEB
-import concurrent.futures as ASYNC
 
 import tkinter as TK
 
@@ -86,10 +85,6 @@ class GameDownloadBox (tkRAD.RADXMLFrame):
             cancelling pending download operation;
         """
 
-        # try to cancel thread
-
-        self.thread.cancel()
-
         # cancelled OK
 
         self.events.raise_event(
@@ -105,6 +100,8 @@ class GameDownloadBox (tkRAD.RADXMLFrame):
         r"""
             updates progressbar value along params;
         """
+
+        print("update progressbar:", block_count, block_size, file_size)
 
         # param inits
 
@@ -194,57 +191,13 @@ class GameDownloadBox (tkRAD.RADXMLFrame):
 
         # update display
 
-        self.update_idletasks()
+        #~ self.update_idletasks()
 
         # clean up temp files
 
         WEB.urlcleanup()
 
-        # set async procedure
-
-        with ASYNC.ThreadPoolExecutor(max_workers=1) as executor:
-
-            # back to the future!
-
-            self.thread = executor.submit(
-
-                WEB.urlretrieve,
-
-                url,
-
-                filename=to_file,
-
-                reporthook=self._update_progressbar,
-            )
-
-            # get return values
-
-            try:
-
-                # return values for WEB.urlretrieve()
-
-                to_file, _headers = self.thread.result()
-
-            except Exception as e:
-
-                # reset file path
-
-                to_file = None
-
-                # display some info
-
-                self.label_url.configure(
-
-                    text="Error: {}".format(str(e)),
-
-                    foreground="red",
-                )
-
-                raise
-
-            # end try
-
-        # end with
+        to_file, _headers = WEB.urlretrieve(url, to_file, reporthook=self._update_progressbar)
 
         return to_file
 
@@ -357,7 +310,7 @@ class GameDownloadDialog (DLG.RADDialog):
             returns target file path;
         """
 
-        to_file = self.container.download(url, to_file)
+        self.after(100, self.container.download, url, to_file)
 
         self.show()
 

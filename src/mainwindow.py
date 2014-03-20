@@ -82,7 +82,7 @@ class MainWindow (tkRAD.RADXMLMainWindow):
 
                 _tempfile = DNL.download(
 
-                    url=_src, to_file=None, tk_owner=self
+                    url=_src, to_file="^/games/archive.zip", tk_owner=self
                 )
 
                 print("mainwindow::temp_file:", _tempfile)

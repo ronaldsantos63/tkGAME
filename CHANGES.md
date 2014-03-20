@@ -12,6 +12,11 @@
 # CHANGELOG
 
 
+## $ 2014-03-20 RS $
+
+* swimming pool day?
+
+
 ## $ 2014-03-19 RS $
 
 * renamed `GameFileDownloadDialog` to `GameDownloadDialog`;
