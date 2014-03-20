@@ -29,12 +29,27 @@
         import="lib.widgets.game_section_browser"
     />
 
+    <module
+        id="download_box"
+        import="lib.widgets.game_download_box"
+    />
+
     <widget
         name="game_section_browser"
         class="GameSectionBrowser"
         module="section_browser"
-        layout="pack"
+        layout="grid"
+        layout_options="row=0, column=0"
         resizable="yes"
+    />
+
+    <widget
+        name="download_box_frame"
+        class="GameDownloadBox"
+        module="download_box"
+        layout="grid"
+        layout_options="row=1, column=0, padx=5, pady=5"
+        resizable="width"
     />
 
 </tkwidget>

@@ -16,6 +16,16 @@
 
 * swimming pool day?
 
+* is Tkinter thread unsafe?
+
+* removed all threading features;
+
+* integrated `GameDownloadBox` into `gabe.MainWindow` directly;
+
+* now it works without cancellation possibilities but -huh!- it works;
+
+* this will be OK for the moment;
+
 
 ## $ 2014-03-19 RS $
 

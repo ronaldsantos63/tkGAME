@@ -78,11 +78,15 @@ class MainWindow (tkRAD.RADXMLMainWindow):
 
             if _response == MB.YES:
 
+                # show download box component
+
+                self._show_download_box()
+
                 # download in temporary file
 
-                _tempfile = DNL.download(
+                _tempfile = self.mainframe.download_box_frame.download(
 
-                    url=_src, to_file="^/games/archive.zip", tk_owner=self
+                    url=_src, to_file="^/tmp/archive.zip"
                 )
 
                 print("mainwindow::temp_file:", _tempfile)
@@ -247,6 +251,19 @@ class MainWindow (tkRAD.RADXMLMainWindow):
 
 
 
+    def _hide_download_box (self, tk_event=None, *args, **kw):
+        r"""
+            hides download box component;
+        """
+
+        self.mainframe.download_box_frame.grid_remove()
+
+        self.mainframe.download_box_frame.reset()
+
+    # end def
+
+
+
     def _show_about_dialog (self, *args, **kw):
         r"""
             tkRAD event slot method;
@@ -271,6 +288,19 @@ class MainWindow (tkRAD.RADXMLMainWindow):
 
             parent=self,
         )
+
+    # end def
+
+
+
+    def _show_download_box (self, tk_event=None, *args, **kw):
+        r"""
+            shows download box component;
+        """
+
+        self.mainframe.download_box_frame.grid()
+
+        self.update()
 
     # end def
 
@@ -329,6 +359,10 @@ class MainWindow (tkRAD.RADXMLMainWindow):
             #~ apport(...???...)
             raise
 
+        finally:
+
+            self._hide_download_box()
+
         # end try
 
     # end def
@@ -352,6 +386,16 @@ class MainWindow (tkRAD.RADXMLMainWindow):
 
         self.connect_statusbar("show_statusbar")
 
+        # ensure download box is hidden
+
+        self.mainframe.download_box_frame.button_cancel.grid_forget()
+
+        self._hide_download_box()
+
+        # run game section browser
+
+        self.mainframe.game_section_browser.show("local_sections")
+
         # connect tkRAD simplified events
 
         self.events.connect_dict(
@@ -373,10 +417,6 @@ class MainWindow (tkRAD.RADXMLMainWindow):
         self.bind_all("<Button-4>", self._slot_mouse_scrollup)
 
         self.bind_all("<Button-5>", self._slot_mouse_scrolldown)
-
-        # run game section browser
-
-        self.mainframe.game_section_browser.show("local_sections")
 
     # end def
 

@@ -24,52 +24,13 @@
 
 # lib imports
 
-import os.path as OP
 import urllib.request as WEB
 
-import tkinter as TK
-
 import tkRAD
+
 from tkRAD.core import tools
+
 from tkRAD.core import path as P
-
-import tkRAD.widgets.rad_dialog as DLG
-
-
-
-# module function def
-
-def download (url, to_file=None, tk_owner=None, **kw):
-    r"""
-        tries to download file set in @url, put it in @to_file and
-        shows progressbar in dialog box;
-
-        returns target file path;
-    """
-
-    # only a subcomponent?
-
-    if isinstance(tk_owner, (TK.Frame, TK.ttk.Frame)):
-
-        # get file download box
-
-        return GameDownloadBox(tk_owner, **kw).download(url, to_file)
-
-    # must show in dialog window
-
-    else:
-
-        # dialog window inits
-
-        return GameDownloadDialog(tk_owner, **kw).download(url, to_file)
-
-    # end if
-
-# end def
-
-
-
-# ===========================   CLASS DEF   ============================
 
 
 
@@ -96,12 +57,29 @@ class GameDownloadBox (tkRAD.RADXMLFrame):
 
 
 
+    def _display_url (self, url=""):
+        r"""
+            displays URL in a short way;
+        """
+
+        _cvar = self.get_stringvar("remote_url")
+
+        if _cvar:
+
+            _cvar.set(P.shorten_path(url, limit=64))
+
+        # end if
+
+    # end def
+
+
+
     def _update_progressbar (self, block_count, block_size, file_size):
         r"""
             updates progressbar value along params;
         """
 
-        print("update progressbar:", block_count, block_size, file_size)
+        #~ print("update progressbar:", block_count, block_size, file_size)
 
         # param inits
 
@@ -151,6 +129,8 @@ class GameDownloadBox (tkRAD.RADXMLFrame):
 
         self.progressbar.configure(orient="horizontal", **_options)
 
+        self.update_idletasks()
+
     # end def
 
 
@@ -184,20 +164,28 @@ class GameDownloadBox (tkRAD.RADXMLFrame):
 
         # display some info
 
-        self.label_url.configure(
-
-            text=P.shorten_path(url, limit=64),
-        )
+        self._display_url(url)
 
         # update display
 
-        #~ self.update_idletasks()
+        self.events.raise_event(
+
+            "GameDownloadBoxStart", widget=self,
+        )
 
         # clean up temp files
 
         WEB.urlcleanup()
 
-        to_file, _headers = WEB.urlretrieve(url, to_file, reporthook=self._update_progressbar)
+        to_file, _headers = WEB.urlretrieve(
+
+            url, to_file, reporthook=self._update_progressbar
+        )
+
+        self.events.raise_event(
+
+            "GameDownloadBoxDone", widget=self,
+        )
 
         return to_file
 
@@ -220,7 +208,8 @@ class GameDownloadBox (tkRAD.RADXMLFrame):
                     resizable="width"
                 />
                 <ttklabel
-                    name="label_url"
+                    textvariable="remote_url"
+                    foreground="blue"
                     padding="0px 3px"
                     layout="pack"
                     resizable="width"
@@ -235,16 +224,12 @@ class GameDownloadBox (tkRAD.RADXMLFrame):
                         layout_options="row=0, column=0"
                         resizable="width"
                     />
-                    <ttkframe
-                        width="5"
-                        layout="grid"
-                        layout_options="row=0, column=1"
-                    />
                     <ttkbutton
+                        name="button_cancel"
                         text="Cancel"
                         command="@GameDownloadBoxCancel"
                         layout="grid"
-                        layout_options="row=0, column=2"
+                        layout_options="row=0, column=2, padx=5"
                     />
                 </ttkframe>
             </tkwidget>
@@ -260,9 +245,9 @@ class GameDownloadBox (tkRAD.RADXMLFrame):
             )
         )
 
-        # force progressbar to be horizontal
+        # progressbar inits
 
-        self._update_progressbar(0, 0, 0)
+        self.reset()
 
         # connecting people
 
@@ -274,65 +259,17 @@ class GameDownloadBox (tkRAD.RADXMLFrame):
     # end def
 
 
+
+    def reset (self, tk_event=None, *args, **kw):
+        r"""
+            resets components to initial state;
+        """
+
+        self._update_progressbar(0, 0, 0)
+
+        self._display_url()
+
+    # end def
+
+
 # end class GameDownloadBox
-
-
-
-# ===========================   CLASS DEF   ============================
-
-
-
-class GameDownloadDialog (DLG.RADDialog):
-    r"""
-        Web remote file downloader dialog window class;
-    """
-
-
-
-    def _slot_download_cancelled (self, tk_event=None, *args, **kw):
-        r"""
-            tries to quit dialog;
-        """
-
-        self._slot_pending_task_off()
-
-        self._slot_quit_dialog(tk_event, *args, **kw)
-
-    # end def
-
-
-
-    def download (self, url, to_file=None):
-        r"""
-            tries to download file from @url into @to_file or into a
-            temp file if omitted;
-
-            returns target file path;
-        """
-
-        self.after(100, self.container.download, url, to_file)
-
-        self.show()
-
-        return to_file
-
-    # end def
-
-
-
-    def init_widget (self, **kw):
-        r"""
-            widget main inits;
-        """
-
-        self.set_contents(GameDownloadBox(self, **kw))
-
-        self.events.connect(
-
-            "GameDownloadBoxCancelled", self._slot_download_cancelled
-        )
-
-    # end def
-
-
-# end class GameDownloadDialog
