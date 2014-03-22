@@ -26,6 +26,8 @@
 
 # lib imports
 
+import os
+
 import os.path as OP
 
 from tkinter import messagebox as MB
@@ -84,18 +86,8 @@ class MainWindow (tkRAD.RADXMLMainWindow):
 
                 # download in temporary file
 
-                _tempfile = self.mainframe.download_box_frame.download(
-
-                    url=_src, to_file="^/tmp/archive.zip"
-                )
-
-                print("mainwindow::temp_file:", _tempfile)
-
-                # TODO: verify ZIP archive
-
-                # TODO: unzip archive into target package dir
-
-                # TODO: run script if OK
+                return self.mainframe\
+                                .download_box.download(url=_src)
 
             else:
 
@@ -228,7 +220,15 @@ class MainWindow (tkRAD.RADXMLMainWindow):
 
                 # ask for download
 
-                self.__download_package(_attrs)
+                _tempfile = self.__download_package(_attrs)
+
+                # unzip archive (and install)
+
+                self.__unzip_archive(_tempfile, _attrs)
+
+                # try to run executable
+
+                self.__run_script(_attrs)
 
         # end if - xml_element
 
@@ -245,7 +245,32 @@ class MainWindow (tkRAD.RADXMLMainWindow):
 
         _exe_path = item_attrs["exe_path"]
 
-        print("running script:", _exe_path)
+        print("running script:", _exe_path) # ===========================  FIXME
+
+    # end def
+
+
+
+    def __unzip_archive (self, zip_path, item_attrs):
+        r"""
+             tries to unzip archive and install all at once;
+        """
+
+        # inits
+
+        import zipfile
+
+        print("unzipping archive:", zip_path)
+
+        with zipfile.ZipFile(zip_path, "r") as _archive:
+
+            print("TODO!")  # ===========================================  FIXME
+
+        # end with
+
+        # remove file
+
+        os.remove(zip_path)
 
     # end def
 
@@ -256,9 +281,9 @@ class MainWindow (tkRAD.RADXMLMainWindow):
             hides download box component;
         """
 
-        self.mainframe.download_box_frame.grid_remove()
+        self.mainframe.download_box.grid_remove()
 
-        self.mainframe.download_box_frame.reset()
+        self.mainframe.download_box.reset()
 
     # end def
 
@@ -298,7 +323,7 @@ class MainWindow (tkRAD.RADXMLMainWindow):
             shows download box component;
         """
 
-        self.mainframe.download_box_frame.grid()
+        self.mainframe.download_box.grid()
 
         self.update()
 
@@ -388,7 +413,7 @@ class MainWindow (tkRAD.RADXMLMainWindow):
 
         # ensure download box is hidden
 
-        self.mainframe.download_box_frame.button_cancel.grid_forget()
+        self.mainframe.download_box.button_cancel.grid_forget()
 
         self._hide_download_box()
 

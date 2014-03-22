@@ -12,6 +12,18 @@
 # CHANGELOG
 
 
+## $ 2014-03-22 RS $
+
+* in `MainWindow`:
+
+    * added new `__unzip_archive()`:
+
+        * added very little bit of code today (busy elsewhere);
+
+* after unzipping + installing + launching script, `gabe` will be
+operational, at least for testing game archives;
+
+
 ## $ 2014-03-20 RS $
 
 * swimming pool day?

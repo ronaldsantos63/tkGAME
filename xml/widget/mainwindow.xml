@@ -44,7 +44,7 @@
     />
 
     <widget
-        name="download_box_frame"
+        name="download_box"
         class="GameDownloadBox"
         module="download_box"
         layout="grid"
