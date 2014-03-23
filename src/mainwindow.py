@@ -256,7 +256,7 @@ class MainWindow (tkRAD.RADXMLMainWindow):
              tries to unzip archive and install all at once;
         """
 
-        # inits
+        # lib import
 
         import zipfile
 
@@ -266,11 +266,11 @@ class MainWindow (tkRAD.RADXMLMainWindow):
 
         try:
 
-            with zipfile.ZipFile(zip_path, "r") as _archive:
+            with zipfile.ZipFile(zip_path, "r") as _zip:
 
                 # extract and install on-the-fly
 
-                _archive.extract(member=_package, path=_package_dir)
+                _zip.extract(member=_package, path=_package_dir)
 
             # end with
 
@@ -280,7 +280,7 @@ class MainWindow (tkRAD.RADXMLMainWindow):
 
             os.remove(zip_path)
 
-            print("removed:", zip_path)
+            #~ print("removed:", zip_path)
 
         # end try
 
