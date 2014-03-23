@@ -260,17 +260,29 @@ class MainWindow (tkRAD.RADXMLMainWindow):
 
         import zipfile
 
-        with zipfile.ZipFile(zip_path, "r") as _archive:
+        _package = item_attrs.get("package")
 
-            # extract and install on-the-fly
+        _package_dir = item_attrs.get("package_dir")
 
-            _archive.extractall(path=item_attrs.get("package_dir"))
+        try:
 
-        # end with
+            with zipfile.ZipFile(zip_path, "r") as _archive:
 
-        # remove file
+                # extract and install on-the-fly
 
-        os.remove(zip_path)
+                _archive.extract(member=_package, path=_package_dir)
+
+            # end with
+
+        finally:
+
+            # remove file
+
+            os.remove(zip_path)
+
+            print("removed:", zip_path)
+
+        # end try
 
         MB.showinfo(
 
