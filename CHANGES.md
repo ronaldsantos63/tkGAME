@@ -14,7 +14,9 @@
 
 ## $ 2014-03-23 RS $
 
-* finalizing `__unzip_archive()`;
+* in `__unzip_archive()`:
+
+    * now fully implemented;
 
 
 ## $ 2014-03-22 RS $

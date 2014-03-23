@@ -174,19 +174,21 @@ class MainWindow (tkRAD.RADXMLMainWindow):
 
         _attrs["package_dir"] = P.normalize(
 
-            OP.join(
-
-                _attrs["dirs"].get(_attrs["type"]),
-
-                _attrs["package"],
-            )
+            _attrs["dirs"].get(_attrs["type"])
         )
 
         # build executable script path
 
-        _attrs["exe_path"] = OP.join(
+        _attrs["exe_path"] = P.normalize(
 
-            _attrs["package_dir"], _attrs["main"]
+            OP.join(
+
+                _attrs["package_dir"],
+
+                _attrs["package"],
+
+                _attrs["main"],
+            )
         )
 
         return _attrs
@@ -208,9 +210,9 @@ class MainWindow (tkRAD.RADXMLMainWindow):
 
             _attrs = self.__get_item_attrs(xml_element)
 
-            # package installed?
+            # package installed and executable?
 
-            if OP.isdir(_attrs["package_dir"]):
+            if OP.isfile(_attrs["exe_path"]):
 
                 # try to run "main" executable
 
@@ -222,13 +224,17 @@ class MainWindow (tkRAD.RADXMLMainWindow):
 
                 _tempfile = self.__download_package(_attrs)
 
-                # unzip archive (and install)
+                if _tempfile:
 
-                self.__unzip_archive(_tempfile, _attrs)
+                    # unzip archive (and install)
 
-                # try to run executable
+                    self.__unzip_archive(_tempfile, _attrs)
 
-                self.__run_script(_attrs)
+                    # try to run executable
+
+                    self.__run_script(_attrs)
+
+                # end if - _tempfile
 
         # end if - xml_element
 
@@ -260,8 +266,6 @@ class MainWindow (tkRAD.RADXMLMainWindow):
 
         import zipfile
 
-        _package = item_attrs.get("package")
-
         _package_dir = item_attrs.get("package_dir")
 
         try:
@@ -270,7 +274,7 @@ class MainWindow (tkRAD.RADXMLMainWindow):
 
                 # extract and install on-the-fly
 
-                _zip.extract(member=_package, path=_package_dir)
+                _zip.extractall(path=_package_dir)
 
             # end with
 
@@ -289,7 +293,8 @@ class MainWindow (tkRAD.RADXMLMainWindow):
             _("Installed"),
 
             _("Software has been installed at:\n{path}")
-            .format(path=item_attrs.get("package_dir")),
+
+            .format(path=_package_dir),
 
             parent=self,
         )
