@@ -12,6 +12,11 @@
 # CHANGELOG
 
 
+## $ 2014-03-23 RS $
+
+* finalizing `__unzip_archive()`;
+
+
 ## $ 2014-03-22 RS $
 
 * in `MainWindow`:

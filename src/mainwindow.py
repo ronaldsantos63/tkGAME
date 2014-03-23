@@ -260,17 +260,27 @@ class MainWindow (tkRAD.RADXMLMainWindow):
 
         import zipfile
 
-        print("unzipping archive:", zip_path)
-
         with zipfile.ZipFile(zip_path, "r") as _archive:
 
-            print("TODO!")  # ===========================================  FIXME
+            # extract and install on-the-fly
+
+            _archive.extractall(path=item_attrs.get("package_dir"))
 
         # end with
 
         # remove file
 
         os.remove(zip_path)
+
+        MB.showinfo(
+
+            _("Installed"),
+
+            _("Software has been installed at:\n{path}")
+            .format(path=item_attrs.get("package_dir")),
+
+            parent=self,
+        )
 
     # end def
 
