@@ -92,7 +92,7 @@ class GameSectionBrowser (RADFrame):
 
         # delayed build along with web mirrors data
 
-        self.after(100, self.view.web_build, filename, *args, **kw)
+        self.view.web_build(filename, *args, **kw)
 
         # do *NOT* wait after HTTP response
 
@@ -750,67 +750,7 @@ class GameSectionView (GameScrollView):
 
 
 
-    def go_home (self, *args, **kw):
-        r"""
-            shows root section;
-        """
-
-        self._open_section(home = True)
-
-    # end def
-
-
-
-    def go_parent (self, *args, **kw):
-        r"""
-            shows parent section;
-        """
-
-        if tools.is_pstr(self._parent_section_id):
-
-            self._open_section(section_id = self._parent_section_id)
-
-        else:
-
-            self.go_home()
-
-        # end if
-
-    # end def
-
-
-
-    def init_widget (self, **kw):
-        r"""
-            widget main inits;
-        """
-
-        # super class inits
-
-        super().init_widget(**kw)
-
-        # default values
-
-        self.IMAGE_UNKNOWN = P.normalize(
-
-            OP.join(self.IMAGES_DIR, self.IMAGE_UNKNOWN)
-        )
-
-        # member inits
-
-        self.slot_owner = self
-
-        self.tk_owner = self.viewport.container
-
-        self._parent_section_id = None
-
-        self._cvar = TK.StringVar()
-
-    # end def
-
-
-
-    def web_build (self, filename=None):
+    def _web_build (self, filename=None, *args, **kw):
         r"""
             tries to build view from remote file before trying locally;
         """
@@ -927,6 +867,79 @@ class GameSectionView (GameScrollView):
         # build GUI
 
         self.xml_build(filename)
+
+    # end def
+
+
+
+    def go_home (self, *args, **kw):
+        r"""
+            shows root section;
+        """
+
+        self._open_section(home = True)
+
+    # end def
+
+
+
+    def go_parent (self, *args, **kw):
+        r"""
+            shows parent section;
+        """
+
+        if tools.is_pstr(self._parent_section_id):
+
+            self._open_section(section_id = self._parent_section_id)
+
+        else:
+
+            self.go_home()
+
+        # end if
+
+    # end def
+
+
+
+    def init_widget (self, **kw):
+        r"""
+            widget main inits;
+        """
+
+        # super class inits
+
+        super().init_widget(**kw)
+
+        # default values
+
+        self.IMAGE_UNKNOWN = P.normalize(
+
+            OP.join(self.IMAGES_DIR, self.IMAGE_UNKNOWN)
+        )
+
+        # member inits
+
+        self.slot_owner = self
+
+        self.tk_owner = self.viewport.container
+
+        self._parent_section_id = None
+
+        self._cvar = TK.StringVar()
+
+    # end def
+
+
+
+    def web_build (self, filename=None, *args, **kw):
+        r"""
+            tries to build view from remote file before trying locally;
+
+            delayed feature (self.after);
+        """
+
+        self.after(100, self._web_build, filename, *args, **kw)
 
     # end def
 

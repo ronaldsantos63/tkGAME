@@ -169,9 +169,9 @@ msgstr ""
 "aucune archive ZIP à télécharger"
 
 msgid ""
-"Software has been installed at:\n{path}"
+"Software has been installed at: {path}"
 msgstr ""
-"Le logiciel vient d'être installé dans :\n{path}"
+"Le logiciel vient d'être installé dans : {path}"
 
 msgid ""
 "Now running external script file: {fname}"

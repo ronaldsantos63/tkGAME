@@ -14,18 +14,34 @@
 
 ## $ 2014-03-24 RS $
 
-* in `__run_script()`:
+* gone testing under MS-Windows by now;
 
-    * now fully implemented for UNIX-likes;
+* in `MainWindow`:
 
-    * must test under MS-Windows;
+    * in `__run_script()`:
+
+        * now fully implemented for UNIX-likes;
+
+        * must test under MS-Windows;
+
+* in `lib.widgets.game_section_browser.GameSectionView`:
+
+    * in `web_build()`:
+
+        * testing some `threading.Thread()` features;
+
+        * finally using `self.after()` instead: quite sufficient;
+
+        * now this method works better; :happy:
 
 
 ## $ 2014-03-23 RS $
 
-* in `__unzip_archive()`:
+* in `MainWindow`:
 
-    * now fully implemented;
+    * in `__unzip_archive()`:
+
+        * now fully implemented;
 
 
 ## $ 2014-03-22 RS $

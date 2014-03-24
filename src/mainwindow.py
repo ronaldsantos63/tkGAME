@@ -322,9 +322,9 @@ class MainWindow (tkRAD.RADXMLMainWindow):
 
         # notify user
 
-        self.statusbar.info(
+        self.statusbar.notify(
 
-            _("Software has been installed at:\n{path}")
+            _("Software has been installed at: {path}")
 
             .format(path=_package_dir)
         )
@@ -341,6 +341,8 @@ class MainWindow (tkRAD.RADXMLMainWindow):
         self.mainframe.download_box.grid_remove()
 
         self.mainframe.download_box.reset()
+
+        self.update()
 
     # end def
 
@@ -476,7 +478,9 @@ class MainWindow (tkRAD.RADXMLMainWindow):
 
         # run game section browser
 
-        self.mainframe.game_section_browser.show("local_sections")
+        # default is ^/xml/data/tkgame_sections.xml
+
+        self.mainframe.game_section_browser.show("local_sections") # ==== FIXME: debug session
 
         # connect tkRAD simplified events
 
@@ -488,7 +492,7 @@ class MainWindow (tkRAD.RADXMLMainWindow):
 
                 "StatusBarNotify": self.statusbar.notify,
 
-                "GameSectionBrowserOpenSection": None,          # TODO?
+                "GameSectionBrowserOpenSection": None,
 
                 "GameSectionBrowserOpenItem": self._slot_open_item,
             }
