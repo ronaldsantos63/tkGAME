@@ -22,6 +22,28 @@
 -->
 <tksection>
     <!--
+        XML template:
+
+        Notice: please, do *NOT* put more than 3 elements per group;
+
+        <section
+            text="section name text label"
+            image="picture.gif"
+        >
+            <group>
+                <section/>
+                <item
+                    text="item name text label"
+                    image="picture.gif"
+                    main="game.py"
+                    package="game_directory"
+                    src="http://domain.org/archive.zip"
+                />
+            </group>
+        </section>
+    -->
+
+    <!--
             MAIN SECTION: Games
     -->
     <section
@@ -48,10 +70,11 @@
                     image="scrolling-arcade-games.gif"
                     main="super-marcello.pyw"
                     package="super_marcello"
-                    src="https://github.com/tarball69/tkGAME/blob/master/games/super-marcello.zip"
+                    src="https://github.com/tarball69/tkGAME/raw/master/games/super-marcello.zip"
                 />
                 <item/>
             </group>
+<!--
             <group>
                 <item/>
                 <item/>
@@ -67,16 +90,17 @@
                 <item/>
                 <item/>
             </group>
+-->
         </section><!-- Arcade Games -->
 
         <!--
-                REFLEXION GAMES SECTION
+                PUZZLE GAMES SECTION
         -->
         <section
-            text="Reflexion Games"
-            image="reflexion-games.gif"
+            text="Puzzle Games"
+            image="puzzle-games.gif"
         >
-        </section><!-- Reflexion Games -->
+        </section><!-- Puzzle Games -->
 
         <!--
                 CARD GAMES SECTION
@@ -103,6 +127,7 @@
             text="Arcade Games"
             image="arcade-games.gif"
         >
+<!--
             <item
                 text="Tetris-like Games"
                 image="tetris-like-games.gif"
@@ -115,16 +140,17 @@
                 package="sag_editor"
                 type="editor"
             />
+-->
         </section><!-- Arcade Games -->
 
         <!--
-                REFLEXION GAMES SECTION
+                PUZZLE GAMES SECTION
         -->
         <section
-            text="Reflexion Games"
-            image="reflexion-games.gif"
+            text="Puzzle Games"
+            image="puzzle-games.gif"
         >
-        </section><!-- Reflexion Games -->
+        </section><!-- Puzzle Games -->
 
         <!--
                 CARD GAMES SECTION
