@@ -93,6 +93,13 @@
             text="Puzzle Games"
             image="puzzle-games.gif"
         >
+            <item
+                text="Gabriele's 2048"
+                image="gabriele-cirulli-2048.gif"
+                main="game.py"
+                package="gabriele-cirulli-2048"
+                src="https://github.com/tarball69/tkGAME/raw/master/games/gabriele-cirulli-2048.zip"
+            />
         </section>
 
         <!--

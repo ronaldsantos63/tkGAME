@@ -270,6 +270,16 @@ msgstr ""
 "Jeux d'Arcade"
 
 msgid ""
+"Puzzle Games"
+msgstr ""
+"Casse-têtes"
+
+msgid ""
+"Platform Games"
+msgstr ""
+"Jeux de Plateforme"
+
+msgid ""
 "Reflexion Games"
 msgstr ""
 "Jeux de Réflexion"
