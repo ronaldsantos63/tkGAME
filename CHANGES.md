@@ -20,7 +20,7 @@
 
         * must adapt MouseWheel to ScrollView:
 
-            * ;
+            * DONE;
 
         * must adapt `__run_script()` to win32:
 

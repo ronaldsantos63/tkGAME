@@ -767,19 +767,9 @@ class GameSectionView (GameScrollView):
 
         else:
 
-            _step = tk_event.num
-
-            print("step:", _step)
+            _step = (tk_event.num == 5) - (tk_event.num == 4)
 
         # end if - _platform
-
-        # ensure value
-
-        if not _step:
-
-            _step = 1
-
-        # end if
 
         # raise event
 

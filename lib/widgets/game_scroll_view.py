@@ -37,6 +37,34 @@ class GameScrollView (tkRAD.RADXMLFrame):
         Scrollable viewport widget component;
     """
 
+    def _get_scroll_step (self, step=None):
+        r"""
+            ensures a non-zero scrolling step;
+        """
+
+        return max(1, abs(tools.ensure_int(step)))
+
+    # end def
+
+
+
+    def _update_scrollregion (self):
+
+        _canvas = self.viewport
+
+        _frame = _canvas.container
+
+        _w = max(_canvas.winfo_width(), _frame.winfo_reqwidth())
+
+        _h = max(_canvas.winfo_height(), _frame.winfo_reqheight())
+
+        _canvas.configure(scrollregion=(1, 1, _w - 1, _h - 1))
+
+    # end def
+
+
+
+
     def init_widget (self, **kw):
         r"""
             widget main inits;
@@ -138,7 +166,7 @@ class GameScrollView (tkRAD.RADXMLFrame):
             mouse events scroll down;
         """
 
-        _step = abs(tools.choose_num(None, kw.get("step"), 1))
+        _step = self._get_scroll_step(kw.get("step"))
 
         self.viewport.yview_scroll(_step, "units")
 
@@ -151,7 +179,7 @@ class GameScrollView (tkRAD.RADXMLFrame):
             mouse events scroll up;
         """
 
-        _step = abs(tools.choose_num(None, kw.get("step"), 1))
+        _step = self._get_scroll_step(kw.get("step"))
 
         self.viewport.yview_scroll(-_step, "units")
 
@@ -167,22 +195,6 @@ class GameScrollView (tkRAD.RADXMLFrame):
         # inits
 
         self._update_scrollregion()
-
-    # end def
-
-
-
-    def _update_scrollregion (self):
-
-        _canvas = self.viewport
-
-        _frame = _canvas.container
-
-        _w = max(_canvas.winfo_width(), _frame.winfo_reqwidth())
-
-        _h = max(_canvas.winfo_height(), _frame.winfo_reqheight())
-
-        _canvas.configure(scrollregion=(1, 1, _w - 1, _h - 1))
 
     # end def
 

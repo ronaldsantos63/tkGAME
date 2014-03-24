@@ -342,6 +342,37 @@ class MainWindow (tkRAD.RADXMLMainWindow):
 
 
 
+    def _bind_events (self, *args, **kw):
+        r"""
+            mainwindow's event bindings;
+        """
+
+        # connect tkRAD simplified events
+
+        self.events.connect_dict(
+            {
+                "MenuHelpAbout": self._show_about_dialog,
+                "StatusBarInfo": self.statusbar.info,
+                "StatusBarNotify": self.statusbar.notify,
+                "GameSectionBrowserOpenSection": None,
+                "GameSectionBrowserOpenItem": self._slot_open_item,
+            }
+        )
+
+        # bind tk_event
+
+        _slot = self.mainframe.gabe.view._slot_mouse_wheel
+
+        for _seq in ("<Button-4>", "<Button-5>", "<MouseWheel>"):
+
+            self.bind_all(_seq, _slot)
+
+        # end for
+
+    # end def
+
+
+
     def _hide_download_box (self, tk_event=None, *args, **kw):
         r"""
             hides download box component;
@@ -469,28 +500,9 @@ class MainWindow (tkRAD.RADXMLMainWindow):
 
         self.mainframe.gabe.show()
 
-        # connect tkRAD simplified events
+        # bind events
 
-        self.events.connect_dict(
-            {
-                "MenuHelpAbout": self._show_about_dialog,
-
-                "StatusBarInfo": self.statusbar.info,
-
-                "StatusBarNotify": self.statusbar.notify,
-
-                "GameSectionBrowserOpenSection": None,
-
-                "GameSectionBrowserOpenItem": self._slot_open_item,
-            }
-        )
-
-        # bind tk_event
-
-        self.bind_all(
-
-            "<MouseWheel>", self.mainframe.gabe.view._slot_mouse_wheel
-        )
+        self._bind_events(**kw)
 
     # end def
 
