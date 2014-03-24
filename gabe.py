@@ -33,7 +33,7 @@ import tkRAD
 
 
 
-class Application (tkRAD.RADApplication):
+class Gabe (tkRAD.RADApplication):
     r"""
         Gabe - Game Browser
 
@@ -124,11 +124,13 @@ class Application (tkRAD.RADApplication):
 
         self.mainwindow = MW.MainWindow(**kw)
 
+        self.mainwindow.show()
+
         self.mainwindow.run()
 
     # end def
 
-# end class Application
+# end class Gabe
 
 
 
@@ -138,6 +140,6 @@ if __name__ == "__main__":
 
     # launch app
 
-    Application().run()
+    Gabe().run()
 
 # end if

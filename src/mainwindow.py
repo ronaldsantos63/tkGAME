@@ -26,8 +26,6 @@
 
 # lib imports
 
-import os
-
 import os.path as OP
 
 from tkinter import messagebox as MB
@@ -92,6 +90,7 @@ class MainWindow (tkRAD.RADXMLMainWindow):
             else:
 
                 MB.showinfo(
+
                     _("Info"),
 
                     _("Package download aborted."),
@@ -247,11 +246,44 @@ class MainWindow (tkRAD.RADXMLMainWindow):
              tries to launch executable Python script;
         """
 
+        # lib import
+
+        import subprocess
+
         # inits
 
         _exe_path = item_attrs["exe_path"]
 
-        print("running script:", _exe_path) # ===========================  FIXME
+        _fname = item_attrs["main"]
+
+        # notify user
+
+        self.statusbar.notify(
+
+            _("Now running external script file: {fname}")
+
+            .format(fname=_fname)
+        )
+
+        try:
+
+            # run executable script
+
+            subprocess.check_call(["python3", _exe_path])
+
+        except subprocess.CalledProcessError:
+
+            raise OSError(
+
+                _(
+                    "something went wrong in external "
+                    "script file '{fname}'"
+
+                ).format(fname=_fname)
+
+            ) from None
+
+        # end try
 
     # end def
 
@@ -259,10 +291,12 @@ class MainWindow (tkRAD.RADXMLMainWindow):
 
     def __unzip_archive (self, zip_path, item_attrs):
         r"""
-             tries to unzip archive and install all at once;
+             tries to unzip archive and install it all at once;
         """
 
-        # lib import
+        # lib imports
+
+        import os
 
         import zipfile
 
@@ -284,19 +318,15 @@ class MainWindow (tkRAD.RADXMLMainWindow):
 
             os.remove(zip_path)
 
-            #~ print("removed:", zip_path)
-
         # end try
 
-        MB.showinfo(
+        # notify user
 
-            _("Installed"),
+        self.statusbar.info(
 
             _("Software has been installed at:\n{path}")
 
-            .format(path=_package_dir),
-
-            parent=self,
+            .format(path=_package_dir)
         )
 
     # end def

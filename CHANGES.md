@@ -12,6 +12,15 @@
 # CHANGELOG
 
 
+## $ 2014-03-24 RS $
+
+* in `__run_script()`:
+
+    * now fully implemented for UNIX-likes;
+
+    * must test under MS-Windows;
+
+
 ## $ 2014-03-23 RS $
 
 * in `__unzip_archive()`:
