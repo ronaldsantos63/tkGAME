@@ -138,7 +138,9 @@ class GameScrollView (tkRAD.RADXMLFrame):
             mouse events scroll down;
         """
 
-        self.viewport.yview_scroll(+1, "units")
+        _step = abs(tools.choose_num(None, kw.get("step"), 1))
+
+        self.viewport.yview_scroll(_step, "units")
 
     # end def
 
@@ -149,7 +151,9 @@ class GameScrollView (tkRAD.RADXMLFrame):
             mouse events scroll up;
         """
 
-        self.viewport.yview_scroll(-1, "units")
+        _step = abs(tools.choose_num(None, kw.get("step"), 1))
+
+        self.viewport.yview_scroll(-_step, "units")
 
     # end def
 

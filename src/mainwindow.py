@@ -26,6 +26,8 @@
 
 # lib imports
 
+import os
+
 import os.path as OP
 
 from tkinter import messagebox as MB
@@ -84,8 +86,7 @@ class MainWindow (tkRAD.RADXMLMainWindow):
 
                 # download in temporary file
 
-                return self.mainframe\
-                                .download_box.download(url=_src)
+                return self.mainframe.debbie.download(url=_src)
 
             else:
 
@@ -252,9 +253,19 @@ class MainWindow (tkRAD.RADXMLMainWindow):
 
         # inits
 
+        _fname = item_attrs["main"]
+
         _exe_path = item_attrs["exe_path"]
 
-        _fname = item_attrs["main"]
+        _exe = "python3"
+
+        if os.name.lower() == "nt":
+
+            # MS-Windows specifics
+
+            _exe = "py"
+
+        # end if
 
         # notify user
 
@@ -269,7 +280,7 @@ class MainWindow (tkRAD.RADXMLMainWindow):
 
             # run executable script
 
-            subprocess.check_call(["python3", _exe_path])
+            subprocess.check_call([_exe, _exe_path])
 
         except subprocess.CalledProcessError:
 
@@ -295,8 +306,6 @@ class MainWindow (tkRAD.RADXMLMainWindow):
         """
 
         # lib imports
-
-        import os
 
         import zipfile
 
@@ -338,9 +347,9 @@ class MainWindow (tkRAD.RADXMLMainWindow):
             hides download box component;
         """
 
-        self.mainframe.download_box.grid_remove()
+        self.mainframe.debbie.grid_remove()
 
-        self.mainframe.download_box.reset()
+        self.mainframe.debbie.reset()
 
         self.update()
 
@@ -382,31 +391,9 @@ class MainWindow (tkRAD.RADXMLMainWindow):
             shows download box component;
         """
 
-        self.mainframe.download_box.grid()
+        self.mainframe.debbie.grid()
 
         self.update()
-
-    # end def
-
-
-
-    def _slot_mouse_scrolldown (self, *args, **kw):
-        r"""
-            raises tkRAD event instead;
-        """
-
-        self.events.raise_event("MouseWheelScrollDown", *args, **kw)
-
-    # end def
-
-
-
-    def _slot_mouse_scrollup (self, *args, **kw):
-        r"""
-            raises tkRAD event instead;
-        """
-
-        self.events.raise_event("MouseWheelScrollUp", *args, **kw)
 
     # end def
 
@@ -470,17 +457,17 @@ class MainWindow (tkRAD.RADXMLMainWindow):
 
         self.connect_statusbar("show_statusbar")
 
-        # ensure download box is hidden
+        # ensure download box (debbie) is hidden
 
-        self.mainframe.download_box.button_cancel.grid_forget()
+        self.mainframe.debbie.button_cancel.grid_forget()
 
         self._hide_download_box()
 
-        # run game section browser
+        # run game section browser (gabe)
 
         # default is ^/xml/data/tkgame_sections.xml
 
-        self.mainframe.game_section_browser.show("local_sections") # ==== FIXME: debug session
+        self.mainframe.gabe.show()
 
         # connect tkRAD simplified events
 
@@ -498,11 +485,12 @@ class MainWindow (tkRAD.RADXMLMainWindow):
             }
         )
 
-        # bind tkevents
+        # bind tk_event
 
-        self.bind_all("<Button-4>", self._slot_mouse_scrollup)
+        self.bind_all(
 
-        self.bind_all("<Button-5>", self._slot_mouse_scrolldown)
+            "<MouseWheel>", self.mainframe.gabe.view._slot_mouse_wheel
+        )
 
     # end def
 

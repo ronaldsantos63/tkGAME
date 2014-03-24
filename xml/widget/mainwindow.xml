@@ -35,7 +35,7 @@
     />
 
     <widget
-        name="game_section_browser"
+        name="gabe"
         class="GameSectionBrowser"
         module="section_browser"
         layout="grid"
@@ -44,7 +44,7 @@
     />
 
     <widget
-        name="download_box"
+        name="debbie"
         class="GameDownloadBox"
         module="download_box"
         layout="grid"

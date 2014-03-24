@@ -25,25 +25,17 @@
 # lib imports
 
 import re
-
+import os
 import os.path as OP
-
 import urllib.request as WEB
 
-
 import tkinter as TK
-
 import tkinter.messagebox as MB
 
-
 import tkRAD
-
 from tkRAD.core import tools
-
 from tkRAD.core import path as P
-
 from tkRAD.widgets.rad_frame import RADFrame
-
 
 from .game_scroll_view import GameScrollView
 
@@ -109,19 +101,6 @@ class GameSectionNavBar (tkRAD.RADXMLFrame):
         tkGAME game section browser subcomponent (navigation bar);
     """
 
-    def init_widget (self, **kw):
-        r"""
-            widget inits;
-        """
-
-        # build GUI
-
-        self.xml_build(self._get_xml_source())
-
-    # end def
-
-
-
     def _get_xml_source (self, *args, **kw):
         r"""
             virtual method to be overridden in subclasses;
@@ -149,6 +128,19 @@ class GameSectionNavBar (tkRAD.RADXMLFrame):
                 />
             </tkwidget>
         """
+
+    # end def
+
+
+
+    def init_widget (self, **kw):
+        r"""
+            widget inits;
+        """
+
+        # build GUI
+
+        self.xml_build(self._get_xml_source())
 
     # end def
 
@@ -622,6 +614,52 @@ class GameSectionView (GameScrollView):
 
 
 
+    def _parse_attr_image (self, attribute, attrs, **kw):
+        r"""
+            image attribute;
+
+            no return value (void);
+        """
+
+        # param controls
+
+        if self._is_unparsed(attribute):
+
+            # inits
+
+            _list = [
+
+                attribute.value,
+
+                OP.join(self.IMAGES_DIR, attribute.value),
+
+                self.IMAGE_UNKNOWN,
+            ]
+
+            for _path in _list:
+
+                _path = P.normalize(_path)
+
+                if OP.isfile(_path):
+
+                    break
+
+                # end if
+
+            # end for
+
+            # parsed attribute inits
+
+            attribute.value = self.set_image(_path)
+
+            self._tk_config(attribute)
+
+        # end if
+
+    # end def
+
+
+
     def _parse_attr_main (self, attribute, **kw):
         r"""
             main Python exe script attribute;
@@ -704,47 +742,56 @@ class GameSectionView (GameScrollView):
 
 
 
-    def _parse_attr_image (self, attribute, attrs, **kw):
+    def _slot_mouse_wheel (self, tk_event=None, *args, **kw):
         r"""
-            image attribute;
-
-            no return value (void);
+            generic handler for <MouseWheel> TkEvent;
         """
 
-        # param controls
+        # inits
 
-        if self._is_unparsed(attribute):
+        _platform = os.name.lower()
 
-            # inits
+        # MS-Windows specifics
 
-            _list = [
+        if _platform == "nt":
 
-                attribute.value,
+            _step = -tk_event.delta//120
 
-                OP.join(self.IMAGES_DIR, attribute.value),
+        # Apple MacOS specifics
 
-                self.IMAGE_UNKNOWN,
-            ]
+        elif _platform == "mac":
 
-            for _path in _list:
+            _step = -tk_event.delta
 
-                _path = P.normalize(_path)
+        # other POSIX / UNIX-like
 
-                if OP.isfile(_path):
+        else:
 
-                    break
+            _step = tk_event.num
 
-                # end if
+            print("step:", _step)
 
-            # end for
+        # end if - _platform
 
-            # parsed attribute inits
+        # ensure value
 
-            attribute.value = self.set_image(_path)
+        if not _step:
 
-            self._tk_config(attribute)
+            _step = 1
 
         # end if
+
+        # raise event
+
+        if _step < 0:
+
+            self.events.raise_event("MouseWheelScrollUp", step=_step)
+
+        else:
+
+            self.events.raise_event("MouseWheelScrollDown", step=_step)
+
+        # end if - _step
 
     # end def
 

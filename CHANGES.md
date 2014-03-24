@@ -14,6 +14,22 @@
 
 ## $ 2014-03-24 RS $
 
+* back from MS-Windows:
+
+    * TODO:
+
+        * must adapt MouseWheel to ScrollView:
+
+            * ;
+
+        * must adapt `__run_script()` to win32:
+
+            * DONE;
+
+        * should update `^/xml/data/tkgame_sections.xml`:
+
+            * DONE;
+
 * gone testing under MS-Windows by now;
 
 * in `MainWindow`:

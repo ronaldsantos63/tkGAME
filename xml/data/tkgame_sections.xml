@@ -32,17 +32,41 @@
                 ARCADE GAMES SECTION
         -->
         <section
-            text="Arcade Games"
+            text="Arcade games"
             image="arcade-games.gif"
         >
-            <item
-                text="Tetris-like Games"
-                image="tetris-like-games.gif"
-            />
-            <item
-                text="Scrolling Arcade Games"
-                image="scrolling-arcade-games.gif"
-            />
+            <group>
+                <item
+                    text="Tetris-like Games"
+                    image="tetris-like-games.gif"
+                    main="tetris.py"
+                    package="tetris"
+                    src="https://github.com/tarball69/tkGAME/raw/master/games/tetris.zip"
+                />
+                <item
+                    text="Scrolling Arcade Games"
+                    image="scrolling-arcade-games.gif"
+                    main="super-marcello.pyw"
+                    package="super_marcello"
+                    src="https://github.com/tarball69/tkGAME/blob/master/games/super-marcello.zip"
+                />
+                <item/>
+            </group>
+            <group>
+                <item/>
+                <item/>
+                <item/>
+            </group>
+            <group>
+                <item/>
+                <item/>
+                <item/>
+            </group>
+            <group>
+                <item/>
+                <item/>
+                <item/>
+            </group>
         </section><!-- Arcade Games -->
 
         <!--
@@ -82,11 +106,13 @@
             <item
                 text="Tetris-like Games"
                 image="tetris-like-games.gif"
+                package="tetris_editor"
                 type="editor"
             />
             <item
                 text="Scrolling Arcade Games"
                 image="scrolling-arcade-games.gif"
+                package="sag_editor"
                 type="editor"
             />
         </section><!-- Arcade Games -->
