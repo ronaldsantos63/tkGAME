@@ -94,7 +94,7 @@
             image="puzzle-games.gif"
         >
             <item
-                text="Gabriele's 2048"
+                text="Gabriele Cirulli's 2048"
                 image="gabriele-cirulli-2048.gif"
                 main="game.py"
                 package="gabriele-cirulli-2048"
