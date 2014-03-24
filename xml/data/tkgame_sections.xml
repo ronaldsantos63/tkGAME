@@ -26,6 +26,8 @@
 
         Notice: please, do *NOT* put more than 3 elements per group;
 
+        Notice: type="game|editor" defaults to type="game" if omitted;
+
         <section
             text="section name text label"
             image="picture.gif"
@@ -35,6 +37,7 @@
                 <item
                     text="item name text label"
                     image="picture.gif"
+                    type="game|editor"
                     main="game.py"
                     package="game_directory"
                     src="http://domain.org/archive.zip"
@@ -53,6 +56,7 @@
         <!--
                 ARCADE GAMES SECTION
         -->
+<!--
         <section
             text="Arcade games"
             image="arcade-games.gif"
@@ -74,24 +78,13 @@
                 />
                 <item/>
             </group>
-<!--
             <group>
                 <item/>
                 <item/>
                 <item/>
             </group>
-            <group>
-                <item/>
-                <item/>
-                <item/>
-            </group>
-            <group>
-                <item/>
-                <item/>
-                <item/>
-            </group>
+        </section>
 -->
-        </section><!-- Arcade Games -->
 
         <!--
                 PUZZLE GAMES SECTION
@@ -100,16 +93,18 @@
             text="Puzzle Games"
             image="puzzle-games.gif"
         >
-        </section><!-- Puzzle Games -->
+        </section>
 
         <!--
                 CARD GAMES SECTION
         -->
+<!--
         <section
             text="Card Games"
             image="card-games.gif"
         >
-        </section><!-- Card Games -->
+        </section>
+-->
 
     </section><!-- MAIN SECTION: Games -->
 
@@ -123,11 +118,11 @@
         <!--
                 ARCADE GAMES SECTION
         -->
+<!--
         <section
             text="Arcade Games"
             image="arcade-games.gif"
         >
-<!--
             <item
                 text="Tetris-like Games"
                 image="tetris-like-games.gif"
@@ -140,26 +135,30 @@
                 package="sag_editor"
                 type="editor"
             />
+        </section>
 -->
-        </section><!-- Arcade Games -->
 
         <!--
                 PUZZLE GAMES SECTION
         -->
+<!--
         <section
             text="Puzzle Games"
             image="puzzle-games.gif"
         >
-        </section><!-- Puzzle Games -->
+        </section>
+-->
 
         <!--
                 CARD GAMES SECTION
         -->
+<!--
         <section
             text="Card Games"
             image="card-games.gif"
         >
-        </section><!-- Card Games -->
+        </section>
+-->
 
     </section><!-- MAIN SECTION: Game Editors -->
 
