@@ -14,6 +14,8 @@
 
 ## $ 2014-03-24 RS $
 
+* Gabe is now operational;
+
 * back from MS-Windows:
 
     * TODO:
