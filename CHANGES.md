@@ -12,6 +12,13 @@
 # CHANGELOG
 
 
+## $ 2014-03-29 RS $
+
+* now switching to:
+
+    Development Status :: 3 - Alpha
+
+
 ## $ 2014-03-24 RS $
 
 * Gabe is now operational;

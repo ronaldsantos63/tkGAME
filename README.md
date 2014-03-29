@@ -14,6 +14,8 @@ set.
 It also handles a game browser &ndash;&nbsp;**Gabe**&nbsp;&ndash;
 and aims to offer WYSIWYG game designing editors to end users.
 
+The whole project is **freefullware** oriented (see below).
+
 
 ## LICENSE
 
@@ -43,32 +45,69 @@ along with this program.
 
 ## DEVELOPMENT STATUS
 
-Development Status :: 2 - Pre-Alpha
+    Development Status :: 3 - Alpha
 
 Software has been:
 
 * Linux:
-    * NOT YET TESTED;
+
+    * TESTED OK on Ubuntu;
+    * should be OK with all distros;
+
 * macOS:
+
     * NOT YET TESTED;
+
 * MS-Windows:
+
     * NOT YET TESTED;
 
 Any feedback for any platform is still the welcome.
+
+
+## FREEFULLWARE
+
+What is a freefullware?
+
+A **freefullware** is a new kind of software:
+
+* Free as in Freedom;
+
+* Free of charge (gratis);
+
+* Ad-free (no advertisement at all);
+
+* Donate-free (no 'Donate' button at all);
+
+* 100% virus-free;
+
+* no counterpart at all;
+
+* really absolutely free;
+
+Just get it and enjoy.
+
+That's all, folks!
 
 
 ## FEATURES
 
 At this time, `tkGAME` project supports:
 
-* xxxxxxx
-* xxxxxxx
+* `Gabe`: a Game browser that eases up selecting, downloading,
+installing and running a certified collection of games;
+
+* new game: `tk2048` (freefullware), a Tkinter clone of Gabriele
+Cirulli's famous puzzle game;
 * xxxxxxx
 
 We plan to implement the following FUTURE supports:
 
-* xxxxxxx
-* xxxxxxx
+* enhancing `tkGAME.lib` in order to become a real Tkinter Game
+library for developers;
+
+* aiming to create WYSIWYG game editors (board, puzzle, arcade, etc);
+
 * xxxxxxx
 
 
@@ -81,7 +120,7 @@ Last known URL: https://github.com/tarball69/tkGAME/wiki
 
 ## INSTALLATION
 
-Requirements:
+### Requirements
 
 This project has some dependencies:
 
@@ -89,19 +128,30 @@ This project has some dependencies:
 
 * Python's embedded Tkinter library;
 
-Installation procedure:
+Notice: Tkinter library is mainly installed by default with Python3.
 
-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+If you get `ImportError` concerning Tkinter, please see with help
+forums on how to fix it.
+
+### Installation procedure
 
 Please, refer to our wiki documentation page for more detailed
 installation procedure:
 
 https://github.com/tarball69/tkGAME/wiki/en%3Ainstall
+
+
+## QUICK START
+
+* run **Gabe** Game browser by double-clicking on `gabe.py` file or
+launch it in a UNIX/Linux shell console:
+
+    $ python3 gabe.py
+
+* for self application development, please refer to wiki API
+documentation:
+
+https://github.com/tarball69/tkGAME/wiki
 
 
 ## BUG REPORT
@@ -138,35 +188,3 @@ https://github.com/tarball69/tkGAME/issues/1
 
 **Thank you for contributing** to make `tkGAME` a better place for
 everyone.
-
-
-## QUICK START
-
-Let's play with `tkGAME`!
-
-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-
-## CONTRIBUTING
-
-Our team grows rapidly.
-
-If you wish to join us, please read first **Contributors: getting
-started** wiki page at:
-
-https://github.com/tarball69/tkGAME/wiki/en%3Acontributors#wiki-getting-started
-
-Enjoy!
