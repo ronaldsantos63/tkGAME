@@ -143,14 +143,12 @@ https://github.com/tarball69/tkGAME/wiki/en%3Ainstall
 
 ## QUICK START
 
-* run **Gabe** Game browser by double-clicking on `gabe.py` file or
+Run **Gabe** Game browser by double-clicking on `gabe.py` file or
 launch it in a UNIX/Linux shell console:
 
-```
     $ python3 gabe.py
-```
 
-* for self application development, please refer to wiki API
+For self application development, please refer to wiki API
 documentation:
 
 https://github.com/tarball69/tkGAME/wiki
