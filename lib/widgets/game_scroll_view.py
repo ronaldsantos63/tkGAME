@@ -50,18 +50,9 @@ class GameScrollView (tkRAD.RADXMLFrame):
 
     def _update_scrollregion (self):
 
-        _canvas = self.viewport
-
-        _frame = _canvas.container
-
-        _w = max(_canvas.winfo_width(), _frame.winfo_reqwidth())
-
-        _h = max(_canvas.winfo_height(), _frame.winfo_reqheight())
-
-        _canvas.configure(scrollregion=(1, 1, _w - 1, _h - 1))
+        self.viewport.configure(scrollregion=self.viewport.bbox("all"))
 
     # end def
-
 
 
 
