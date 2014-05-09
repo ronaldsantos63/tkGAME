@@ -1185,11 +1185,11 @@ class GridMatrix:
 
         # all is OK?
 
-        if self.matrix[row][column] is None:
+        if self.matrix.get((row, column)) is None:
 
             # add object to matrix
 
-            self.matrix[row][column] = object_
+            self.matrix[(row, column)] = object_
 
             # succeeded
 
@@ -1274,17 +1274,9 @@ class GridMatrix:
             raises an error if @raise_error and empty location;
         """
 
-        # try to get object
+        # get object
 
-        try:
-
-            _object = self.matrix[row][column]
-
-        except:
-
-            _object = None
-
-        # end try
+        _object = self.matrix.get((row, column))
 
         # no object found?
 
@@ -1351,7 +1343,7 @@ class GridMatrix:
 
         # remove object
 
-        self.matrix[row][column] = None
+        self.matrix.pop((row, column), None)
 
     # end def
 
@@ -1359,17 +1351,10 @@ class GridMatrix:
 
     def reset_matrix (self):
         r"""
-            resets matrix to current rows and columns;
+            resets matrix;
         """
 
-        # $ 2014-03-25 RS $
-        # caution:
-        # do *NOT* use [[None]*cols]*rows: *NOT* shallow copies!
-
-        self.__matrix = [
-
-            [None] * self.columns for i in range(self.rows)
-        ]
+        self.__matrix = dict()
 
     # end def
 
