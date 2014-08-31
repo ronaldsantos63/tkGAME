@@ -29,10 +29,9 @@ import os.path as OP
 from . import tkgame_events as EM
 from . import tkgame_images as IM
 from . import tkgame_animations as AP
-from . import tkgame_matrix as MX
 
 
-class TkGameSprite:
+class TkGameCanvasSprite:
     """
         A sprite is an animated graphical object that manages
         several states such as wait, walk, run, jump, etc;
@@ -48,31 +47,33 @@ class TkGameSprite:
     }
 
 
-    def __init__ (self, owner, matrix, canvas, **kw):
+    def __init__ (self, owner, canvas, **kw):
         """
-            class constructor
+            class constructor;
         """
         # member inits
         self.owner = owner
-        self.matrix = matrix
         self.canvas = canvas
         self.events = EM.get_event_manager()
         self.animations = AP.get_animation_pool()
         self.image_manager = IM.get_image_manager()
         self.images_dir = kw.get("images_dir") or ""
+        self.started = False
+        self.__state = None
         self.state = kw.get("state") or "default"
         self.canvas_id = kw.get("cid") or 0
         self.canvas_tags = kw.get("tags") or ""
         self.xy = (kw.get("x"), kw.get("y"))
-        self.row_column = (kw.get("row") or 0, kw.get("column") or 0)
         # for best simplification - hook method
-        self.init_sprite(**kw)
+        if not kw.get("subclassed"):
+            self.init_sprite(**kw)
+        # end if
     # end def
 
 
     def bbox (self):
         """
-            returns sprite's bounding box in canvas
+            returns sprite's bounding box in canvas;
         """
         return self.canvas.bbox(self.canvas_id)
     # end def
@@ -80,16 +81,28 @@ class TkGameSprite:
 
     def center_xy (self):
         """
-            returns (x, y) center point of sprite in canvas
+            returns (x, y) center point of sprite in canvas;
         """
         x0, y0, x1, y1 = self.bbox()
         return ((x0 + x1)/2, (y0 + y1)/2)
     # end def
 
 
+    def get_sprites_from_ids (self, list_ids, exclude=None):
+        """
+            retrieves registered sprites in owner's dict along with
+            @list_ids parameter, excluding @exclude, if any;
+            returns sprites list, as ordered as possible;
+            this should be reimplemented in subclasses;
+        """
+        # retrieve sprites list from owner
+        return self.owner.get_sprites_from_ids(list_ids, exclude)
+    # end def
+
+
     def image_animation_loop (self):
         """
-            sprite's image animation loop
+            sprite's image animation loop;
         """
         # inits
         _status = self.STATUS[self.state]
@@ -130,7 +143,7 @@ class TkGameSprite:
     @property
     def images_dir (self):
         """
-            sprite's images directory
+            sprite's images directory;
         """
         return self.__images_dir
     # end def
@@ -158,67 +171,41 @@ class TkGameSprite:
 
     def load_images (self):
         """
-            cacheing all sprite states pictures
+            cacheing all sprite states pictures;
         """
         self.image_manager.load_images(self.images_dir)
     # end def
 
 
-    def look_ahead (self, sx, sy):
+    def look_ahead (self, dx, dy):
         """
             looks around current sprite to see who might collide;
+            this could be reimplemented in subclasses;
         """
         # inits
-        rel_xy = (sx * self.matrix.cellsize, sy * self.matrix.cellsize)
-        # look ahead
-        sprite = self.matrix.rel_at_xy(self.xy, rel_xy)
+        x, y = self.center_xy()
+        dxy = (x + dx, y + dy)
+        # retrieve sprites list
+        sprites = self.get_sprites_from_ids(
+            # look ahead
+            self.canvas.find_overlapping(*(dxy * 2)),
+            # exclude list of ids
+            exclude=(self.canvas_id,)
+        )
         # return data
-        return {"sprite": sprite, "rel_xy": rel_xy}
-    # end def
-
-
-    @property
-    def matrix (self):
-        """
-            game matrix attribute;
-            must be of TkGameMatrix type;
-        """
-        return self.__matrix
-    # end def
-
-    @matrix.setter
-    def matrix (self, value):
-        """
-            game matrix attribute;
-            must be of TkGameMatrix type;
-        """
-        if isinstance(value, MX.TkGameMatrix):
-            self.__matrix = value
-        else:
-            raise TypeError(
-                "'matrix' attribute must be of "
-                "'TkGameMatrix' type or at least a subclass of this."
-            )
-        # end if
-    # end def
-
-    @matrix.deleter
-    def matrix (self):
-        del self.__matrix
+        return {"sprites": sprites, "dx": dx, "dy": dy, "dxy": dxy}
     # end def
 
 
     def move_animation (self, c_dict):
         """
-            here is the animation of a moving sprite
+            here is the animation of a moving sprite;
         """
         # moving is quite simple here
         # but you can reimplement this in your own subclasses
-        dx, dy = c_dict["rel_xy"]
+        dx, dy = c_dict["dx"], c_dict["dy"]
         # relative move on canvas
         self.canvas.move(self.canvas_id, dx, dy)
-        # update matrix
-        self.matrix.rel_move_xy(self.xy, (dx, dy))
         # update pos
         self.x += dx
         self.y += dy
@@ -235,7 +222,7 @@ class TkGameSprite:
         """
         # param inits
         if not callable(callback):
-            callback = lambda c_dict: not c_dict["sprite"]
+            callback = lambda c_dict: not c_dict.get("sprites")
         # end if
         # look ahead
         c_dict = self.look_ahead(sx, sy)
@@ -256,21 +243,6 @@ class TkGameSprite:
     # end def
 
 
-    @property
-    def row_column (self):
-        """
-            sprite's (row, column) location on matrix;
-        """
-        return self.matrix.row_column(self.xy)
-    # end def
-
-    @row_column.setter
-    def row_column (self, value):
-        # inits
-        self.xy = self.matrix.center_xy(value)
-    # end def
-
-
     def start (self):
         """
             starting sprite's image animation loop;
@@ -283,31 +255,41 @@ class TkGameSprite:
             )
             # load sprite's animation pictures
             self.load_images()
-            # notify sprite creation (e.g. for registering)
+            # notify sprite's creation (e.g. for registration)
             self.events.raise_event(
                 "Canvas:Sprite:Created",
                 canvas_id=self.canvas_id,
                 sprite=self,
             )
         # end if
+        # sprite has been started
+        self.started = True
         # enter the loop
-        self.animations.run_after(1, self.image_animation_loop)
+        self.update_image_animation_loop()
     # end def
 
 
     @property
     def state (self):
         """
-            sprite's current state
+            sprite's current state;
         """
         return self.__state
     # end def
 
     @state.setter
     def state (self, value):
+        # param controls
         if value in self.STATUS:
-            self.__state = str(value)
-            self.state_counter = 0
+            # state has changed?
+            if self.__state != value:
+                # reset counter
+                self.state_counter = 0
+            # end if
+            # new state inits
+            self.__state = value
+            # update animation loop if started
+            self.update_image_animation_loop()
         else:
             raise TkGameSpriteError(
                 "unsupported value '{v}' for 'state' attribute."
@@ -322,10 +304,31 @@ class TkGameSprite:
     # end def
 
 
+    def stop (self):
+        """
+            stops image animation loop;
+        """
+        # inits
+        self.started = False
+        self.animations.stop(self.image_animation_loop)
+    # end def
+
+
+    def update_image_animation_loop (self):
+        """
+            updates sprite's image animation loop;
+        """
+        # allowed to proceed?
+        if self.started:
+            self.animations.run_after(1, self.image_animation_loop)
+        # end if
+    # end def
+
+
     @property
     def x (self):
         """
-            x coordinate of current sprite
+            x coordinate of current sprite;
         """
         return self.__x
     # end def
@@ -344,7 +347,7 @@ class TkGameSprite:
     @property
     def xy (self):
         """
-            (x, y) coordinates of current sprite
+            (x, y) coordinates of current sprite;
         """
         return (self.x, self.y)
     # end def
@@ -363,7 +366,7 @@ class TkGameSprite:
     @property
     def y (self):
         """
-            y coordinate of current sprite
+            y coordinate of current sprite;
         """
         return self.__y
     # end def
@@ -378,7 +381,7 @@ class TkGameSprite:
         del self.__y
     # end def
 
-# end class TkGameSprite
+# end class TkGameCanvasSprite
 
 
 # error handling
