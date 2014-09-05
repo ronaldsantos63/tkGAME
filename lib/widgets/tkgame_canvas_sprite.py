@@ -243,9 +243,9 @@ class TkGameCanvasSprite:
     # end def
 
 
-    def start (self):
+    def setup (self):
         """
-            starting sprite's image animation loop;
+            sets up sprite on canvas, if not already done;
         """
         # sets up sprite if not already done
         if not self.canvas_id:
@@ -262,6 +262,15 @@ class TkGameCanvasSprite:
                 sprite=self,
             )
         # end if
+    # end def
+
+
+    def start (self):
+        """
+            starting sprite's image animation loop;
+        """
+        # set up sprite if not already done
+        self.setup()
         # sprite has been started
         self.started = True
         # enter the loop

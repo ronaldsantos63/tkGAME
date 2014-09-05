@@ -73,14 +73,17 @@ class TkGameAnimationPool:
     # end def
 
 
-    def stop (self, callback):
+    def stop (self, *callbacks):
         """
-            stops scheduled thread, if any;
+            stops scheduled threads, if any;
         """
-        # stop thread
-        self.root.after_cancel(self.tid.get(callback) or 0)
-        # remove thread id
-        self.tid.pop(callback, None)
+        # browse list of callbacks
+        for _cb in callbacks:
+            # stop thread
+            self.root.after_cancel(self.tid.get(_cb) or 0)
+            # remove thread id
+            self.tid.pop(_cb, None)
+        # end for
     # end def
 
 
