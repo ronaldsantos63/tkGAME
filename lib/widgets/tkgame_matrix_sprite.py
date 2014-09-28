@@ -62,7 +62,7 @@ class TkGameMatrixSprite (CS.TkGameCanvasSprite):
         # look ahead
         sprite = self.matrix.rel_at_xy(self.xy, rel_xy)
         # return data
-        return {"sprite": sprite, "rel_xy": rel_xy}
+        return {"sprite": sprite, "rel_xy": rel_xy, "sx": sx, "sy": sy}
     # end def
 
 

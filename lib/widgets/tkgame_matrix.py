@@ -264,8 +264,7 @@ class TkGameMatrix:
     # end def
 
 
-    def move (self, from_rowcol, to_rowcol,
-                                    raise_error=False, duplicate=False):
+    def move (self, from_rowcol, to_rowcol, raise_error=False, duplicate=False):
         """
             absolute move from (row0, column0) to (row1, column1);
             if @raise_error is True:
@@ -305,8 +304,7 @@ class TkGameMatrix:
     # end def
 
 
-    def move_xy (self, from_xy, to_xy,
-                                    raise_error=False, duplicate=False):
+    def move_xy (self, from_xy, to_xy, raise_error=False, duplicate=False):
         """
             absolute move from (x0, y0) to (x1, y1) all adjusted to
             matrix (row, column) locations;
@@ -406,8 +404,7 @@ class TkGameMatrix:
     # end def
 
 
-    def rel_move (self, from_rowcol, rel_rowcol,
-                                    raise_error=False, duplicate=False):
+    def rel_move (self, from_rowcol, rel_rowcol, raise_error=False, duplicate=False):
         """
             relative move from (row, column) to (row + rel_row,
             column + rel_column);
@@ -427,8 +424,7 @@ class TkGameMatrix:
     # end def
 
 
-    def rel_move_xy (self, from_xy, rel_xy,
-                                    raise_error=False, duplicate=False):
+    def rel_move_xy (self, from_xy, rel_xy, raise_error=False, duplicate=False):
         """
             relative move from (x, y) to (x + rel_x, y + rel_y)
             using rel_xy all adjusted to matrix (row, column)

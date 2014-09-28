@@ -58,6 +58,7 @@ class TkGameCanvasSprite:
         self.animations = AP.get_animation_pool()
         self.image_manager = IM.get_image_manager()
         self.images_dir = kw.get("images_dir") or ""
+        self.role = kw.get("role") or ""
         self.started = False
         self.__state = None
         self.state = kw.get("state") or "default"
@@ -230,7 +231,11 @@ class TkGameCanvasSprite:
         if callback(c_dict):
             # move sprite
             self.move_animation(c_dict)
+            # confirm sprite has moved
+            return True
         # end if
+        # no moves
+        return False
     # end def
 
 
