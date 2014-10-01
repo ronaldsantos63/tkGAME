@@ -52,6 +52,18 @@ class TkGameMatrixSprite (CS.TkGameCanvasSprite):
     # end def
 
 
+    def destroy (self, *args, **kw):
+        """
+            event handler for sprite destruction;
+            should be reimplemented in subclass;
+        """
+        # stop animations
+        super().destroy(*args, **kw)
+        # delete from matrix
+        self.matrix.drop_xy(self.xy)
+    # end def
+
+
     def look_ahead (self, sx, sy):
         """
             looks around current sprite to see who might collide;

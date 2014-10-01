@@ -54,8 +54,29 @@ class TkGameAnimationPool:
         """
         # thread-ids dictionary inits
         self.tid = dict()
+        # atomic lockers inits
+        self.lockers = dict()
         # tkinter default root object
         self.root = TK._default_root
+    # end def
+
+
+    def _atomic (self, callback, *args):
+        """
+            ensures each callback runs in atomic mode (neither
+            interrupted nor called several times);
+        """
+        # inits
+        _locked = self.lockers.setdefault(callback, False)
+        # enabled ?
+        if not _locked:
+            # set atomic mode
+            self.lockers[callback] = True
+            # run callback
+            callback(*args)
+            # release atomic mode
+            self.lockers[callback] = False
+        # end if
     # end def
 
 
@@ -69,7 +90,9 @@ class TkGameAnimationPool:
         # stop previous running thread, if any
         self.stop(callback)
         # schedule new thread id for further call
-        self.tid[callback] = self.root.after(delay, callback, *args)
+        self.tid[callback] = self.root.after(
+            delay, self._atomic, callback, *args
+        )
     # end def
 
 

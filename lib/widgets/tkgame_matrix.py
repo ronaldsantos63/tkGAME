@@ -45,6 +45,7 @@ class TkGameMatrix:
         self.rows = kw.get("rows") or 0
         self.columns = kw.get("columns") or 0
         self.cellsize = kw.get("cellsize") or self.CELLSIZE
+        self.offset_xy = kw.get("offset_xy") or (0, 0)
         # external matrix data support
         self.resize(kw.get("data"))
     # end def
@@ -103,7 +104,7 @@ class TkGameMatrix:
 
     def bbox (self):
         """
-            returns matrix bounding box;
+            returns matrix (rows, columns) bounding box;
         """
         return (0, 0, max(0, self.rows - 1), max(0, self.columns - 1))
     # end def
@@ -111,12 +112,15 @@ class TkGameMatrix:
 
     def bbox_xy (self):
         """
-            returns estimated graphical bounding box of the matrix;
+            returns canvas estimated (x1, y1, x2, y2) graphical
+            bounding box of the matrix;
         """
+        # inits
+        x0, y0 = self.offset_xy
         return (
-            0, 0,
-            max(0, self.columns * self.cellsize - 1),
-            max(0, self.rows * self.cellsize - 1)
+            x0, y0,
+            max(x0, x0 + self.columns * self.cellsize - 1),
+            max(y0, y0 + self.rows * self.cellsize - 1)
         )
     # end def
 
@@ -145,9 +149,12 @@ class TkGameMatrix:
             returns center (x, y) coordinates of a matrix cell
             located at (row, column);
         """
+        # inits
         row, column = row_column
+        x0, y0 = self.offset_xy
         return (
-            (column + 0.5) * self.cellsize, (row + 0.5) * self.cellsize
+            x0 + (column + 0.5) * self.cellsize,
+            y0 + (row + 0.5) * self.cellsize
         )
     # end def
 
@@ -171,6 +178,7 @@ class TkGameMatrix:
         """
         # inits
         row, column = row_column
+        x0, y0 = self.offset_xy
         # relative_row, relative_column
         rr, rc = {
             self.TOP_LEFT: (0, 0),
@@ -178,7 +186,10 @@ class TkGameMatrix:
             self.BOTTOM_LEFT: (1, 0),
             self.BOTTOM_RIGHT: (1, 1),
         }.get(corner) or (0, 0)
-        return ((column + rc) * self.cellsize, (row + rr) * self.cellsize)
+        return (
+            x0 + (column + rc) * self.cellsize,
+            y0 + (row + rr) * self.cellsize
+        )
     # end def
 
 
@@ -329,6 +340,26 @@ class TkGameMatrix:
     # end def
 
 
+    @property
+    def offset_xy (self):
+        """
+            canvas point of origin for current matrix;
+        """
+        return (self.offset_x, self.offset_y)
+    # end def
+
+    @offset_xy.setter
+    def offset_xy (self, tuple_xy):
+        # inits
+        self.offset_x, self.offset_y = tuple_xy
+    # end def
+
+    @offset_xy.deleter
+    def offset_xy (self):
+        del self.offset_x, self.offset_y
+    # end def
+
+
     def rebind (self, row_column, circular=False):
         """
             rebinds (row, column) matrix location to fit into
@@ -344,8 +375,8 @@ class TkGameMatrix:
     def rebind_xy (self, xy, circular=False):
         """
             rebinds (x, y) coordinates to fit into current matrix
-            bounding box (bbox_xy);
-            if @circular is True, any overflow will return to zero;
+            bounding box (bbox_xy); if @circular is True, any
+            overflow will return to x0 and/or y0 of self.offset_xy;
             returns new rebound (x, y) coordinates;
         """
         # return results
@@ -464,11 +495,16 @@ class TkGameMatrix:
 
     def row_column (self, xy):
         """
-            converts an xy = (x, y) position to (row, column) position
+            converts an (x, y) canvas position to (row, column)
+            matrix position;
         """
         # inits
         x, y = xy
-        return (y//self.cellsize, x//self.cellsize)
+        x0, y0 = self.offset_xy
+        return (
+            max(0, (y - y0) // self.cellsize),
+            max(0, (x - x0) // self.cellsize)
+        )
     # end def
 
 
@@ -491,7 +527,7 @@ class TkGameMatrix:
 
     def width_height (self):
         """
-            returns estimated graphical (width, height) of the matrix
+            returns canvas estimated (width, height) of the matrix;
         """
         return (self.columns * self.cellsize, self.rows * self.cellsize)
     # end def

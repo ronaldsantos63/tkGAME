@@ -89,6 +89,18 @@ class TkGameCanvasSprite:
     # end def
 
 
+    def destroy (self, *args, **kw):
+        """
+            event handler for sprite destruction;
+            should be reimplemented in subclass;
+        """
+        # stop animations
+        self.stop()
+        # delete from canvas
+        self.canvas.delete(self.canvas_id)
+    # end def
+
+
     def get_sprites_from_ids (self, list_ids, exclude=None):
         """
             retrieves registered sprites in owner's dict along with
