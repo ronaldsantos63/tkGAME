@@ -142,6 +142,49 @@ class TkGameEventManager:
     # end def
 
 
+    def disconnect_dict (self, events_dict):
+        """
+            disconnects (signal, slots) pairs in dict() object;
+            slots can be a single callback or one of tuple, list, set;
+            returns True on success, False otherwise;
+        """
+        # param controls
+        if events_dict and isinstance(events_dict, dict):
+            # loop on items
+            for (_signal, _slots) in events_dict.items():
+                if isinstance(_slots, (tuple, list, set)):
+                    self.disconnect(_signal, *_slots)
+                else:
+                    self.disconnect(_signal, _slots)
+                # end if
+            # end for
+            # operation succeeded
+            return True
+        # unsupported
+        else:
+            raise TypeError("Expected plain dict() object type.")
+        # end if
+        # operation failed
+        return False
+    # end def
+
+
+    def disconnect_group (self, groupname):
+        """
+            disconnects only signals which name starts with @groupname;
+            for each signal, all slots are removed at once;
+        """
+        # browse signals list
+        for _signal in set(self.connections):
+            # signal in group?
+            if str(_signal).startswith(groupname):
+                # disconnect signal
+                self.connections.pop(_signal, None)
+            # end if
+        # end for
+    # end def
+
+
     def raise_event (self, signal, *args, **kw):
         """
             calls all attached slots to the given signal name  with
@@ -157,7 +200,7 @@ class TkGameEventManager:
             # update signal slots collection
             self.connections[signal] = _slots
             # browse the set
-            for _slot in _slots:
+            for _slot in _slots.copy():
                 # call each slot one by one
                 # with arguments and keywords
                 _slot(*args, **kw)

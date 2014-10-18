@@ -33,20 +33,17 @@ class TkGameMatrixSprite (CS.TkGameCanvasSprite):
         several states such as wait, walk, run, jump, etc;
     """
 
-    def __init__ (self, owner, matrix, canvas, **kw):
+    def __init__ (self, owner, matrix, canvas, subclassed=False, **kw):
         """
             class constructor
         """
-        # inits
-        _kw = kw.copy()
-        _kw.update(subclassed=True)
         # super class inits
-        super().__init__(owner, canvas, **_kw)
+        super().__init__(owner, canvas, subclassed=True, **kw)
         # member inits
         self.matrix = matrix
         self.row_column = (kw.get("row") or 0, kw.get("column") or 0)
         # for best simplification - hook method
-        if not kw.get("subclassed"):
+        if not subclassed:
             self.init_sprite(**kw)
         # end if
     # end def
@@ -57,10 +54,13 @@ class TkGameMatrixSprite (CS.TkGameCanvasSprite):
             event handler for sprite destruction;
             should be reimplemented in subclass;
         """
-        # stop animations
-        super().destroy(*args, **kw)
-        # delete from matrix
-        self.matrix.drop_xy(self.xy)
+        # sprite is enabled?
+        if not self.locked:
+            # delete from matrix
+            self.matrix.drop_xy(self.xy)
+            # stop all
+            super().destroy(*args, **kw)
+        # end if
     # end def
 
 
@@ -114,6 +114,10 @@ class TkGameMatrixSprite (CS.TkGameCanvasSprite):
             here is the animation of a moving sprite;
             this overrides super class function def;
         """
+        # safety controls
+        if self.locked:
+            return
+        # end if
         # moving is quite simple here
         # but you can reimplement this in your own subclasses
         dx, dy = c_dict["rel_xy"]
@@ -124,6 +128,8 @@ class TkGameMatrixSprite (CS.TkGameCanvasSprite):
         # update pos
         self.x += dx
         self.y += dy
+        # notify system
+        self.notify_event("Moved")
     # end def
 
 

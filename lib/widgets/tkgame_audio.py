@@ -28,6 +28,7 @@ import os
 
 # debugging mode
 DEBUG = False
+#~ DEBUG = True
 
 
 # module private member
@@ -39,7 +40,7 @@ def tron (message, *args, **kw):
         traces on messages for debugging session (TRON);
     """
     if DEBUG:
-        print("tkGAME::audio:{}".format(message), *args, **kw)
+        print("tkGAME::audio: {}".format(message), *args, **kw)
     # end if
 # end def
 
@@ -81,8 +82,17 @@ class BaseAudioPlayer:
         Generic asynchronous audio player class (interface);
     """
 
+    def __del__ (self):
+        """ Class destructor """
+        tron("garbage collection (GC) asked for", self)
+        self.on_garbage_collection()
+        tron("GC suppressed player:", self)
+    # end def
+
+
     def __init__ (self, volume=None):
         """ Class initialiser """
+        tron("initializing:", self)
         self.volume = volume or 1.0
     # end def
 
@@ -93,6 +103,15 @@ class BaseAudioPlayer:
             read-only property for instance class name;
         """
         return self.__class__.__name__
+    # end def
+
+
+    def on_garbage_collection (self):
+        """
+            hook method to be reimplemented in subclass;
+        """
+        # stop playing
+        self.stop()
     # end def
 
 
@@ -189,6 +208,15 @@ class WindowsAudioPlayer (BaseAudioPlayer):
         # winsound support
         import winsound as WS
         self.flags = WS.SND_FILENAME | WS.SND_ASYNC | WS.SND_NODEFAULT
+    # end def
+
+
+    def on_garbage_collection (self):
+        """
+            hook method to be reimplemented in subclass;
+        """
+        # keep quiet
+        pass
     # end def
 
 

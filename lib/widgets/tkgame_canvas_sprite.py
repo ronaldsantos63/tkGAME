@@ -38,6 +38,8 @@ class TkGameCanvasSprite:
     """
 
     # class constants
+    EVENTS_GROUP = "Game"
+
     STATUS = {
         "default": {
             "loop": False,
@@ -47,7 +49,7 @@ class TkGameCanvasSprite:
     }
 
 
-    def __init__ (self, owner, canvas, **kw):
+    def __init__ (self, owner, canvas, subclassed=False, **kw):
         """
             class constructor;
         """
@@ -59,6 +61,7 @@ class TkGameCanvasSprite:
         self.image_manager = IM.get_image_manager()
         self.images_dir = kw.get("images_dir") or ""
         self.role = kw.get("role") or ""
+        self.locked = False
         self.started = False
         self.__state = None
         self.state = kw.get("state") or "default"
@@ -66,7 +69,7 @@ class TkGameCanvasSprite:
         self.canvas_tags = kw.get("tags") or ""
         self.xy = (kw.get("x"), kw.get("y"))
         # for best simplification - hook method
-        if not kw.get("subclassed"):
+        if not subclassed:
             self.init_sprite(**kw)
         # end if
     # end def
@@ -80,6 +83,15 @@ class TkGameCanvasSprite:
     # end def
 
 
+    def bind_events (self, *args, **kw):
+        """
+            hook method to be reimplemented in subclass;
+            class event bindings;
+        """
+        pass
+    # end def
+
+
     def center_xy (self):
         """
             returns (x, y) center point of sprite in canvas;
@@ -89,15 +101,51 @@ class TkGameCanvasSprite:
     # end def
 
 
+    @property
+    def class_name (self):
+        """
+            READ-ONLY property;
+            returns instance's class name;
+        """
+        return self.__class__.__name__
+    # end def
+
+
     def destroy (self, *args, **kw):
         """
             event handler for sprite destruction;
             should be reimplemented in subclass;
         """
-        # stop animations
-        self.stop()
-        # delete from canvas
-        self.canvas.delete(self.canvas_id)
+        # sprite is enabled?
+        if not self.locked:
+            # lock sprite to avoid unexpected events
+            self.locked = True
+            # stop and lock animations
+            self.stop()
+            self.animations.lock(self.image_animation_loop)
+            # remove events before dying!
+            self.unbind_events()
+            # delete from canvas
+            self.canvas.delete(self.canvas_id)
+            # notify system (e.g. for garbage collection)
+            self.notify_event("Destroyed")
+        # end if
+    # end def
+
+
+    def get_event_name (self, action, group=None):
+        """
+            hook method to be reimplemented in subclass;
+            returns current 'event name' along @action for this
+            sprite class;
+            all arguments are CASE SENSITIVE;
+            template: '{event_group}:{sprite_name}:{action}';
+            example: Game:Player:Moved;
+        """
+        # param inits
+        group = group or self.EVENTS_GROUP
+        # get canonized event name
+        return "{}:{}:{}".format(group, self.sprite_name, action)
     # end def
 
 
@@ -117,6 +165,10 @@ class TkGameCanvasSprite:
         """
             sprite's image animation loop;
         """
+        # safety controls
+        if self.locked:
+            return
+        # end if
         # inits
         _status = self.STATUS[self.state]
         _image = self.image_manager.get_image(
@@ -214,6 +266,10 @@ class TkGameCanvasSprite:
         """
             here is the animation of a moving sprite;
         """
+        # safety controls
+        if self.locked:
+            return
+        # end if
         # moving is quite simple here
         # but you can reimplement this in your own subclasses
         dx, dy = c_dict["dx"], c_dict["dy"]
@@ -222,6 +278,8 @@ class TkGameCanvasSprite:
         # update pos
         self.x += dx
         self.y += dy
+        # notify system
+        self.notify_event("Moved")
     # end def
 
 
@@ -233,6 +291,10 @@ class TkGameCanvasSprite:
             callback function will get in argument
             self.look_ahead()'s return value;
         """
+        # safety controls
+        if self.locked:
+            return
+        # end if
         # param inits
         if not callable(callback):
             callback = lambda c_dict: not c_dict.get("sprites")
@@ -241,6 +303,8 @@ class TkGameCanvasSprite:
         c_dict = self.look_ahead(sx, sy)
         # allowed to move?
         if callback(c_dict):
+            # notify system
+            self.notify_event("Moving")
             # move sprite
             self.move_animation(c_dict)
             # confirm sprite has moved
@@ -248,6 +312,22 @@ class TkGameCanvasSprite:
         # end if
         # no moves
         return False
+    # end def
+
+
+    def notify_event (self, action):
+        """
+            hook method to be reimplemented in subclass;
+            notifies application of some general and specific actions;
+        """
+        # general notification
+        self.events.raise_event(
+            "Canvas:Sprite:{}".format(action), sprite=self
+        )
+        # specific notification
+        self.events.raise_event(
+            self.get_event_name(action), sprite=self
+        )
     # end def
 
 
@@ -260,6 +340,16 @@ class TkGameCanvasSprite:
     # end def
 
 
+    def on_start (self, *args, **kw):
+        """
+            hook method to be reimplemented in subclass;
+            this happens just after self.start() has been called;
+        """
+        # enter the loop
+        self.update_image_animation_loop()
+    # end def
+
+
     def setup (self):
         """
             sets up sprite on canvas, if not already done;
@@ -268,17 +358,28 @@ class TkGameCanvasSprite:
         if not self.canvas_id:
             # create sprite on canvas
             self.canvas_id = self.canvas.create_image(
-                self.x, self.y, anchor='center', tags=self.canvas_tags,
+                self.x, self.y,
+                anchor="center",
+                tags=self.canvas_tags,
             )
             # load sprite's animation pictures
             self.load_images()
             # notify sprite's creation (e.g. for registration)
-            self.events.raise_event(
-                "Canvas:Sprite:Created",
-                canvas_id=self.canvas_id,
-                sprite=self,
-            )
+            self.notify_event("Setup")
         # end if
+    # end def
+
+
+    @property
+    def sprite_name (self):
+        """
+            READ-ONLY property;
+            hook method to be reimplemented in subclass;
+            returns sprite's genuine name (case-sensitive);
+            you may define some logic along with your own sprite
+            naming convention;
+        """
+        return "Sprite"
     # end def
 
 
@@ -286,12 +387,22 @@ class TkGameCanvasSprite:
         """
             starting sprite's image animation loop;
         """
-        # set up sprite if not already done
-        self.setup()
-        # sprite has been started
-        self.started = True
-        # enter the loop
-        self.update_image_animation_loop()
+        # not already running?
+        if not self.started:
+            # sprite is now started
+            self.started = True
+            # set up sprite if not already done
+            self.setup()
+            # hook method for subclass
+            self.on_start()
+            # bind events
+            self.bind_events()
+            # notify system
+            self.notify_event("Started")
+        # notify error
+        else:
+            raise TkGameSpriteError("sprite has already been started.")
+        # end if
     # end def
 
 
@@ -316,6 +427,8 @@ class TkGameCanvasSprite:
             self.__state = value
             # update animation loop if started
             self.update_image_animation_loop()
+            # notify system
+            self.notify_event("State:Changed")
         else:
             raise TkGameSpriteError(
                 "unsupported value '{v}' for 'state' attribute."
@@ -340,12 +453,22 @@ class TkGameCanvasSprite:
     # end def
 
 
+    def unbind_events (self, *args, **kw):
+        """
+            hook method to be reimplemented in subclass;
+            class event unbindings;
+        """
+        pass
+    # end def
+
+
     def update_image_animation_loop (self):
         """
             updates sprite's image animation loop;
         """
         # allowed to proceed?
-        if self.started:
+        if self.started and not self.locked:
+            # threaded animation loop
             self.animations.run_after(1, self.image_animation_loop)
         # end if
     # end def
