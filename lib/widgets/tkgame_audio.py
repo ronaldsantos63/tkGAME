@@ -307,11 +307,11 @@ class GstAudioPlayer (BaseAudioPlayer):
         """
             stops playback for eventual pending audio data;
         """
+        # stop playing audio data
+        self.player.set_state(Gst.State.NULL)
         # CAUTION:
         # 'uri' property must be reset because of multiple calls
         self.player.set_property("uri", "")
-        # stop playing audio data
-        self.player.set_state(Gst.State.NULL)
         # debugging session
         tron("stopped audio playback.")
     # end def
