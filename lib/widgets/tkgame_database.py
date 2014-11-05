@@ -201,7 +201,7 @@ class TkGameDatabase:
         else:
             # throw exception
             raise TkGameDatabaseError(
-                "could not retrieve last row id: "
+                "could not fetch data: "
                 "no pending cursor by now (DB not open?)."
             )
         # end if
