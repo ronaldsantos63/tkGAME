@@ -45,6 +45,8 @@ def rotate_left (sequence, inplace=False):
             # object must be a mutable sequence (list)
             sequence.append(sequence.pop(0))
         # end if
+        # return sequence itself
+        return sequence
     # copy instance
     else:
         # object must be list or tuple
@@ -68,6 +70,8 @@ def rotate_right (sequence, inplace=False):
             # object must be a mutable sequence (list)
             sequence.insert(0, sequence.pop(-1))
         # end if
+        # return sequence itself
+        return sequence
     # copy instance
     else:
         # object must be list or tuple
