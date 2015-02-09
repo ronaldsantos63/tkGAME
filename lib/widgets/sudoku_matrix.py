@@ -884,27 +884,29 @@ class SudokuMatrixSolver (SudokuMatrix):
             latin square algorithm; takes @seed sequence and builds
             matrix values by rotating left this sequence at each next
             row position; row positions sequence has been slightly
-            improved by myself, as I noticed jumping to next band
-            rather than next linear row was sufficient to comply with
-            Sudoku's third rule: all distinct items must appear only
-            once into a box region;
+            improved by myself, as I noticed jumping to next relative
+            band row position rather than next contiguous row position
+            was quite sufficient to comply with Sudoku's third rule:
+            all distinct items must appear only once into a box region;
 
             I made this (while rotating left sequence at each step):
 
                    +--row0          1 2 3 4 5 6 7 8 9   (1)
-                +--|--row3<-+       4 5 6 7 8 9 1 2 3   (4)
-             +--|--|--row6<-|--+    7 8 9 1 2 3 4 5 6   (7)
+                +--|--row3<-+       4 5 6 7 8 9 1 2 3       (4)
+             +--|--|--row6<-|--+    7 8 9 1 2 3 4 5 6           (7)
              |  |  +->row1  |  |    2 3 4 5 6 7 8 9 1   (2)
-             |  +--|->row4  |  |    5 6 7 8 9 1 2 3 4   (5)
-             +--|--|->row7  |  |    8 9 1 2 3 4 5 6 7   (8)
+             |  +--|->row4  |  |    5 6 7 8 9 1 2 3 4       (5)
+             +--|--|->row7  |  |    8 9 1 2 3 4 5 6 7           (8)
              |  |  +->row2--+  |    3 4 5 6 7 8 9 1 2   (3)
-             |  +---->row5-----+    6 7 8 9 1 2 3 4 5   (6)
-             +------->row8          9 1 2 3 4 5 6 7 8   (9)
+             |  +---->row5-----+    6 7 8 9 1 2 3 4 5       (6)
+             +------->row8          9 1 2 3 4 5 6 7 8           (9)
 
             This Euler improved algorithm allows 9! = 362,880 distinct
-            playable grids; adding to this a variable number of GIVENS
-            for each distinct grid, this makes hours and hours of
-            pleasant game!
+            playable grids; of course, you can mix this with matrix
+            vertical/horizontal morphs on chutes and many other mixups,
+            but I think adding simply to this a variable number of
+            GIVENS for each distinct grid will probably provide hours
+            and hours of pleasant game!
         """
         # ensure mutable list
         _seq = list(seed)
