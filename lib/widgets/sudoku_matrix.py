@@ -272,7 +272,7 @@ class SudokuMatrix (Matrix):
         from 1 to 9, alphabetical letters or even symbols;
         - each CELL may contain 1 to 9 ITEMS or the Python value None;
         - for historical reasons, ITEMS are frequently called VALUES;
-        - a VALUE is always an UNIQUE ITEM into a CELL;
+        - a VALUE is always an UNIQUE ITEM into a UNIQUE CELL;
         - to avoid confusion, we choose here to call VALUES unique ITEM
         into SEVERAL CELLS and ITEMS several values into an UNIQUE
         CELL;
