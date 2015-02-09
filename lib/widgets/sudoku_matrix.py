@@ -502,9 +502,9 @@ class SudokuMatrix (Matrix):
 
     def set_answer_values (self, answers):
         """
-            sets matrix' cells with unique answer value for each cell;
-            answer values are kept hidden unless self.reveal() is
-            called; see class doc for more detail;
+            sets matrix' cells with unique answer value (or None) for
+            each cell; answer values are kept hidden unless calling
+            self.reveal();
         """
         # internal def
         self.__set_cells(self, answers, "set_answer_value")
@@ -513,11 +513,11 @@ class SudokuMatrix (Matrix):
 
     def set_column_values (self, column, values):
         """
-            sets unique value for each cell in @column column; will
-            raise SudokuMatrixError if at least one value into @values
-            unique value list is not part of base sequence or if
-            @column is out of matrix' bounds; see class doc for more
-            detail;
+            sets unique value (or None) for each cell in @column
+            column; will raise SudokuMatrixError if at least one value
+            into @values unique value list is not part of base sequence
+            or if @column is out of matrix' bounds; see class doc for
+            more detail;
         """
         # internal def
         self.__set_cells(
@@ -538,10 +538,10 @@ class SudokuMatrix (Matrix):
 
     def set_row_values (self, row, values):
         """
-            sets unique value for each cell in @row row; will raise
-            SudokuMatrixError if at least one value into @values unique
-            value list is not part of base sequence or if @row is out
-            of matrix' bounds; see class doc for more detail;
+            sets unique value (or None) for each cell in @row row; will
+            raise SudokuMatrixError if at least one value into @values
+            unique value list is not part of base sequence or if @row
+            is out of matrix' bounds; see class doc for more detail;
         """
         # internal def
         self.__set_cells(self.get_row_cells(row), values, "set_value")
@@ -561,23 +561,25 @@ class SudokuMatrix (Matrix):
 
     def strip_value (self, value, row, column):
         """
-            strips @value from matrix cells according to Sudoku's game
-            policies i.e. strips @value from all cells in @row row,
-            @column column and (@row, @column) relied box, except for
-            matrix cell located in (@row, @column) itself, which is set
-            up to this unique @value; see class doc for more detail;
+            if @value is part of base sequence, strips @value from
+            matrix cells according to Sudoku's game policies i.e.
+            strips @value from all cells in @row row, @column column
+            and (@row, @column) relied box, except for matrix' cell
+            located in (@row, @column) itself, which is set up to this
+            unique @value; see class doc for more detail;
         """
-        # browse cells in row, column and relied box (unit)
-        for _cell in self.get_unit_cells(row, column):
-            # strip value from cell
-            _cell.strip_value(value)
+        # don't waste your time
+        if value in self.base_sequence:
+            # browse cells in row, column and relied box (unit)
+            for _cell in self.get_unit_cells(row, column):
+                # strip value from cell
+                _cell.strip_value(value)
+            # end for
+            # set value for (row, column) cell only
+            self.at(row, column).set_value(value)
             # update eventual UI display
             self.on_matrix_update()
-        # end for
-        # set value for (row, column) cell only
-        self.at(row, column).set_value(value)
-        # update eventual UI display
-        self.on_matrix_update()
+        # end if
     # end def
 
 # end class SudokuMatrix
@@ -821,14 +823,15 @@ class SudokuMatrixCell (list):
 
     def strip_value (self, value):
         """
-            silently removes @value from cell's current sequence; will
-            call self.on_unique_value() event handler if last value
-            left is unique; does nothing if cell is locked by
-            self.solved; if you want to manage ValueError by yourself,
-            simply use SudokuMatrixCell.remove(value) instead;
+            silently removes @value from cell's current sequence; does
+            nothing if @value is None or cell is locked by self.solved;
+            will call self.on_unique_value() event handler if last
+            value left is unique; if you want to manage ValueError by
+            yourself, simply use SudokuMatrixCell.remove(value)
+            instead;
         """
         # allowed to proceed?
-        if not self.solved:
+        if not (self.solved or value is None):
             # try out
             try:
                 # strip value
