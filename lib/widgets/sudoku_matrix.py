@@ -1067,18 +1067,15 @@ class SudokuMatrixSolver (SudokuMatrix):
 
     def generate (self):
         """
-            generates a Sudoku-compliant fully playable matrix; uses
-            Leonhard Euler's latin square, plus at least three
-            different shuffling algorithms;
+            generates a Sudoku-compliant fully playable matrix; this
+            generating method uses Leonhard Euler's latin square
+            algorithm (slightly improved by myself);
         """
-        # set first row random seed
+        # set random seed sequence
         _seq = list(self.base_sequence)
         random.shuffle(_seq)
-        # apply Leonhard Euler's latin square algorithm
+        # apply Leonhard Euler's improved algorithm
         self.algo_euler_latin_square(_seq)
-        # TODO: shuffling algorithms?
-        pass                                                                # FIXME
-        print("generated grid is playable:", self.verify_correct())
         # return matrix
         return self
     # end def
@@ -1158,17 +1155,47 @@ class SudokuMatrixSolver (SudokuMatrix):
             returns True if current matrix is fully compliant with all
             Sudoku policies, False otherwise;
         """
+        print("verify_correct()")
         # inits
         _base = set(self.base_sequence)
         _matrix = [_cell.get_value() for _cell in self]
+        print("verifying global harmony...")
         # verify global harmony
         if set(_matrix) != _base:
             # failed
             return False
         # end if
         # verify more detailed
+        _rows = self.rows
+        _cols = self.columns
+        print("verifying rows...")
         # browse rows
-        for _
+        for _row in range(_rows):
+            # not good?
+            if set(_matrix[_row*_cols:(_row+1)*_cols]) != _base:
+                # failed
+                return False
+            # end if
+        # end for
+        print("verifying columns...")
+        # browse columns
+        for _column in range(_cols):
+            # not good?
+            if set(_matrix[_column::_cols]) != _base:
+                # failed
+                return False
+            # end if
+        # end for
+        print("verifying boxes...")
+        # browse boxes
+        for _box in self.get_boxes():
+            # not good?
+            if set([_c.get_value() for _c in _box]) != _base:
+                # failed
+                return False
+            # end if
+        # end for
+        # what else?
         # succeeded
         return True
     # end def
