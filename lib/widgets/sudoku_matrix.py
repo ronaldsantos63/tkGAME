@@ -887,10 +887,16 @@ class SudokuMatrixSolver (SudokuMatrix):
         """
         # ensure mutable list
         _seq = list(seed)
-        # browse rows
-        for _row in range(self.rows):
-            # set row cells' unique values
-            self.set_row_values(_row, rotate_left(_seq, inplace=True))
+        _c = self.chutes
+        # browse rows into a band chute
+        for _r0 in range(_c):
+            # browse rows by band-to-band jumps
+            for _r1 in range(_c):
+                # set row cells' unique values
+                self.set_row_values(
+                    _r0 + _r1 * _c, rotate_left(_seq, inplace=True)
+                )
+            # end for
         # end for
     # end def
 
@@ -1072,6 +1078,7 @@ class SudokuMatrixSolver (SudokuMatrix):
         self.algo_euler_latin_square(_seq)
         # TODO: shuffling algorithms?
         pass                                                                # FIXME
+        print("generated grid is playable:", self.verify_correct())
         # return matrix
         return self
     # end def
@@ -1143,6 +1150,27 @@ class SudokuMatrixSolver (SudokuMatrix):
             # notify user (event handler)
             self.on_solving_failure(exception=e)
         # end try
+    # end def
+
+
+    def verify_correct (self):
+        """
+            returns True if current matrix is fully compliant with all
+            Sudoku policies, False otherwise;
+        """
+        # inits
+        _base = set(self.base_sequence)
+        _matrix = [_cell.get_value() for _cell in self]
+        # verify global harmony
+        if set(_matrix) != _base:
+            # failed
+            return False
+        # end if
+        # verify more detailed
+        # browse rows
+        for _
+        # succeeded
+        return True
     # end def
 
 # end class SudokuMatrixSolver
