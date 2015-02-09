@@ -287,14 +287,12 @@ class SudokuMatrix (Matrix):
         """
             class constructor;
         """
-        # super class inits
-        super().__init__()
         # member inits
         self.owner = kw.pop("owner", None)
         # default value (1..9)
         self.base_sequence = range(1, 10)
-        # reset matrix to new args
-        self.reset_matrix(**kw)
+        # super class inits
+        super().__init__(**kw)
     # end def
 
 
@@ -429,10 +427,11 @@ class SudokuMatrix (Matrix):
     # end def
 
 
-    def reset_matrix (self, **kw):
+    def reset (self, **kw):
         """
-            resets current matrix model; supported keywords:
-            base_sequence, answers, values, show_sieve;
+            resets current matrix model; overrides super class def;
+            supported keywords: base_sequence, answers, values,
+            show_sieve;
         """
         # inits
         self.base_sequence = tuple(
@@ -1007,18 +1006,20 @@ class SudokuMatrixSolver (SudokuMatrix):
     # end def
 
 
-    def fill_with (self, row, column):
+    def fill_with (self, row, column, **kw):
         """
             this is called by Matrix.reset_contents() super class
             method;
         """
-        # fill matrix with cells
-        return SudokuMatrixSolverCell(
-            self,
+        # make some overridings
+        kw.update(
+            owner=self,
             row=row,
             column=column,
             base_sequence=self.base_sequence,
         )
+        # fill matrix with cells
+        return SudokuMatrixSolverCell(**kw)
     # end def
 
 
@@ -1028,8 +1029,9 @@ class SudokuMatrixSolver (SudokuMatrix):
             uses a screened-by resolution algorithm;
         """
 
-                # FIXME: Euler's carré latin e.g. rotate_left(_seq) at each row?
-                #           + shuffle matrix morphs?
+                # FIXME: what about Euler's latin square?
+                # e.g. rotate_left(_seq) at each row?
+                #      + matrix shuffle algos?
 
         # reset matrix contents
         self.reset_contents()
@@ -1042,8 +1044,6 @@ class SudokuMatrixSolver (SudokuMatrix):
             # set cell value
             _cell.set_value(_seq.pop())
         # end for
-        # then solve matrix
-        self.solve()
         # return solved matrix
         return self
     # end def
@@ -1068,15 +1068,15 @@ class SudokuMatrixSolver (SudokuMatrix):
     # end def
 
 
-    def reset_matrix (self, **kw):
+    def reset (self, **kw):
         """
-            resets current matrix model;
+            resets current matrix model; overrides super class def;
             supported keywords: base_sequence, answers;
         """
         # inits
         self.cleanups = set()
         # super class inits
-        super().reset_matrix(**kw)
+        super().reset(**kw)
     # end def
 
 
