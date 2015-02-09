@@ -297,6 +297,28 @@ class SudokuMatrix (Matrix):
     # end def
 
 
+    def __set_cells (self, cells, values, cell_setter):
+        """
+            private method def for internal use only; sets a given
+            group of @cells with data coming from given @values list;
+            applies data to cell with @cell_setter attribute;
+        """
+        # list not empty?
+        if values:
+            # ensure mutable list
+            _list = list(values)
+            # browse cells
+            for _cell in cells[:min(len(_list), len(cells))]:
+                # set value
+                exec(
+                    "_cell.{attr}(_list.pop(0))"
+                    .format(attr=cell_setter)
+                )
+            # end for
+        # end if
+    # end def
+
+
     def fill_with (self, row, column):
         """
             hook method to be reimplemented in subclass; this is called
@@ -422,25 +444,17 @@ class SudokuMatrix (Matrix):
             sets matrix' cells with unique answer value for each cell;
             see class doc for more detail;
         """
-        # param control
-        if answers:
-            # ensure mutable list
-            _list = list(answers)
-            # browse cells
-            for _cell in self[:min(len(_list), len(self))]:
-                # reset answer value
-                _cell.answer = _list.pop(0)
-            # end for
-        # end if
+        # internal def
+        self.__set_cells(self, answers, "set_answer_value")
     # end def
 
 
     def set_column_values (self, column, values):
         """
             sets unique value for each cell in @column; will raise
-            SudokuMatrixError if at least one of @values unique value
-            list is not part of base sequence or if @column is out of
-            matrix' bounds; see class doc for more detail;
+            SudokuMatrixError if at least one value into @values unique
+            value list is not part of base sequence or if @column is
+            out of matrix' bounds; see class doc for more detail;
         """
         # list not empty?
         if values:
@@ -459,8 +473,8 @@ class SudokuMatrix (Matrix):
 
     def set_items (self, items):
         """
-            resets all matrix' cells with multiple items for each cell;
-            see class doc for more detail on ITEMS;
+            sets matrix' cells with multiple items for each cell; see
+            class doc for more detail;
         """
         # param control
         if items:
