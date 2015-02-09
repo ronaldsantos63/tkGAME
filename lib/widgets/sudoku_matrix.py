@@ -1261,7 +1261,7 @@ if __name__ == "__main__":
     # solver test
     matrix = SudokuMatrixSolver()
     # let's make some big tests
-    for n in range(10000):
+    for n in range(1000):
         # generation delay
         print(
             "grid generated in: {:0.6f} sec"
