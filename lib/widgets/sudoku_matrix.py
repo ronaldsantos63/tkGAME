@@ -22,10 +22,9 @@
     If not, see http://www.gnu.org/licenses/
 """
 
-# lib imports
-import copy
-import math
-import random
+# module scope global var
+
+__DEBUG__ = False
 
 
 # module scope function defs
@@ -413,7 +412,7 @@ class SudokuMatrix (Matrix):
         # put your own code in subclass
         pass
         # debugging
-        if __debug__:
+        if __DEBUG__ and __debug__:
             print("\n[DEBUG]\tcurrent matrix state:")
             print(self)
             print()
@@ -440,8 +439,8 @@ class SudokuMatrix (Matrix):
                 "Cannot use matrix this way."
             )
         # end if
-        # other inits
-        self.box_size = math.sqrt(self.base_len)
+        # box_size = sqrt(base_len)
+        self.box_size = self.base_len**0.5
         # invalid box size?
         if int(self.box_size) != self.box_size:
             # notify error
@@ -1071,9 +1070,11 @@ class SudokuMatrixSolver (SudokuMatrix):
             generating method uses Leonhard Euler's latin square
             algorithm (slightly improved by myself);
         """
+        # lib import
+        from random import shuffle
         # set random seed sequence
         _seq = list(self.base_sequence)
-        random.shuffle(_seq)
+        shuffle(_seq)
         # apply Leonhard Euler's improved algorithm
         self.algo_euler_latin_square(_seq)
         # return matrix
@@ -1159,7 +1160,6 @@ class SudokuMatrixSolver (SudokuMatrix):
         # inits
         _base = set(self.base_sequence)
         _matrix = [_cell.get_value() for _cell in self]
-        print("verifying global harmony...")
         # verify global harmony
         if set(_matrix) != _base:
             # failed
@@ -1168,7 +1168,6 @@ class SudokuMatrixSolver (SudokuMatrix):
         # verify more detailed
         _rows = self.rows
         _cols = self.columns
-        print("verifying rows...")
         # browse rows
         for _row in range(_rows):
             # not good?
@@ -1177,7 +1176,6 @@ class SudokuMatrixSolver (SudokuMatrix):
                 return False
             # end if
         # end for
-        print("verifying columns...")
         # browse columns
         for _column in range(_cols):
             # not good?
@@ -1186,7 +1184,6 @@ class SudokuMatrixSolver (SudokuMatrix):
                 return False
             # end if
         # end for
-        print("verifying boxes...")
         # browse boxes
         for _box in self.get_boxes():
             # not good?
@@ -1196,6 +1193,7 @@ class SudokuMatrixSolver (SudokuMatrix):
             # end if
         # end for
         # what else?
+        print("grid is OK.")
         # succeeded
         return True
     # end def
@@ -1234,12 +1232,22 @@ class SudokuMatrixSolverCell (SudokuMatrixCell):
 
 # make some tests
 if __name__ == "__main__":
-    # ancestor matrix test
-    #~ matrix = Matrix()
-    # standard matrix test
-    matrix = SudokuMatrix()
+    # get chronometer
+    from timeit import timeit
     # solver test
     matrix = SudokuMatrixSolver()
-    print("\nsolved matrix:")
-    print(matrix.generate())
+    # let's make some big tests
+    for n in range(10000):
+        # generation delay
+        print(
+            "grid generated in: {:0.6f} sec"
+            .format(timeit(matrix.generate, number=1))
+        )
+        # verify correct grid
+        if not matrix.verify_correct():
+            print(matrix)
+            exit("\n[ERROR]\tincorrect grid!")
+        # end if
+    # end for
+    print("\n[SUCCESS]\tall has been tested OK.")
 # end if
