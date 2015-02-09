@@ -270,10 +270,11 @@ class SudokuMatrix (Matrix):
 
         - a Sudoku GRID uses a BASE SEQUENCE of 9 ITEMS e.g. numbers
         from 1 to 9, alphabetical letters or even symbols;
+        - each CELL may contain 1 to 9 ITEMS or the Python value None;
         - for historical reasons, ITEMS are frequently called VALUES;
-        - a VALUE is always an ITEM unique value;
+        - a VALUE is always a unique ITEM into a CELL;
         - to avoid confusion, we choose here to call historical values
-        ITEMS and unique item values VALUES;
+        ITEMS;
         - each ITEM must appear ONLY ONCE into a given UNIT i.e. only
         once into a given ROW, only once into a given COLUMN and only
         once into a given BOX;
@@ -404,7 +405,7 @@ class SudokuMatrix (Matrix):
         self.reset_contents()
         # reset matrix' item unique values
         self.reset_values(kw.get("values"))
-        # set answer values
+        # set answer unique values (or None)
         self.set_answer_values(kw.get("answer_list"))
     # end def
 
