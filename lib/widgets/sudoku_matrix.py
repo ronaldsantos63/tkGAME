@@ -207,7 +207,7 @@ class Matrix (list):
 
     def reset (self, **kw):
         """
-            resets matrix to fit new @kw arguments;
+            resets matrix to fit new @kw keyword arguments;
             supported keywords: rows, columns, fill_with;
         """
         # inits
@@ -398,8 +398,8 @@ class SudokuMatrix (Matrix):
 
     def on_matrix_update (self, *args, **kw):
         """
-            event handler: updates eventual GUI display of matrix;
-            hook method to be reimplemented in subclass;
+            event handler: updates eventual GUI display of matrix; hook
+            method to be reimplemented in subclass;
         """
         # put your own code in subclass
         pass
@@ -412,26 +412,11 @@ class SudokuMatrix (Matrix):
     # end def
 
 
-    def reset_cells (self, **kw):
-        """
-            resets all matrix cells with common @kw keyword args;
-            supported common keywords: base_sequence, show_sieve;
-        """
-        # browse cells
-        for _cell in self:
-            # reset cell
-            _cell.reset(**kw)
-        # end for
-        # update eventual UI display
-        self.on_matrix_update()
-    # end def
-
-
     def reset (self, **kw):
         """
-            resets current matrix model; overrides super class def;
-            supported keywords: base_sequence, answers, values,
-            show_sieve;
+            resets current matrix model; overrides super class method
+            def; see class doc for more detail; supported keywords:
+            base_sequence, answers, values, show_sieve;
         """
         # inits
         self.base_sequence = tuple(
@@ -458,20 +443,35 @@ class SudokuMatrix (Matrix):
         # end if
         # more inits
         self.box_size = int(self.box_size)
-        # nb of chutes per dimension (horizontally, vertically)
         # see class doc for more detail
+        # nb of chutes per dimension (horizontally, vertically)
         # chutes = base_len/box_size = n²/n = n = box_size
         self.chutes = self.box_size
         # a Sudoku grid is a square
         self.rows = self.columns = self.base_len
         # reset matrix contents
         self.reset_contents(**kw)
-        # set matrix' cells with unique value for each cell
+        # set matrix' cells with unique value (or None) for each cell
+        # this allows to set up GIVENS on-the-fly
         # see class doc for more detail
         self.set_values(kw.get("values"))
         # set matrix' cells with unique answer value for each cell
-        # see class doc for more detail
         self.set_answer_values(kw.get("answers"))
+        # update eventual UI display
+        self.on_matrix_update()
+    # end def
+
+
+    def reset_cells (self, **kw):
+        """
+            resets all matrix' cells with new common @kw keyword args;
+            supported common keywords: base_sequence, show_sieve;
+        """
+        # browse cells
+        for _cell in self:
+            # reset cell
+            _cell.reset(**kw)
+        # end for
         # update eventual UI display
         self.on_matrix_update()
     # end def
@@ -1072,7 +1072,7 @@ class SudokuMatrixSolver (SudokuMatrix):
 
     def reset (self, **kw):
         """
-            resets current matrix model; overrides super class def;
+            resets current matrix model; inherits super class def;
             supported keywords: base_sequence, answers, show_sieve;
         """
         # inits
@@ -1139,7 +1139,7 @@ if __name__ == "__main__":
     # ancestor matrix test
     #~ matrix = Matrix()
     # standard matrix test
-    #~ matrix = SudokuMatrix()
+    matrix = SudokuMatrix()
     # solver test
     matrix = SudokuMatrixSolver()
     print("\nsolved matrix:")
