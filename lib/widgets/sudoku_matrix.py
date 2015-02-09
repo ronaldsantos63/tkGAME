@@ -630,11 +630,11 @@ class SudokuMatrixCell (list):
             # too many data to show off?
             if len(self) == len(self.base_sequence):
                 # simplify
-                return "   ?    "
+                return "?"
             # what else?
             else:
                 # set digest
-                return "{:^8s}".format("".join(map(repr, self)))
+                return "".join(map(repr, self))
             # end if
         # NO debug mode
         else:
@@ -878,6 +878,23 @@ class SudokuMatrixSolver (SudokuMatrix):
         additional features);
         Please, read SudokuMatrix class doc for more detail;
     """
+
+    def algo_euler_latin_square (self, seed):
+        """
+            Leonhard Euler's (april 15th, 1707 - sept. 18th, 1783)
+            latin square algorithm; takes @seed sequence and builds
+            matrix values by rotating left this sequence at each row;
+        """
+        # ensure mutable list
+        _seq = list(seed)
+        # browse rows
+        for _row in range(self.rows):
+            # set row cells' unique values
+            self.set_row_values(_row, rotate_left(_seq, inplace=True))
+        # end for
+        # that's all, folks!
+    # end def
+
 
     def do_finished (self):
         """
