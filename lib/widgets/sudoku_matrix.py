@@ -882,7 +882,29 @@ class SudokuMatrixSolver (SudokuMatrix):
         """
             Leonhard Euler's (april 15th, 1707 - sept. 18th, 1783)
             latin square algorithm; takes @seed sequence and builds
-            matrix values by rotating left this sequence at each row;
+            matrix values by rotating left this sequence at each next
+            row position; row positions sequence has been slightly
+            improved by myself, as I noticed jumping to next band
+            rather than next linear row was sufficient to comply with
+            Sudoku's third rule: all distinct items must appear only
+            once into a box region;
+
+            I made this (while rotating left sequence at each step):
+
+                   +--row0          1 2 3 4 5 6 7 8 9   (1)
+                +--|--row3<-+       4 5 6 7 8 9 1 2 3   (4)
+             +--|--|--row6<-|--+    7 8 9 1 2 3 4 5 6   (7)
+             |  |  +->row1  |  |    2 3 4 5 6 7 8 9 1   (2)
+             |  +--|->row4  |  |    5 6 7 8 9 1 2 3 4   (5)
+             +--|--|->row7  |  |    8 9 1 2 3 4 5 6 7   (8)
+             |  |  +->row2--+  |    3 4 5 6 7 8 9 1 2   (3)
+             |  +---->row5-----+    6 7 8 9 1 2 3 4 5   (6)
+             +------->row8          9 1 2 3 4 5 6 7 8   (9)
+
+            This Euler improved algorithm allows 9! = 362,880 distinct
+            playable grids; adding to this a variable number of GIVENS
+            for each distinct grid, this makes hours and hours of
+            pleasant game!
         """
         # ensure mutable list
         _seq = list(seed)
