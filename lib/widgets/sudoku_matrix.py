@@ -123,8 +123,8 @@ class Matrix (list):
 
     def at (self, row, column):
         """
-            retrieves @matrix' cell located at (row, column);
-            will raise IndexError if location is out of matrix' bounds;
+            retrieves matrix' cell located at (@row, @column); will
+            raise IndexError if location is out of matrix' bounds;
         """
         # ensure location is in matrix' bounds
         self.ensure_inbounds(row, column)
@@ -135,8 +135,8 @@ class Matrix (list):
 
     def ensure_inbounds (self, row, column):
         """
-            ensures (row, column) location is actually into matrix'
-            bounds; raises IndexError otherwise;
+            ensures (@row, @column) cell location is actually into
+            matrix' bounds; raises IndexError otherwise;
         """
         # out of bounds?
         if not(0 <= row < self.rows and 0 <= column < self.columns):
@@ -152,7 +152,7 @@ class Matrix (list):
     def fill_with (self, row, column):
         """
             hook method to be reimplemented in subclass;
-            allows to fill matrix with default values or objects;
+            fills matrix with default items (values or objects);
         """
         # fill matrix with None values
         return None
@@ -161,8 +161,8 @@ class Matrix (list):
 
     def get_column_cells (self, column):
         """
-            retrieves all @column cells in matrix;
-            will raise IndexError if out of matrix' bounds;
+            retrieves all @column cells from matrix; will raise
+            IndexError if location is out of matrix' bounds;
         """
         # ensure location is in matrix' bounds
         self.ensure_inbounds(0, column)
@@ -173,7 +173,8 @@ class Matrix (list):
 
     def get_columns (self):
         """
-            retrieves all columns in matrix;
+            retrieves all columns in matrix, sequentially (from left to
+            right);
         """
         # return columns
         return [self[i::self.columns] for i in range(self.columns)]
@@ -182,8 +183,8 @@ class Matrix (list):
 
     def get_row_cells (self, row):
         """
-            retrieves all @row cells in matrix;
-            will raise IndexError if out of matrix' bounds;
+            retrieves all @row cells from matrix; will raise IndexError
+            if location is out of matrix' bounds;
         """
         # ensure location is in matrix' bounds
         self.ensure_inbounds(row, 0)
@@ -194,7 +195,8 @@ class Matrix (list):
 
     def get_rows (self):
         """
-            retrieves all rows in matrix;
+            retrieves all rows in matrix, sequentially (from top to
+            bottom);
         """
         # return rows
         return [
@@ -225,8 +227,8 @@ class Matrix (list):
 
     def reset_contents (self, *args, **kw):
         """
-            event handler: resets matrix' contents;
-            fills matrix with self.fill_with callable return value;
+            event handler: resets matrix' contents; fills matrix with
+            self.fill_with callable return value;
         """
         # ensure callable
         if not callable(self.fill_with):
@@ -297,8 +299,8 @@ class SudokuMatrix (Matrix):
 
     def fill_with (self, row, column):
         """
-            this is called by Matrix.reset_contents() super class
-            method;
+            hook method to be reimplemented in subclass; this is called
+            by Matrix.reset_contents() super class method;
         """
         # fill matrix with cells
         return SudokuMatrixCell(
@@ -313,7 +315,7 @@ class SudokuMatrix (Matrix):
     def get_boxes (self):
         """
             retrieves all boxes in matrix, sequentially (left-to-right
-            and top-down);
+            and top-down); see class doc for more detail;
         """
         # return boxes
         return [
@@ -329,7 +331,7 @@ class SudokuMatrix (Matrix):
     def get_box_cells (self, row, column):
         """
             retrieves all cells of (@row, @column) relied box in
-            matrix;
+            matrix; see class doc for more detail;
         """
         # ensure location is in matrix' bounds
         self.ensure_inbounds(row, column)
@@ -353,11 +355,12 @@ class SudokuMatrix (Matrix):
 
     def get_unit_cells (self, row, column):
         """
-            retrieves all surrounding cells for (row, column) cell
+            retrieves all surrounding cells for (@row, @column) cell
             location (including this cell) along with Sudoku policies
             compliance e.g. cells in @row row, in @column column and in
             (@row, @column) relied box; Sudoku term for a (row, column,
-            box) group of cells is 'unit' or 'scope' - see class doc;
+            box) group of cells is 'unit' or 'scope'; see class doc for
+            more detail;
         """
         # return surrounding cells
         return set(
@@ -371,7 +374,7 @@ class SudokuMatrix (Matrix):
     def reset_matrix (self, **kw):
         """
             resets current matrix model;
-            supported keywords: base_sequence, answer_list, values;
+            supported keywords: base_sequence, answers, values;
         """
         # inits
         self.base_sequence = tuple(
@@ -399,46 +402,30 @@ class SudokuMatrix (Matrix):
         # more inits
         self.box_size = int(self.box_size)
         # nb of chutes per dimension (horizontally, vertically)
-        # chute = band or stack - see class doc
+        # see class doc for more detail
         self.chutes = int(self.base_len // self.box_size)
         # a Sudoku grid is a square
         self.rows = self.columns = self.base_len
         # reset matrix contents
         self.reset_contents()
-        # reset matrix' unique value for several cells
-        self.reset_values(kw.get("values"))
-        # set answer unique values (or None)
-        self.set_answer_values(kw.get("answer_list"))
+        # set matrix' cells with unique value for each cell
+        # see class doc for more detail
+        self.set_values(kw.get("values"))
+        # set matrix' cells with unique answer value for each cell
+        # see class doc for more detail
+        self.set_answer_values(kw.get("answers"))
     # end def
 
 
-    def reset_values (self, values):
+    def set_answer_values (self, answers):
         """
-            resets all matrix' unique value for several cells;
-            see class doc for more detail on VALUES;
-        """
-        # param control
-        if values:
-            # ensure mutable list
-            _list = list(values)
-            # browse cells
-            for _cell in self[:min(len(_list), len(self))]:
-                # reset value
-                _cell.set_value(_list.pop(0))
-            # end for
-        # end if
-    # end def
-
-
-    def set_answer_values (self, answer_list):
-        """
-            resets matrix' unique value for several cells (answer
-            attribute);
+            sets matrix' cells with unique answer value for each cell;
+            see class doc for more detail;
         """
         # param control
-        if answer_list:
+        if answers:
             # ensure mutable list
-            _list = list(answer_list)
+            _list = list(answers)
             # browse cells
             for _cell in self[:min(len(_list), len(self))]:
                 # reset answer value
@@ -450,10 +437,10 @@ class SudokuMatrix (Matrix):
 
     def set_column_values (self, column, values):
         """
-            sets unique values for each cell in @column; will raise
+            sets unique value for each cell in @column; will raise
             SudokuMatrixError if at least one of @values unique value
-            is not part of self.base_sequence or if @column is out of
-            matrix' bounds;
+            list is not part of base sequence or if @column is out of
+            matrix' bounds; see class doc for more detail;
         """
         # list not empty?
         if values:
@@ -465,6 +452,24 @@ class SudokuMatrix (Matrix):
             for _cell in _cells[:min(len(_list), len(_cells))]:
                 # reset value
                 _cell.set_value(_list.pop(0))
+            # end for
+        # end if
+    # end def
+
+
+    def set_items (self, items):
+        """
+            resets all matrix' cells with multiple items for each cell;
+            see class doc for more detail on ITEMS;
+        """
+        # param control
+        if items:
+            # ensure mutable list
+            _list = list(items)
+            # browse cells
+            for _cell in self[:min(len(_list), len(self))]:
+                # reset items
+                _cell.set_items(_list.pop(0))
             # end for
         # end if
     # end def
@@ -485,6 +490,24 @@ class SudokuMatrix (Matrix):
             _cells = self.get_row_cells(row)
             # browse cells
             for _cell in _cells[:min(len(_list), len(_cells))]:
+                # reset value
+                _cell.set_value(_list.pop(0))
+            # end for
+        # end if
+    # end def
+
+
+    def set_values (self, values):
+        """
+            resets all matrix' cells with unique value for each cell;
+            see class doc for more detail on VALUES;
+        """
+        # param control
+        if values:
+            # ensure mutable list
+            _list = list(values)
+            # browse cells
+            for _cell in self[:min(len(_list), len(self))]:
                 # reset value
                 _cell.set_value(_list.pop(0))
             # end for
@@ -973,7 +996,7 @@ class SudokuMatrixSolver (SudokuMatrix):
     def reset_matrix (self, **kw):
         """
             resets current matrix model;
-            supported keywords: base_sequence, answer_list;
+            supported keywords: base_sequence, answers;
         """
         # inits
         self.cleanups = set()
