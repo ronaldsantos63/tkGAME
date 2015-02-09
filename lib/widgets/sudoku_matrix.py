@@ -892,7 +892,6 @@ class SudokuMatrixSolver (SudokuMatrix):
             # set row cells' unique values
             self.set_row_values(_row, rotate_left(_seq, inplace=True))
         # end for
-        # that's all, folks!
     # end def
 
 
