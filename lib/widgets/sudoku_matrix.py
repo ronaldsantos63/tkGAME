@@ -1046,7 +1046,6 @@ class SudokuMatrixSolver (SudokuMatrix):
             # set cell value
             _cell.set_value(_seq.pop())
         # end for
-        self.solve()
         # return solved matrix
         return self
     # end def
@@ -1137,8 +1136,11 @@ class SudokuMatrixSolverCell (SudokuMatrixCell):
 
 # make some tests
 if __name__ == "__main__":
-    # inits
-    matrix = SudokuMatrix()
+    # ancestor matrix test
+    #~ matrix = Matrix()
+    # standard matrix test
+    #~ matrix = SudokuMatrix()
+    # solver test
     matrix = SudokuMatrixSolver()
     print("\nsolved matrix:")
     print(matrix.generate())
