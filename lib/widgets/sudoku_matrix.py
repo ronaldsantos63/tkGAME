@@ -369,7 +369,7 @@ class SudokuMatrix (Matrix):
     def reset_matrix (self, **kw):
         """
             resets current matrix model;
-            supported keywords: base_sequence, answer_list, items;
+            supported keywords: base_sequence, answer_list, values;
         """
         # inits
         self.base_sequence = tuple(
@@ -402,8 +402,8 @@ class SudokuMatrix (Matrix):
         self.rows = self.columns = self.base_len
         # reset matrix contents
         self.reset_contents()
-        # reset overridden items
-        self.reset_values(kw.get("items"))
+        # reset matrix' item unique values
+        self.reset_values(kw.get("values"))
         # set answer values
         self.set_answer_values(kw.get("answer_list"))
     # end def
@@ -411,7 +411,7 @@ class SudokuMatrix (Matrix):
 
     def reset_values (self, values):
         """
-            resets matrix' cell values;
+            resets all matrix' item unique values;
         """
         # param control
         if values:
