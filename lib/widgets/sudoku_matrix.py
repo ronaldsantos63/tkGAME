@@ -254,6 +254,31 @@ class SudokuMatrix (Matrix):
         This matrix is a subclass of Python's list class;
         This matrix can be used as a Python list sequence (with some
         additional features);
+
+        Sudoku glossary:
+
+        - a Sudoku GRID is made of ROWS, COLUMNS, BOXES and CELLS;
+        - a STACK is made of 3 contiguous vertical BOXES;
+        - a BAND is made of 3 contiguous horizontal BOXES;
+        - a CHUTE represents either a STACK or a BAND;
+        - a UNIT represents a (ROW, COLUMN, BOX) group of CELLS;
+        - a GIVEN is an initial given value;
+        - a PUZZLE is a partially complete GRID;
+        - a PROPER PUZZLE is a GRID with one unique solution;
+
+        Classical Sudoku policies:
+
+        - a Sudoku GRID uses a BASE SEQUENCE of 9 ITEMS e.g. numbers
+        from 1 to 9, alphabetical letters or even symbols;
+        - for historical reasons, ITEMS are frequently called VALUES;
+        - a VALUE is always an ITEM unique value;
+        - to avoid confusion, we choose here to call historical values
+        ITEMS and unique item values VALUES;
+        - each ITEM must appear ONLY ONCE into a given UNIT i.e. only
+        once into a given ROW, only once into a given COLUMN and only
+        once into a given BOX;
+        - to get a PROPER PUZZLE, mathematics have proved there must be
+        at least 17 GIVENS in a GRID;
     """
 
     def __init__ (self, **kw):
@@ -284,6 +309,21 @@ class SudokuMatrix (Matrix):
     # end def
 
 
+    def get_boxes (self):
+        """
+            retrieves all boxes in matrix, sequentially;
+        """
+        # return boxes
+        return [
+            self.get_box_cells(
+                _row * self.box_size, _column * self.box_size
+            )
+            for _row in range(self.rows // self.box_size)
+            for _column in range(self.columns // self.box_size)
+        ]
+    # end def
+
+
     def get_box_cells (self, row, column):
         """
             retrieves all cells of (@row, @column) relied box in
@@ -309,12 +349,13 @@ class SudokuMatrix (Matrix):
     # end def
 
 
-    def get_surrounding_cells (self, row, column):
+    def get_unit_cells (self, row, column):
         """
             retrieves all surrounding cells for (row, column) cell
             location (including this cell) along with Sudoku policies
             compliance e.g. cells in @row row, in @column column and in
-            (@row, @column) surrounding box;
+            (@row, @column) relied box; Sudoku term for a (row, column,
+            box) group of cells is 'unit' or 'scope' - see class doc;
         """
         # return surrounding cells
         return set(
@@ -328,7 +369,7 @@ class SudokuMatrix (Matrix):
     def reset_matrix (self, **kw):
         """
             resets current matrix model;
-            supported keywords: base_sequence, answer_list, values;
+            supported keywords: base_sequence, answer_list, items;
         """
         # inits
         self.base_sequence = tuple(
@@ -354,11 +395,15 @@ class SudokuMatrix (Matrix):
             )
         # end if
         # more inits
+        self.box_size = int(self.box_size)
+        # nb of chutes per dimension (horizontally, vertically)
+        self.chutes = int(self.base_len // self.box_size)
+        # a Sudoku grid is a square
         self.rows = self.columns = self.base_len
         # reset matrix contents
         self.reset_contents()
-        # reset overridden values
-        self.reset_values(kw.get("values"))
+        # reset overridden items
+        self.reset_values(kw.get("items"))
         # set answer values
         self.set_answer_values(kw.get("answer_list"))
     # end def
@@ -450,7 +495,7 @@ class SudokuMatrix (Matrix):
             matrix cell located in (@row, @column) itself;
         """
         # get cells in row, column and box
-        _cells = self.get_surrounding_cells(row, column)
+        _cells = self.get_unit_cells(row, column)
         # browse cells
         for _cell in _cells:
             # strip value from cell
