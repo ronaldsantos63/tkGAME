@@ -97,8 +97,6 @@ class Matrix (list):
         super().__init__()
         # reset matrix
         self.reset(**kw)
-        # reset matrix contents
-        self.reset_contents()
     # end def
 
 
@@ -149,10 +147,11 @@ class Matrix (list):
     # end def
 
 
-    def fill_with (self, row, column):
+    def fill_with (self, row, column, **kw):
         """
             hook method to be reimplemented in subclass;
             fills matrix with default items (values or objects);
+            this method is called by self.reset_contents();
         """
         # fill matrix with None values
         return None
@@ -208,7 +207,7 @@ class Matrix (list):
 
     def reset (self, **kw):
         """
-            resets matrix to fit with new @kw arguments;
+            resets matrix to fit new @kw arguments;
             supported keywords: rows, columns, fill_with;
         """
         # inits
@@ -220,8 +219,8 @@ class Matrix (list):
             # preserve subclass hook method overridings this way
             self.fill_with = _fill_with
         # end if
-        # clear matrix contents
-        self.clear()
+        # must reset contents to reflect changes
+        self.reset_contents(**kw)
     # end def
 
 
@@ -232,14 +231,14 @@ class Matrix (list):
         """
         # ensure callable
         if not callable(self.fill_with):
-            self.fill_with = lambda *a: None
+            self.fill_with = lambda *args, **kw: None
         # end if
         # clear matrix
         self.clear()
         # fill with default values (could be objects)
         self.extend(
             [
-                self.fill_with(_row, _column)
+                self.fill_with(_row, _column, **kw)
                 for _row in range(self.rows)
                 for _column in range(self.columns)
             ]
@@ -290,6 +289,8 @@ class SudokuMatrix (Matrix):
         """
         # super class inits
         super().__init__()
+        # member inits
+        self.owner = kw.pop("owner", None)
         # default value (1..9)
         self.base_sequence = range(1, 10)
         # reset matrix to new args
@@ -315,6 +316,8 @@ class SudokuMatrix (Matrix):
                     .format(attr=cell_setter)
                 )
             # end for
+            # update eventual UI display
+            self.on_matrix_update()
         # end if
     # end def
 
@@ -326,7 +329,7 @@ class SudokuMatrix (Matrix):
         """
         # fill matrix with cells
         return SudokuMatrixCell(
-            self,
+            owner=self,
             row=row,
             column=column,
             base_sequence=self.base_sequence
@@ -393,6 +396,48 @@ class SudokuMatrix (Matrix):
     # end def
 
 
+    def on_cell_update (self, *args, **kw):
+        """
+            event handler: updates eventual GUI display when a matrix'
+            cell is modified; hook method to be reimplemented in
+            subclass;
+        """
+        # put your own code in subclass
+        pass
+    # end def
+
+
+    def on_matrix_update (self, *args, **kw):
+        """
+            event handler: updates eventual GUI display of matrix;
+            hook method to be reimplemented in subclass;
+        """
+        # put your own code in subclass
+        pass
+        # debugging
+        print("\n[DEBUG]\tcurrent matrix state:")
+        print(self)
+        print()
+    # end def
+
+
+    def reset_cells (self, **kw):
+        """
+            resets all matrix cells with common @kw keyword args;
+            supported common keywords: base_sequence, show_sieve;
+        """
+        # browse cells
+        for _cell in self:
+            # reset cell
+            _cell.reset(**kw)
+            # update eventual UI display
+            self.on_cell_update(cell=_cell)
+        # end for
+        # update eventual UI display
+        self.on_matrix_update()
+    # end def
+
+
     def reset_matrix (self, **kw):
         """
             resets current matrix model;
@@ -436,6 +481,8 @@ class SudokuMatrix (Matrix):
         # set matrix' cells with unique answer value for each cell
         # see class doc for more detail
         self.set_answer_values(kw.get("answers"))
+        # update eventual UI display
+        self.on_matrix_update()
     # end def
 
 
@@ -508,9 +555,13 @@ class SudokuMatrix (Matrix):
         for _cell in self.get_unit_cells(row, column):
             # strip value from cell
             _cell.strip_value(value)
+            # update eventual UI display
+            self.on_matrix_update()
         # end for
         # set value for (row, column) cell only
         self.at(row, column).set_value(value)
+        # update eventual UI display
+        self.on_matrix_update()
     # end def
 
 # end class SudokuMatrix
@@ -534,16 +585,17 @@ class SudokuMatrixCell (list):
     # end def
 
 
-    def __init__ (self, owner, **kw):
+    def __init__ (self, **kw):
         """
             class constructor;
         """
         # super class inits
         super().__init__()
         # member inits
-        self.owner = owner
+        self.owner = kw.pop("owner", None)
         # default values
         self.answer = None
+        self.show_sieve = False
         self.row = self.column = 0
         self.base_sequence = range(1, 10)
         # reset cell
@@ -608,9 +660,9 @@ class SudokuMatrixCell (list):
 
     def reset (self, **kw):
         """
-            resets matrix' cell to fit kw args;
-            supported keywords: row, column, answer, base_sequence;
-            see SudokuMatrix class doc for more detail;
+            resets matrix' cell to fit kw args; see SudokuMatrix class
+            doc for more detail; supported keywords: row, column,
+            answer, base_sequence, show_sieve;
         """
         # inits
         self.solved = False
@@ -620,10 +672,47 @@ class SudokuMatrixCell (list):
             kw.get("base_sequence") or self.base_sequence
         )
         self.base_len = len(self.base_sequence)
-        # set cell items
-        self.set_items(self.base_sequence)
+        self.show_sieve = bool(kw.get("show_sieve", self.show_sieve))
         # set answer value
         self.set_answer_value(kw.get("answer", self.answer))
+        # should show sieve in cell?
+        if self.show_sieve:
+            # show sieve
+            self.set_items(self.base_sequence)
+        # default behaviour
+        else:
+            # reset cell to None
+            self.set_value(None)
+        # end if
+    # end def
+
+
+    def reveal (self, *args, **kw):
+        """
+            event handler: reveals answer value into cell's inner
+            value; returns True if player's single candidate value was
+            correct, False in any other case, including answer value is
+            None; calls self.on_unique_value() event handler when value
+            is in base sequence; does nothing if cell is locked by
+            self.solved;
+        """
+        # allowed to proceed?
+        if not self.solved:
+            # get official answer
+            _answer = self.get_answer_value()
+            # actual answer?
+            if _answer is not None:
+                # cell is now solved
+                self.solved = True
+                # player's answer was correct?
+                _response = bool(self.get_value() == _answer)
+                # reveal answer
+                self.set_value(_answer)
+                # return player's answer
+                return _response
+            # end if
+        # end if
+        return False
     # end def
 
 
@@ -783,10 +872,10 @@ class SudokuMatrixSolver (SudokuMatrix):
             # do step task
             exec("self.do_step_{}(_kw)".format(self.step))
             # update eventual GUI display of matrix
-            self.update_display()
+            self.on_matrix_update()
         # end while
         # update eventual GUI display of matrix
-        self.update_display()
+        self.on_matrix_update()
         #                                                                   FIXME: should verify matrix is correct?
     # end def
 
@@ -1002,18 +1091,6 @@ class SudokuMatrixSolver (SudokuMatrix):
             # notify user
             self.failed_solving(e)
         # end try
-    # end def
-
-
-    def update_display (self, *args, **kw):
-        """
-            event handler: updates eventual GUI display of matrix;
-            hook method to be reimplemented in subclass;
-        """
-        pass
-        print("\n[DEBUG]\tcurrent matrix state:")
-        print(self)
-        print()
     # end def
 
 # end class SudokuMatrixSolver
