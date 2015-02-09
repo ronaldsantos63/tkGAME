@@ -559,9 +559,9 @@ class SudokuMatrix (Matrix):
     # end def
 
 
-    def strip_value (self, value, row, column):
+    def strip_unit_set_value (self, value, row, column):
         """
-            if @value is part of base sequence, strips @value from
+            if @value is part of base sequence, strips @value from UNIT
             matrix cells according to Sudoku's game policies i.e.
             strips @value from all cells in @row row, @column column
             and (@row, @column) relied box, except for matrix' cell
@@ -612,7 +612,7 @@ class SudokuMatrixCell (list):
         # member inits
         self.owner = kw.pop("owner", None)
         # default values
-        self.answer = None
+        self.__answer = None
         self.show_sieve = False
         self.row = self.column = 0
         self.base_sequence = range(1, 10)
@@ -630,11 +630,11 @@ class SudokuMatrixCell (list):
             # too many data to show off?
             if len(self) == len(self.base_sequence):
                 # simplify
-                return "?"
+                return "   ?    "
             # what else?
             else:
                 # set digest
-                return "".join(map(repr, self))
+                return "{:^8s}".format("".join(map(repr, self)))
             # end if
         # NO debug mode
         else:
@@ -649,7 +649,7 @@ class SudokuMatrixCell (list):
             returns cell's current answer value; this value should
             always be unique or None;
         """
-        return self.answer
+        return self.__answer
     # end def
 
 
@@ -703,7 +703,7 @@ class SudokuMatrixCell (list):
         self.base_len = len(self.base_sequence)
         self.show_sieve = bool(kw.get("show_sieve", self.show_sieve))
         # set answer value
-        self.set_answer_value(kw.get("answer", self.answer))
+        self.set_answer_value(kw.get("answer", self.__answer))
         # should show sieve in cell?
         if self.show_sieve:
             # show sieve
@@ -757,7 +757,7 @@ class SudokuMatrixCell (list):
             # known item?
             if value is None or value in self.base_sequence:
                 # set value
-                self.answer = value
+                self.__answer = value
             # unknown item
             else:
                 # notify error
@@ -782,6 +782,8 @@ class SudokuMatrixCell (list):
             # reset values
             self.clear()
             self.extend(items)
+            # update eventual UI display
+            self.on_cell_update()
         # end if
     # end def
 
@@ -817,6 +819,8 @@ class SudokuMatrixCell (list):
                     .format(value)
                 )
             # end if
+            # update eventual UI display
+            self.on_cell_update()
         # end if
     # end def
 
@@ -846,6 +850,8 @@ class SudokuMatrixCell (list):
                     # call hook method (event handler)
                     self.on_unique_value()
                 # end if
+                # update eventual UI display
+                self.on_cell_update()
             # end try
         # end if
     # end def
@@ -948,7 +954,7 @@ class SudokuMatrixSolver (SudokuMatrix):
                 _cell.solved = True
                 print("stripping value:", _cell.get_value())
                 # clean-up values
-                self.strip_value(
+                self.strip_unit_set_value(
                     _cell.get_value(), _cell.row, _cell.column
                 )
             # end if
@@ -1057,6 +1063,7 @@ class SudokuMatrixSolver (SudokuMatrix):
             # set cell value
             _cell.set_value(_seq.pop())
         # end for
+        self.solve()
         # return solved matrix
         return self
     # end def
