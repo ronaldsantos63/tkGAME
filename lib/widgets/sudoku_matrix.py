@@ -451,23 +451,16 @@ class SudokuMatrix (Matrix):
 
     def set_column_values (self, column, values):
         """
-            sets unique value for each cell in @column; will raise
-            SudokuMatrixError if at least one value into @values unique
-            value list is not part of base sequence or if @column is
-            out of matrix' bounds; see class doc for more detail;
+            sets unique value for each cell in @column column; will
+            raise SudokuMatrixError if at least one value into @values
+            unique value list is not part of base sequence or if
+            @column is out of matrix' bounds; see class doc for more
+            detail;
         """
-        # list not empty?
-        if values:
-            # ensure mutable list
-            _list = list(values)
-            # get cells
-            _cells = self.get_column_cells(column)
-            # browse cells
-            for _cell in _cells[:min(len(_list), len(_cells))]:
-                # reset value
-                _cell.set_value(_list.pop(0))
-            # end for
-        # end if
+        # internal def
+        self.__set_cells(
+            self.get_column_cells(column), values, "set_value"
+        )
     # end def
 
 
@@ -476,70 +469,43 @@ class SudokuMatrix (Matrix):
             sets matrix' cells with multiple items for each cell; see
             class doc for more detail;
         """
-        # param control
-        if items:
-            # ensure mutable list
-            _list = list(items)
-            # browse cells
-            for _cell in self[:min(len(_list), len(self))]:
-                # reset items
-                _cell.set_items(_list.pop(0))
-            # end for
-        # end if
+        # internal def
+        self.__set_cells(self, items, "set_items")
     # end def
 
 
     def set_row_values (self, row, values):
         """
-            sets unique values for each cell in @row; will raise
-            SudokuMatrixError if at least one of @values unique value
-            is not part of self.base_sequence or if @row is out of
-            matrix' bounds;
+            sets unique value for each cell in @row row; will raise
+            SudokuMatrixError if at least one value into @values unique
+            value list is not part of base sequence or if @row is out
+            of matrix' bounds; see class doc for more detail;
         """
-        # list not empty?
-        if values:
-            # ensure mutable list
-            _list = list(values)
-            # get cells
-            _cells = self.get_row_cells(row)
-            # browse cells
-            for _cell in _cells[:min(len(_list), len(_cells))]:
-                # reset value
-                _cell.set_value(_list.pop(0))
-            # end for
-        # end if
+        # internal def
+        self.__set_cells(self.get_row_cells(row), values, "set_value")
     # end def
 
 
     def set_values (self, values):
         """
-            resets all matrix' cells with unique value for each cell;
-            see class doc for more detail on VALUES;
+            sets matrix' cells with unique value for each cell; see
+            class doc for more detail;
         """
-        # param control
-        if values:
-            # ensure mutable list
-            _list = list(values)
-            # browse cells
-            for _cell in self[:min(len(_list), len(self))]:
-                # reset value
-                _cell.set_value(_list.pop(0))
-            # end for
-        # end if
+        # internal def
+        self.__set_cells(self, values, "set_value")
     # end def
 
 
     def strip_value (self, value, row, column):
         """
-            strips @value from @matrix along with Sudoku's game
-            policies e.g. strips value from all cells in @row row,
+            strips @value from matrix cells according to Sudoku's game
+            policies i.e. strips @value from all cells in @row row,
             @column column and (@row, @column) relied box, except for
-            matrix cell located in (@row, @column) itself;
+            matrix cell located in (@row, @column) itself, which is set
+            up to this unique @value; see class doc for more detail;
         """
-        # get cells in row, column and box
-        _cells = self.get_unit_cells(row, column)
-        # browse cells
-        for _cell in _cells:
+        # browse cells in row, column and relied box (unit)
+        for _cell in self.get_unit_cells(row, column):
             # strip value from cell
             _cell.strip_value(value)
         # end for
@@ -557,7 +523,7 @@ class SudokuMatrixCell (list):
         This cell is a subclass of Python's list class;
         This cell can be used as a Python list sequence (with some
         additional features);
-        Please read SudokuMatrix class doc for more detail;
+        Please, read SudokuMatrix class doc for more detail;
     """
 
     def __hash__ (self):
@@ -608,48 +574,22 @@ class SudokuMatrixCell (list):
     # end def
 
 
-    @property
-    def answer (self):
+    def get_answer_value (self):
         """
-            property attribute: cell's answer value;
-            answer must be a unique item value;
-            raises SudokuMatrixError if value is not part of base
-            sequence or not None;
+            returns cell's current answer value; this value should
+            always be unique or None;
         """
-        return self.__answer
-    # end def
-
-    @answer.setter
-    def answer (self, value):
-        # known item?
-        if value is None or value in self.base_sequence:
-            # reset value
-            self.__answer = value
-        # unknown item
-        else:
-            # notify error
-            raise SudokuMatrixError(
-                "unknown answer value '{}'. "
-                "Not in base sequence."
-                .format(value)
-            )
-        # end if
-    # end def
-
-    @answer.deleter
-    def answer (self):
-        del self.__answer
+        return self.answer
     # end def
 
 
     def get_value (self):
         """
-            returns cell's current value;
-            if cell is still a sequence, returns that sequence;
-            otherwise, returns the unique contained item itself;
-            if you want to manage cell's inner sequence whatever is
-            contained, simply use SudokuMatrixCell() itself as a Python
-            list() object;
+            returns cell's current value; if cell is still a sequence,
+            returns that sequence; otherwise, returns the unique
+            contained item itself; if you want to manage cell's inner
+            sequence whatever is contained, simply use
+            SudokuMatrixCell() itself as a Python list() object;
         """
         # return unique item or sequence otherwise
         return len(self) == 1 and self[0] or self
@@ -670,18 +610,61 @@ class SudokuMatrixCell (list):
         """
             resets matrix' cell to fit kw args;
             supported keywords: row, column, answer, base_sequence;
+            see SudokuMatrix class doc for more detail;
         """
         # inits
+        self.solved = False
         self.row = kw.get("row") or self.row
         self.column = kw.get("column") or self.column
-        self.answer = kw.get("answer", self.answer)
         self.base_sequence = tuple(
             kw.get("base_sequence") or self.base_sequence
         )
         self.base_len = len(self.base_sequence)
-        self.solved = False
-        # reset cell items - see class doc
+        # set cell items
         self.set_items(self.base_sequence)
+        # set answer value
+        self.set_answer_value(kw.get("answer", self.answer))
+    # end def
+
+
+    def set_answer_value (self, value):
+        """
+            sets cell's unique answer value; raises SudokuMatrixError
+            if @value is not part of base sequence or not None (unknown
+            value); does nothing if cell is locked by self.solved; see
+            SudokuMatrix class doc for more detail;
+        """
+        # allowed to proceed?
+        if not self.solved:
+            # known item?
+            if value is None or value in self.base_sequence:
+                # set value
+                self.answer = value
+            # unknown item
+            else:
+                # notify error
+                raise SudokuMatrixError(
+                    "unknown answer item value '{}'. "
+                    "Not in base sequence."
+                    .format(value)
+                )
+            # end if
+        # end if
+    # end def
+
+
+    def set_items (self, items):
+        """
+            sets multiple items for cell contents; does nothing if cell
+            is locked by self.solved; see SudokuMatrix class doc for
+            more detail;
+        """
+        # allowed to proceed?
+        if not self.solved:
+            # reset values
+            self.clear()
+            self.extend(values)
+        # end if
     # end def
 
 
@@ -716,20 +699,6 @@ class SudokuMatrixCell (list):
                     .format(value)
                 )
             # end if
-        # end if
-    # end def
-
-
-    def set_items (self, values):
-        """
-            sets cell's sequence of values; does nothing if cell is
-            locked by self.solved;
-        """
-        # allowed to proceed?
-        if not self.solved:
-            # reset values
-            self.clear()
-            self.extend(values)
         # end if
     # end def
 
@@ -781,7 +750,7 @@ class SudokuMatrixSolver (SudokuMatrix):
         This matrix is a subclass of Python's list class;
         This matrix can be used as a Python list sequence (with some
         additional features);
-        Please read SudokuMatrix class doc for more detail;
+        Please, read SudokuMatrix class doc for more detail;
     """
 
     def do_finished (self):
@@ -1057,7 +1026,7 @@ class SudokuMatrixSolverCell (SudokuMatrixCell):
         This cell is a subclass of Python's list class;
         This cell can be used as a Python list sequence (with some
         additional features);
-        Please read SudokuMatrix class doc for more detail;
+        Please, read SudokuMatrix class doc for more detail;
     """
 
     def on_unique_value (self, *args, **kw):
