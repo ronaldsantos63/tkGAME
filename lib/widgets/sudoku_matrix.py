@@ -279,7 +279,7 @@ class SudokuMatrix (Matrix):
         once into a given ROW, only once into a given COLUMN and only
         once into a given BOX;
         - to get a PROPER PUZZLE, mathematics have proved there must be
-        at least 17 GIVENS in a GRID;
+        at least 17 GIVENS into a GRID;
     """
 
     def __init__ (self, **kw):
@@ -312,7 +312,8 @@ class SudokuMatrix (Matrix):
 
     def get_boxes (self):
         """
-            retrieves all boxes in matrix, sequentially;
+            retrieves all boxes in matrix, sequentially (left-to-right
+            and top-down);
         """
         # return boxes
         return [
@@ -398,12 +399,13 @@ class SudokuMatrix (Matrix):
         # more inits
         self.box_size = int(self.box_size)
         # nb of chutes per dimension (horizontally, vertically)
+        # chute = band or stack - see class doc
         self.chutes = int(self.base_len // self.box_size)
         # a Sudoku grid is a square
         self.rows = self.columns = self.base_len
         # reset matrix contents
         self.reset_contents()
-        # reset matrix' item unique values
+        # reset matrix' unique value for several cells
         self.reset_values(kw.get("values"))
         # set answer unique values (or None)
         self.set_answer_values(kw.get("answer_list"))
@@ -412,7 +414,8 @@ class SudokuMatrix (Matrix):
 
     def reset_values (self, values):
         """
-            resets all matrix' item unique values;
+            resets all matrix' unique value for several cells;
+            see class doc for more detail on VALUES;
         """
         # param control
         if values:
@@ -429,7 +432,8 @@ class SudokuMatrix (Matrix):
 
     def set_answer_values (self, answer_list):
         """
-            resets matrix' cells answer values;
+            resets matrix' unique value for several cells (answer
+            attribute);
         """
         # param control
         if answer_list:
