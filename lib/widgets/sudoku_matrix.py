@@ -516,6 +516,7 @@ class SudokuMatrixCell (list):
         This cell is a subclass of Python's list class;
         This cell can be used as a Python list sequence (with some
         additional features);
+        Please read SudokuMatrix class doc for more detail;
     """
 
     def __hash__ (self):
@@ -739,6 +740,7 @@ class SudokuMatrixSolver (SudokuMatrix):
         This matrix is a subclass of Python's list class;
         This matrix can be used as a Python list sequence (with some
         additional features);
+        Please read SudokuMatrix class doc for more detail;
     """
 
     def do_finished (self):
@@ -1014,6 +1016,7 @@ class SudokuMatrixSolverCell (SudokuMatrixCell):
         This cell is a subclass of Python's list class;
         This cell can be used as a Python list sequence (with some
         additional features);
+        Please read SudokuMatrix class doc for more detail;
     """
 
     def on_unique_value (self, *args, **kw):
