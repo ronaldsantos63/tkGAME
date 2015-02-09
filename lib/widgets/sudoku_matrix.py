@@ -337,22 +337,6 @@ class SudokuMatrix (Matrix):
     # end def
 
 
-    def get_boxes (self):
-        """
-            retrieves all boxes in matrix, sequentially (left-to-right
-            and top-down); see class doc for more detail;
-        """
-        # return boxes
-        return [
-            self.get_box_cells(
-                _row * self.box_size, _column * self.box_size
-            )
-            for _row in range(self.rows // self.box_size)
-            for _column in range(self.columns // self.box_size)
-        ]
-    # end def
-
-
     def get_box_cells (self, row, column):
         """
             retrieves all cells of (@row, @column) relied box in
@@ -375,6 +359,22 @@ class SudokuMatrix (Matrix):
         # end for
         # return cells
         return _cells
+    # end def
+
+
+    def get_boxes (self):
+        """
+            retrieves all boxes in matrix, sequentially (left-to-right
+            and top-down); see class doc for more detail;
+        """
+        # return boxes
+        return [
+            self.get_box_cells(
+                _row * self.box_size, _column * self.box_size
+            )
+            for _row in range(self.rows // self.box_size)
+            for _column in range(self.columns // self.box_size)
+        ]
     # end def
 
 
