@@ -612,7 +612,7 @@ class SudokuMatrixCell (list):
         # member inits
         self.owner = kw.pop("owner", None)
         # default values
-        self.__answer = None
+        self._answer = None
         self.show_sieve = False
         self.row = self.column = 0
         self.base_sequence = range(1, 10)
@@ -649,7 +649,7 @@ class SudokuMatrixCell (list):
             returns cell's current answer value; this value should
             always be unique or None;
         """
-        return self.__answer
+        return self._answer
     # end def
 
 
@@ -703,7 +703,7 @@ class SudokuMatrixCell (list):
         self.base_len = len(self.base_sequence)
         self.show_sieve = bool(kw.get("show_sieve", self.show_sieve))
         # set answer value
-        self.set_answer_value(kw.get("answer", self.__answer))
+        self.set_answer_value(kw.get("answer", self._answer))
         # should show sieve in cell?
         if self.show_sieve:
             # show sieve
@@ -757,7 +757,7 @@ class SudokuMatrixCell (list):
             # known item?
             if value is None or value in self.base_sequence:
                 # set value
-                self.__answer = value
+                self._answer = value
             # unknown item
             else:
                 # notify error
