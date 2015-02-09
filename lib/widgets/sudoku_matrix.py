@@ -991,16 +991,18 @@ class SudokuMatrixSolver (SudokuMatrix):
     # end def
 
 
-    def failed_solving (self, exception=None):
+    def on_solving_failure (self, *args, exception=None, **kw):
         """
-            hook method to be reimplemented in subclass;
-            notifies user solving attempt has failed;
-            you may use this in GUI context;
+            event handler: notifies user that solving attempt has
+            failed; hook method to be reimplemented in subclass; you
+            may use this in GUI context;
         """
         # put your own code in subclass
         print("\n[ERROR]\tattempt to solve matrix has *FAILED*.")
         print("\nCaught the following exception:\n")
-        print("[{}] {}".format(exception.__class__.__name__, exception))
+        print(
+            "[{}] {}".format(exception.__class__.__name__, exception)
+        )
         print("\nStopped.\n")
         exit(1)
     # end def
@@ -1033,8 +1035,8 @@ class SudokuMatrixSolver (SudokuMatrix):
                 # e.g. rotate_left(_seq) at each row?
                 #      + matrix shuffle algos?
 
-        # reset matrix contents
-        self.reset_contents()
+        # reset matrix' cell contents
+        self.reset_cells()
         # set first row random seed
         _seq = list(self.base_sequence)
         random.shuffle(_seq)
@@ -1044,6 +1046,7 @@ class SudokuMatrixSolver (SudokuMatrix):
             # set cell value
             _cell.set_value(_seq.pop())
         # end for
+        self.solve()
         # return solved matrix
         return self
     # end def
@@ -1071,10 +1074,12 @@ class SudokuMatrixSolver (SudokuMatrix):
     def reset (self, **kw):
         """
             resets current matrix model; overrides super class def;
-            supported keywords: base_sequence, answers;
+            supported keywords: base_sequence, answers, show_sieve;
         """
         # inits
         self.cleanups = set()
+        # make some overridings
+        kw.setdefault("show_sieve", True)
         # super class inits
         super().reset(**kw)
     # end def
@@ -1082,8 +1087,10 @@ class SudokuMatrixSolver (SudokuMatrix):
 
     def solve (self):
         """
-            tries to solve given Sudoku matrix;
-            raises SudokuMatrixError if unable to find a solution;
+            tries to solve given Sudoku matrix; calls
+            self.on_solving_failure() event handler on any exception
+            catch; raises SudokuMatrixError if unable to find a
+            solution;
         """
         # try out
         try:
@@ -1091,8 +1098,8 @@ class SudokuMatrixSolver (SudokuMatrix):
             self.do_solve()
         # failed
         except Exception as e:
-            # notify user
-            self.failed_solving(e)
+            # notify user (event handler)
+            self.on_solving_failure(exception=e)
         # end try
     # end def
 
