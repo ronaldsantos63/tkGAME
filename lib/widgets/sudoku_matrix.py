@@ -337,6 +337,15 @@ class SudokuMatrix (Matrix):
     # end def
 
 
+    def get_answer_values (self):
+        """
+            gets matrix' cells answer values;
+        """
+        # get answers
+        return [_cell.get_answer_value() for _cell in self]
+    # end def
+
+
     def get_box_cells (self, row, column):
         """
             retrieves all cells of (@row, @column) relied box in
@@ -458,13 +467,13 @@ class SudokuMatrix (Matrix):
         # set matrix' cells with unique answer value for each cell
         self.set_answer_values(kw.get("answers"))
         # update eventual UI display
-        self.on_matrix_update()
+        self.on_matrix_update(**kw)
     # end def
 
 
     def reset_cells (self, **kw):
         """
-            resets all matrix' cells with new common @kw keyword args;
+            resets all matrix' cells with new @kw common keyword args;
             supported common keywords: base_sequence, show_sieve;
         """
         # browse cells
@@ -473,14 +482,29 @@ class SudokuMatrix (Matrix):
             _cell.reset(**kw)
         # end for
         # update eventual UI display
-        self.on_matrix_update()
+        self.on_matrix_update(**kw)
+    # end def
+
+
+    def reveal (self, *args, **kw):
+        """
+            event handler: reveals all answer values in matrix;
+        """
+        # browse cells
+        for _cell in self:
+            # reveal answer
+            _cell.reveal(*args, **kw)
+        # end for
+        # update eventual UI display
+        self.on_matrix_update(*args, **kw)
     # end def
 
 
     def set_answer_values (self, answers):
         """
             sets matrix' cells with unique answer value for each cell;
-            see class doc for more detail;
+            answer values are kept hidden unless self.reveal() is
+            called; see class doc for more detail;
         """
         # internal def
         self.__set_cells(self, answers, "set_answer_value")
@@ -526,8 +550,9 @@ class SudokuMatrix (Matrix):
 
     def set_values (self, values):
         """
-            sets matrix' cells with unique value for each cell; see
-            class doc for more detail;
+            sets matrix' cells with unique value (or None) for each
+            cell; this is useful for setting up GIVENS; see class doc
+            for more detail;
         """
         # internal def
         self.__set_cells(self, values, "set_value")
@@ -991,23 +1016,6 @@ class SudokuMatrixSolver (SudokuMatrix):
     # end def
 
 
-    def on_solving_failure (self, *args, exception=None, **kw):
-        """
-            event handler: notifies user that solving attempt has
-            failed; hook method to be reimplemented in subclass; you
-            may use this in GUI context;
-        """
-        # put your own code in subclass
-        print("\n[ERROR]\tattempt to solve matrix has *FAILED*.")
-        print("\nCaught the following exception:\n")
-        print(
-            "[{}] {}".format(exception.__class__.__name__, exception)
-        )
-        print("\nStopped.\n")
-        exit(1)
-    # end def
-
-
     def fill_with (self, row, column, **kw):
         """
             this is called by Matrix.reset_contents() super class
@@ -1036,7 +1044,7 @@ class SudokuMatrixSolver (SudokuMatrix):
                 #      + matrix shuffle algos?
 
         # reset matrix' cell contents
-        self.reset_cells()
+        #~ self.reset_cells() # USELESS!
         # set first row random seed
         _seq = list(self.base_sequence)
         random.shuffle(_seq)
@@ -1058,6 +1066,23 @@ class SudokuMatrixSolver (SudokuMatrix):
         return tuple(
             _c for _c in cells if _c == cell and _c is not cell
         )
+    # end def
+
+
+    def on_solving_failure (self, *args, exception=None, **kw):
+        """
+            event handler: notifies user that solving attempt has
+            failed; hook method to be reimplemented in subclass; you
+            may use this in GUI context;
+        """
+        # put your own code in subclass
+        print("\n[ERROR]\tattempt to solve matrix has *FAILED*.")
+        print("\nCaught the following exception:\n")
+        print(
+            "[{}] {}".format(exception.__class__.__name__, exception)
+        )
+        print("\nStopped.\n")
+        exit(1)
     # end def
 
 
