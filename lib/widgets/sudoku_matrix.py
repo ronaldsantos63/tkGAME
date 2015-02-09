@@ -322,18 +322,20 @@ class SudokuMatrix (Matrix):
     # end def
 
 
-    def fill_with (self, row, column):
+    def fill_with (self, row, column, **kw):
         """
             hook method to be reimplemented in subclass; this is called
             by Matrix.reset_contents() super class method;
         """
-        # fill matrix with cells
-        return SudokuMatrixCell(
+        # make some overridings
+        kw.update(
             owner=self,
             row=row,
             column=column,
-            base_sequence=self.base_sequence
+            base_sequence=self.base_sequence,
         )
+        # fill matrix with cells
+        return SudokuMatrixCell(**kw)
     # end def
 
 
@@ -396,17 +398,6 @@ class SudokuMatrix (Matrix):
     # end def
 
 
-    def on_cell_update (self, *args, **kw):
-        """
-            event handler: updates eventual GUI display when a matrix'
-            cell is modified; hook method to be reimplemented in
-            subclass;
-        """
-        # put your own code in subclass
-        pass
-    # end def
-
-
     def on_matrix_update (self, *args, **kw):
         """
             event handler: updates eventual GUI display of matrix;
@@ -415,9 +406,11 @@ class SudokuMatrix (Matrix):
         # put your own code in subclass
         pass
         # debugging
-        print("\n[DEBUG]\tcurrent matrix state:")
-        print(self)
-        print()
+        if __debug__:
+            print("\n[DEBUG]\tcurrent matrix state:")
+            print(self)
+            print()
+        # end if
     # end def
 
 
@@ -430,8 +423,6 @@ class SudokuMatrix (Matrix):
         for _cell in self:
             # reset cell
             _cell.reset(**kw)
-            # update eventual UI display
-            self.on_cell_update(cell=_cell)
         # end for
         # update eventual UI display
         self.on_matrix_update()
@@ -440,8 +431,8 @@ class SudokuMatrix (Matrix):
 
     def reset_matrix (self, **kw):
         """
-            resets current matrix model;
-            supported keywords: base_sequence, answers, values;
+            resets current matrix model; supported keywords:
+            base_sequence, answers, values, show_sieve;
         """
         # inits
         self.base_sequence = tuple(
@@ -470,11 +461,12 @@ class SudokuMatrix (Matrix):
         self.box_size = int(self.box_size)
         # nb of chutes per dimension (horizontally, vertically)
         # see class doc for more detail
-        self.chutes = int(self.base_len // self.box_size)
+        # chutes = base_len/box_size = n²/n = n = box_size
+        self.chutes = self.box_size
         # a Sudoku grid is a square
         self.rows = self.columns = self.base_len
         # reset matrix contents
-        self.reset_contents()
+        self.reset_contents(**kw)
         # set matrix' cells with unique value for each cell
         # see class doc for more detail
         self.set_values(kw.get("values"))
@@ -648,10 +640,21 @@ class SudokuMatrixCell (list):
     # end def
 
 
+    def on_cell_update (self, *args, **kw):
+        """
+            event handler: updates eventual GUI display when a matrix'
+            cell is modified; hook method to be reimplemented in
+            subclass;
+        """
+        # put your own code in subclass
+        pass
+    # end def
+
+
     def on_unique_value (self, *args, **kw):
         """
-            event handler: called when inner value becomes unique;
-            hook method to be reimplemented in subclass;
+            event handler: called when inner value becomes unique; hook
+            method to be reimplemented in subclass;
         """
         # put your own code in subclass
         pass
