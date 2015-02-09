@@ -719,11 +719,11 @@ class SudokuMatrixCell (list):
     def reveal (self, *args, **kw):
         """
             event handler: reveals answer value into cell's inner
-            value; returns True if player's single candidate value was
+            value; does nothing if cell is locked by self.solved;
+            returns True if player's single candidate value was
             correct, False in any other case, including answer value is
             None; calls self.on_unique_value() event handler when value
-            is in base sequence; does nothing if cell is locked by
-            self.solved;
+            is in base sequence;
         """
         # allowed to proceed?
         if not self.solved:
@@ -747,10 +747,11 @@ class SudokuMatrixCell (list):
 
     def set_answer_value (self, value):
         """
-            sets cell's unique answer value; raises SudokuMatrixError
-            if @value is not part of base sequence or not None (unknown
-            value); does nothing if cell is locked by self.solved; see
-            SudokuMatrix class doc for more detail;
+            sets cell's unique answer value; does nothing if cell is
+            locked by self.solved; raises SudokuMatrixError if @value
+            is not part of base sequence or not None (that is, an
+            unregistered / unknown value, in fact); see SudokuMatrix
+            class doc for more detail;
         """
         # allowed to proceed?
         if not self.solved:
@@ -790,11 +791,11 @@ class SudokuMatrixCell (list):
 
     def set_value (self, value):
         """
-            sets cell's unique value; calls self.on_unique_value()
-            event handler when @value is in base sequence; raises
-            SudokuMatrixError if @value is not part of base sequence or
-            not None (unknown value); does nothing if cell is locked by
-            self.solved;
+            sets cell's unique value; does nothing if cell is locked by
+            self.solved; calls self.on_unique_value() event handler
+            when @value is in base sequence; raises SudokuMatrixError
+            if @value is not part of base sequence or not None (that
+            is, an unregistered / unknown value, in fact);
         """
         # allowed to proceed?
         if not self.solved:
@@ -829,10 +830,10 @@ class SudokuMatrixCell (list):
         """
             silently removes @value from cell's current sequence; does
             nothing if @value is None or cell is locked by self.solved;
-            will call self.on_unique_value() event handler if last
-            value left is unique; if you want to manage ValueError by
-            yourself, simply use SudokuMatrixCell.remove(value)
-            instead;
+            will call self.on_unique_value() event handler if item left
+            after removing is unique; if you want to manage ValueError
+            by yourself, simply use SudokuMatrixCell.remove(value) -
+            inherited from list.remove(value) - instead;
         """
         # allowed to proceed?
         if not (self.solved or value is None):
@@ -912,7 +913,7 @@ class SudokuMatrixSolver (SudokuMatrix):
         # end while
         # update eventual GUI display of matrix
         self.on_matrix_update()
-        #                                                                   FIXME: should verify matrix is correct?
+                                                        # FIXME: should verify matrix is correct?
     # end def
 
 
@@ -1044,27 +1045,18 @@ class SudokuMatrixSolver (SudokuMatrix):
 
     def generate (self):
         """
-            generates a fully playable solved matrix;
-            uses a screened-by resolution algorithm;
+            generates a Sudoku-compliant fully playable matrix; uses
+            Leonhard Euler's latin square, plus at least three
+            different shuffling algorithms;
         """
-
-                # FIXME: what about Euler's latin square?
-                # e.g. rotate_left(_seq) at each row?
-                #      + matrix shuffle algos?
-
-        # reset matrix' cell contents
-        #~ self.reset_cells() # USELESS!
         # set first row random seed
         _seq = list(self.base_sequence)
         random.shuffle(_seq)
-        # browse cells
-        for _cell in self.get_row_cells(0): # FIXME: browse rows with self.get_rows()?
-                                            # what about self.set_row_values(row, _seq)?
-            # set cell value
-            _cell.set_value(_seq.pop())
-        # end for
-        self.solve()
-        # return solved matrix
+        # apply Leonhard Euler's latin square algorithm
+        self.algo_euler_latin_square(_seq)
+        # TODO: shuffling algorithms?
+        pass                                                                # FIXME
+        # return matrix
         return self
     # end def
 
