@@ -643,8 +643,8 @@ class SudokuMatrixCell (list):
         )
         self.base_len = len(self.base_sequence)
         self.solved = False
-        # reset cell values
-        self.set_values(self.base_sequence)
+        # reset cell items - see class doc
+        self.set_items(self.base_sequence)
     # end def
 
 
@@ -683,7 +683,7 @@ class SudokuMatrixCell (list):
     # end def
 
 
-    def set_values (self, values):
+    def set_items (self, values):
         """
             sets cell's sequence of values; does nothing if cell is
             locked by self.solved;
