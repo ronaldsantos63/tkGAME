@@ -663,7 +663,7 @@ class SudokuMatrixCell (list):
         if not self.solved:
             # reset values
             self.clear()
-            self.extend(values)
+            self.extend(items)
         # end if
     # end def
 
