@@ -895,27 +895,26 @@ class SudokuMatrixCell (list):
     def reveal (self, *args, **kw):
         """
             event handler: reveals answer value into cell's inner
-            value; does nothing if cell is locked by self.solved;
+            value; *NOT* affected by cell's self.solved locking state;
             returns True if player's single candidate value was
             correct, False in any other case, including answer value is
             None; calls self.on_unique_value() event handler when value
             is in base sequence;
         """
-        # allowed to proceed?
-        if not self.solved:
-            # get official answer
-            _answer = self.get_answer_value()
-            # actual answer?
-            if _answer is not None:
-                # player's answer was correct?
-                _response = bool(self.get_value() == _answer)
-                # reveal answer
-                self.set_value(_answer)
-                # cell is now solved
-                self.solved = True
-                # return player's answer
-                return _response
-            # end if
+        # get official answer
+        _answer = self.get_answer_value()
+        # actual answer?
+        if _answer is not None:
+            # player's answer was correct?
+            _response = bool(self.get_value() == _answer)
+            # allow updates
+            self.solved = False
+            # reveal answer
+            self.set_value(_answer)
+            # cell is now solved (locked)
+            self.solved = True
+            # return player's answer
+            return _response
         # end if
         return False
     # end def
@@ -925,10 +924,11 @@ class SudokuMatrixCell (list):
         """
             sets cell's unique answer value; answer value is kept
             hidden from player's eyes unless self.reveal() is called;
-            raises SudokuMatrixError if @value is not part of base
-            sequence or not None (that is, an unregistered / unknown
-            value, in fact); see SudokuMatrix class doc for more
-            detail;
+            answer value is *NOT* affected by cell's self.solved
+            locking state; raises SudokuMatrixError if @value is not
+            part of base sequence or not None (that is, an unregistered
+            / unknown value, in fact); see SudokuMatrix class doc for
+            more detail;
         """
         # known item?
         if value is None or value in self.base_sequence:
