@@ -111,7 +111,7 @@ class Matrix (list):
         # debug mode?
         if __DEBUG__ and __debug__:
             # return string representation
-            return "{classname} (\n{data}\n)".format(
+            return "\n{classname} (\n{data}\n)".format(
                 classname=self.__class__.__name__,
                 data="\n".join(map(repr, self.get_rows()))
             )
@@ -1346,4 +1346,5 @@ if __name__ == "__main__":
         .format(mean(data))
     )
     print("\n[SUCCESS]\tall has been tested OK.")
+    print(Matrix(), SudokuMatrix(), SudokuMatrixSolver())
 # end if
