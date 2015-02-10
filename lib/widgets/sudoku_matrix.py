@@ -34,6 +34,33 @@ __DEBUG__ = False
 
 # module scope function defs
 
+def algo_lers_2 (base_sequence):
+    """
+        Leonhard Euler and Raphaël Seban (LERS) algorithm (v2);
+        optimized version of SudokuMatrix.algo_euler_latin_square()
+        generation method (LERS1); this algorithm (LERS2) was fitted on
+        Tuesday 10th, 2015, in about 3 hours (including tests); LERS2
+        uses base sequence simple index reading (no sequence rotation)
+        and a 1-pass loop to generate a fully playable Sudoku grid
+        between 9! = 362,880 distinct possibilities; LERS2 algorithm is
+        about 10 times faster than LERS1;
+    """
+    # ensure subscriptable
+    _base = tuple(base_sequence)
+    # nb of items
+    _bl = len(_base)
+    # box size = sqrt(_bl)
+    _bs = int(_bl**0.5)
+    # Sudoku chute rectangle area (constant)
+    _ca = _bl * _bs
+    # answer values
+    return [
+        _base[(_i + _bs * (_i // _bl) + _i // _ca) % _bl]
+        for _i in range(_bl**2)
+    ]
+# end def
+
+
 def rotate_left (sequence, inplace=False):
     """
         rotates @sequence from right to left; if @inplace == True,
@@ -376,17 +403,11 @@ class SudokuMatrix (Matrix):
     # end def
 
 
-    @staticmethod
-    def algo_lers_2 (base_sequence):
+    def algo_lers_2 (self, base_sequence):
         """
-            Leonhard Euler and Raphaël Seban (LERS) algorithm (v2);
-            optimized version of self.algo_euler_latin_square() (LERS1)
-            generation method; this algorithm (LERS2) was fitted on
-            Tuesday 10th, 2015, in about 3 hours (including tests);
-            LERS2 uses base sequence simple index reading (no sequence
-            rotation) and a 1-pass loop to generate a fully playable
-            Sudoku grid between 9! = 362,880 distinct possibilities;
-            LERS2 algorithm is about 10 times faster than LERS1;
+            LERS2 algorithm adaptation to fit current class' needs;
+            please, see algo_lers_2() module function def on top of
+            this file for more detail;
         """
         # ensure subscriptable
         _base = tuple(base_sequence)
@@ -396,11 +417,13 @@ class SudokuMatrix (Matrix):
         _bs = int(_bl**0.5)
         # Sudoku chute rectangle area (constant)
         _ca = _bl * _bs
-        # use the followings as answer values
-        return [
-            _base[(_i + _bs * (_i // _bl) + _i // _ca) % _bl]
-            for _i in range(_bl**2)
-        ]
+        # browse indexed cells
+        for _i, _cell in enumerate(self[:_bl**2]):
+            # clear cell and set answer value all at once
+            _cell.reset(
+                answer=_base[(_i + _bs*(_i//_bl) + _i//_ca) % _bl]
+            )
+        # end for
     # end def
 
 
@@ -442,14 +465,14 @@ class SudokuMatrix (Matrix):
         _seed = list(self.base_sequence)
         # with 9 items: 9! = 362,880 possibilities
         random.shuffle(_seed)
-        # get grid values
-        _answers = self.algo_lers_2(_seed)
+        # set grid answer values
+        # + reset cell contents
+        # all at once
+        self.algo_lers_2(_seed)
         # level of complexity management
         try:
-            # get matrix' morphs
-            _answers = eval(
-                "self.algo_shuffle_{}(_answers)".format(level)
-            )
+            # set matrix' morphs
+            exec("self.algo_shuffle_{}(_answers)".format(level))
         # unsupported level
         except:
             # warn user
@@ -459,8 +482,10 @@ class SudokuMatrix (Matrix):
                 .format(level)
             )
         # end try
-        # apply data to hidden answer values
-        self.set_answer_values(_answers)
+        # renumber cells after shuffling
+        self.renumber_cells()
+        # update eventual UI display
+        self.on_matrix_update(**kw)
         # return matrix
         return self
     # end def
@@ -867,8 +892,8 @@ class SudokuMatrixCell (list):
         """
         # inits
         self.solved = False
-        self.row = kw.get("row") or self.row
-        self.column = kw.get("column") or self.column
+        self.row = kw.get("row", self.row)
+        self.column = kw.get("column", self.column)
         self.base_sequence = tuple(
             kw.get("base_sequence") or self.base_sequence
         )
