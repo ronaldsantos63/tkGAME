@@ -540,7 +540,7 @@ class SudokuMatrix (Matrix):
         except:
             # warn user
             print(
-                "[WARNING]\tno generation algorithm "
+                "[WARNING]\t*NO* generation algorithm "
                 "for complexity level '{}'"
                 .format(level)
             )
