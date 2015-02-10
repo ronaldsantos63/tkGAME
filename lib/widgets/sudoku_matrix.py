@@ -1210,7 +1210,7 @@ if __name__ == "__main__":
     for n in range(1000):
         # generate grid
         t = timeit(matrix.generate, number=1)
-        print("[LERS2]\tgrid generated in: {:0.6f} sec".format(t))
+        print("[LERS2] grid generated in: {:0.6f} sec".format(t))
         # add to stats data
         data.append(t)
         # reveal answer
@@ -1218,12 +1218,13 @@ if __name__ == "__main__":
         # verify: erroneous grid?
         if not matrix.verify_correct():
             print(matrix)
-            exit("\n[ERROR]\tincorrect grid!")
+            exit("\n[ERROR] incorrect grid!")
         # end if
     # end for
+    print("\n[TOTAL] nb of generated grids:", n + 1)
     print(
-        "\n[STATS]\taverage grid generation time: {:0.6f} sec"
+        "\n[STATS] average grid generation time: {:0.6f} sec"
         .format(mean(data))
     )
-    print("\n[SUCCESS]\tall has been tested OK.")
+    print("\n[SUCCESS] all has been tested OK.")
 # end if
