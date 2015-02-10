@@ -565,6 +565,16 @@ class SudokuMatrix (Matrix):
     # end def
 
 
+    def get_band (self, index):
+        """
+            retrieves sequential list of rows corresponding to @index
+            given band; raises SudokuMatrixError if @index out of
+            bounds; see class doc for more detail;
+        """
+        pass                                                                # FIXME
+    # end def
+
+
     def get_box_cells (self, row, column):
         """
             retrieves all cells of (@row, @column) relied box in
@@ -603,6 +613,16 @@ class SudokuMatrix (Matrix):
             for _row in range(self.rows // self.box_size)
             for _column in range(self.columns // self.box_size)
         ]
+    # end def
+
+
+    def get_stack (self, index):
+        """
+            retrieves sequential list of columns corresponding to
+            @index given stack; raises SudokuMatrixError if @index out
+            of bounds; see class doc for more detail;
+        """
+        pass                                                                # FIXME
     # end def
 
 
@@ -789,6 +809,24 @@ class SudokuMatrix (Matrix):
         """
         # internal def
         self.__set_cells(self, values, "set_value")
+    # end def
+
+
+    def show_givens (self, nb):
+        """
+            shows up @nb givens into matrix' cells; see class doc for
+            more detail; minimum number of givens should always be 17;
+            raises SudokuMatrixError if @nb < 17;
+        """
+        # param controls
+        if nb < 17:
+            # notify error
+            raise SudokuMatrixError(
+                "to get a PROPER PUZZLE, number of GIVENS "
+                "should never be less than 17."
+            )
+        # end if
+        pass                                                                # FIXME
     # end def
 
 
