@@ -40,9 +40,9 @@ def euler_latin_square (base_sequence=None):
         algorithm; latin squares are known to fit only the two first
         rules of Sudoku: ITEMS must appear only ONCE in each ROW and in
         each COLUMN; but latin squares do generally *NOT* fit the third
-        rule: ITEMS must appear only ONCE in each BOX region; latin
-        squares are therefore quite good crash tests for Sudoku
-        verifying algorithms;
+        rule of Sudoku: ITEMS must appear only ONCE in each BOX region;
+        latin squares are therefore quite good crash tests for Sudoku
+        grid validation algorithms;
     """
     # ensure subscriptable
     _base = tuple(base_sequence or range(1, 10))
