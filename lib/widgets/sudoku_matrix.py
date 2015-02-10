@@ -543,9 +543,7 @@ class SudokuMatrix (Matrix):
         pass
         # debugging
         if __DEBUG__ and __debug__:
-            print("\n[DEBUG]\tcurrent matrix state:")
-            print(self)
-            print()
+            print("\n[DEBUG]\tcurrent matrix state:", self, "\n")
         # end if
     # end def
 
@@ -1346,5 +1344,4 @@ if __name__ == "__main__":
         .format(mean(data))
     )
     print("\n[SUCCESS]\tall has been tested OK.")
-    print(Matrix(), SudokuMatrix(), SudokuMatrixSolver())
 # end if
