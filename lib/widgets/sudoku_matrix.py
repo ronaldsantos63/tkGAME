@@ -583,8 +583,8 @@ class SudokuMatrix (Matrix):
     def get_band (self, index):
         """
             retrieves sequential list of rows corresponding to @index
-            given band; raises SudokuMatrixError if @index out of
-            bounds; see class doc for more detail;
+            given band; raises IndexError if @index is out of bounds;
+            see class doc for more detail;
         """
         # ensure inbounds
         self.ensure_inbounds_chute(index)
@@ -600,13 +600,14 @@ class SudokuMatrix (Matrix):
     def get_band_cells (self, index):
         """
             retrieves sequential list of cells corresponding to @index
-            given band; raises SudokuMatrixError if @index out of
-            bounds; see class doc for more detail;
+            given band; raises IndexError if @index is out of bounds;
+            see class doc for more detail;
         """
         # inits
         _list = list()
         # browse rows
         for _row in self.get_band(index):
+            # fill with row cells
             _list.extend(_row)
         # end for
         # return cells
@@ -658,23 +659,31 @@ class SudokuMatrix (Matrix):
     def get_stack (self, index):
         """
             retrieves sequential list of columns corresponding to
-            @index given stack; raises SudokuMatrixError if @index out
-            of bounds; see class doc for more detail;
+            @index given stack; raises IndexError if @index is out of
+            bounds; see class doc for more detail;
         """
-        pass                                                                # FIXME
+        # ensure inbounds
+        self.ensure_inbounds_chute(index)
+        # return stack' columns
+        return [
+            # already a Python sequential list
+            self.get_column_cells(index * self.chutes + _i)
+            for _i in range(self.chutes)
+        ]
     # end def
 
 
     def get_stack_cells (self, index):
         """
             retrieves sequential list of cells corresponding to @index
-            given stack; raises SudokuMatrixError if @index out of
-            bounds; see class doc for more detail;
+            given stack; raises IndexError if @index is out of bounds;
+            see class doc for more detail;
         """
         # inits
         _list = list()
         # browse columns
         for _column in self.get_stack(index):
+            # fill with column cells
             _list.extend(_column)
         # end for
         # return cells
