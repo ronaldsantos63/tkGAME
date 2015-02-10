@@ -36,7 +36,7 @@ __DEBUG__ = False
 
 def euler_latin_square (base_sequence=None):
     """
-        Leonhard Euler's historical 'Latin Square' generation
+        Leonhard Euler's historical 'latin square' generation
         algorithm; latin squares are known to fit only the two first
         rules of Sudoku: ITEMS must appear only ONCE in each ROW and in
         each COLUMN; but latin squares do generally *NOT* fit the third
