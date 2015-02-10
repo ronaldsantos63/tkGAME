@@ -109,7 +109,7 @@ class Matrix (list):
             for debugging session;
         """
         # debug mode?
-        if __debug__:
+        if __DEBUG__ and __debug__:
             # return string representation
             return "{classname} (\n{data}\n)".format(
                 classname=self.__class__.__name__,
@@ -800,7 +800,7 @@ class SudokuMatrixCell (list):
             for debugging session;
         """
         # debug mode?
-        if __debug__:
+        if __DEBUG__ and __debug__:
             # too many data to show off?
             if len(self) == len(self.base_sequence):
                 # simplify
