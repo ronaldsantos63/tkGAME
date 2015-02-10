@@ -916,6 +916,7 @@ class SudokuMatrixCell (list):
             # return player's answer
             return _response
         # end if
+        # invalid answer
         return False
     # end def
 
