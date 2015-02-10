@@ -82,8 +82,9 @@ def is_correct_grid (grid_data, base_sequence=None):
     # verify global harmony
     if set(_matrix) != _base: return False
     # verify more detailed
-    _size = _bl = len(_base)
-    # box size = sqrt(_size)
+    # base length (square size)
+    _bl = len(_base)
+    # box size = sqrt(_bl)
     _bs = _bl**0.5
     # do we have a correct Sudoku grid?
     if _bs != int(_bs):
@@ -94,17 +95,17 @@ def is_correct_grid (grid_data, base_sequence=None):
     # reset value
     _bs = int(_bs)
     # browse rows
-    for _row in range(_size):
+    for _row in range(_bl):
         # not good?
-        if set(_matrix[_row * _size:(_row + 1) * _size]) != _base:
+        if set(_matrix[_row * _bl:(_row + 1) * _bl]) != _base:
             # failed
             return False
         # end if
     # end for
     # browse columns
-    for _column in range(_size):
+    for _column in range(_bl):
         # not good?
-        if set(_matrix[_column::_size]) != _base:
+        if set(_matrix[_column::_bl]) != _base:
             # failed
             return False
         # end if
