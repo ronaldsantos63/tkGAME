@@ -47,7 +47,7 @@ def euler_latin_square (base_sequence=None):
     """
     # ensure subscriptable
     _base = tuple(base_sequence or range(1, 10))
-    # nb of items
+    # base length (square size)
     _bl = len(_base)
     # return latin square
     return [
@@ -146,11 +146,11 @@ def lers2_sudoku_grid (base_sequence=None):
     """
     # ensure subscriptable
     _base = tuple(base_sequence or range(1, 10))
-    # nb of items
+    # base length (square size)
     _bl = len(_base)
     # box size = sqrt(_bl)
     _bs = int(_bl**0.5)
-    # Sudoku chute rectangle area (constant)
+    # Sudoku CHUTE rectangle area (constant)
     _ca = _bl * _bs
     # answer values
     return [
@@ -489,8 +489,10 @@ class SudokuMatrix (Matrix):
         """
         # ensure mutable list
         _base = list(seed)
-        _bl = len(_base)        # nb of items
-        _bs = int(_bl**0.5)     # box size = sqrt(_bl)
+        # base length (square size)
+        _bl = len(_base)
+        # box size = sqrt(_bl)
+        _bs = int(_bl**0.5)
         # browse rows into a band chute
         for _r0 in range(_bs):
             # browse rows by band-to-band jumps
@@ -514,7 +516,7 @@ class SudokuMatrix (Matrix):
         """
         # ensure subscriptable
         _base = tuple(base_sequence)
-        # nb of items
+        # base length (square size)
         _bl = len(_base)
         # box size = sqrt(_bl)
         _bs = int(_bl**0.5)
