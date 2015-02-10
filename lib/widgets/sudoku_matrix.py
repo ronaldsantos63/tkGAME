@@ -439,11 +439,11 @@ class SudokuMatrix (Matrix):
             Euler's latin square improved algorithm;
         """
         # set random seed sequence
-        _seq = list(self.base_sequence)
+        _seed = list(self.base_sequence)
         # with 9 items: 9! = 362,880 possibilities
-        random.shuffle(_seq)
+        random.shuffle(_seed)
         # get grid values
-        _answers = self.algo_lers_2(_seq)
+        _answers = self.algo_lers_2(_seed)
         # level of complexity management
         try:
             # get matrix' morphs
@@ -717,7 +717,6 @@ class SudokuMatrix (Matrix):
             returns True if current matrix is fully compliant with all
             Sudoku policies, False otherwise;
         """
-        print("verify_correct()")
         # inits
         _base = set(self.base_sequence)
         _matrix = [_cell.get_value() for _cell in self]
@@ -753,8 +752,6 @@ class SudokuMatrix (Matrix):
                 return False
             # end if
         # end for
-        # what else?
-        print("grid is OK.")
         # succeeded
         return True
     # end def
@@ -1055,7 +1052,6 @@ class SudokuMatrixSolver (SudokuMatrix):
         Please, read SudokuMatrix class doc for more detail;
     """
 
-
     def do_finished (self):
         """
             returns True if matrix is fully solved, False otherwise;
@@ -1329,7 +1325,7 @@ if __name__ == "__main__":
     matrix = SudokuMatrix()
     data = list()
     # let's make some tests
-    for n in range(1000):
+    for n in range(100):
         # generate grid
         t = timeit(matrix.generate, number=1)
         print("[LERS2]\tgrid generated in: {:0.6f} sec".format(t))
@@ -1343,6 +1339,9 @@ if __name__ == "__main__":
             exit("\n[ERROR]\tincorrect grid!")
         # end if
     # end for
-    print("\naverage grid generation time: {:0.6f} sec".format(mean(data)))
+    print(
+        "\n[STATS]\taverage grid generation time: {:0.6f} sec"
+        .format(mean(data))
+    )
     print("\n[SUCCESS]\tall has been tested OK.")
 # end if
