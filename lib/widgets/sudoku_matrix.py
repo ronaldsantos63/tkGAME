@@ -326,7 +326,8 @@ class SudokuMatrix (Matrix):
 
     def algo_euler_latin_square (self, seed):
         """
-            *DEPRECATED* - essentially kept for educational reasons;
+            *DEPRECATED* - essentially kept for educational purpose;
+
             Leonhard Euler's (april 15th, 1707 - sept. 18th, 1783)
             latin square algorithm; takes @seed sequence and builds
             matrix values by rotating left this sequence at each next
@@ -355,8 +356,8 @@ class SudokuMatrix (Matrix):
             playable Sudoku grids; of course, you can mix this with
             matrix vertical / horizontal morphs on chutes and many
             other mixups, but I think simply adding to this a variable
-            number of GIVENS for each distinct generated grid will
-            probably provide hours and hours of pleasant game!
+            number of GIVENS for each distinct generated grid would
+            probably give hours and hours of pleasant game!
         """
         # ensure mutable list
         _base = list(seed)
