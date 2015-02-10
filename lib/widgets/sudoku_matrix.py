@@ -83,7 +83,8 @@ def is_correct_grid (grid_data, base_sequence=None):
     if set(_matrix) != _base: return False
     # verify more detailed
     _size = _bl = len(_base)
-    _chutes = _box_size = _bs = _bl**0.5
+    # box size = sqrt(_size)
+    _bs = _bl**0.5
     # do we have a correct Sudoku grid?
     if _bs != int(_bs):
         raise ValueError(
