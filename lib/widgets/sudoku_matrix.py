@@ -1318,14 +1318,16 @@ class SudokuMatrixSolverCell (SudokuMatrixCell):
 
 # make some tests
 if __name__ == "__main__":
+    # get stats
+    from statistics import mean
     # get chronometer
     from timeit import timeit
-    from statistics import mean
+    # stats data inits
+    data = list()
     # grid generation test
     matrix = SudokuMatrix()
-    data = list()
     # let's make some tests
-    for n in range(100):
+    for n in range(1000):
         # generate grid
         t = timeit(matrix.generate, number=1)
         print("[LERS2]\tgrid generated in: {:0.6f} sec".format(t))
@@ -1333,7 +1335,7 @@ if __name__ == "__main__":
         data.append(t)
         # reveal answer
         matrix.reveal()
-        # erroneous grid?
+        # verify: erroneous grid?
         if not matrix.verify_correct():
             print(matrix)
             exit("\n[ERROR]\tincorrect grid!")
