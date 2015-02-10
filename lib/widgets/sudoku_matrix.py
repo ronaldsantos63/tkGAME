@@ -348,6 +348,8 @@ class SudokuMatrix (Matrix):
             # update eventual UI display
             self.on_matrix_update()
         # end if
+        # return matrix
+        return self
     # end def
 
 
@@ -400,6 +402,8 @@ class SudokuMatrix (Matrix):
                 )
             # end for
         # end for
+        # return matrix
+        return self
     # end def
 
 
@@ -424,6 +428,8 @@ class SudokuMatrix (Matrix):
                 answer=_base[(_i + _bs*(_i//_bl) + _i//_ca) % _bl]
             )
         # end for
+        # return matrix
+        return self
     # end def
 
 
@@ -432,7 +438,8 @@ class SudokuMatrix (Matrix):
             Sudoku grid generation shuffle algorithm;
             complexity level 1: does nothing;
         """
-        pass # this one is NORMAL
+        # return matrix
+        return self
     # end def
 
 
@@ -443,6 +450,8 @@ class SudokuMatrix (Matrix):
             see class doc for more detail;
         """
         pass                                                                # FIXME
+        # return matrix
+        return self
     # end def
 
 
@@ -453,6 +462,8 @@ class SudokuMatrix (Matrix):
             class doc for more detail;
         """
         pass                                                                # FIXME
+        # return matrix
+        return self
     # end def
 
 
@@ -466,6 +477,8 @@ class SudokuMatrix (Matrix):
         self.algo_shuffle_2()
         # shuffles rows into a random band
         self.algo_shuffle_3()
+        # return matrix
+        return self
     # end def
 
 
@@ -476,6 +489,8 @@ class SudokuMatrix (Matrix):
             detail;
         """
         pass                                                                # FIXME
+        # return matrix
+        return self
     # end def
 
 
@@ -486,6 +501,8 @@ class SudokuMatrix (Matrix):
             detail;
         """
         pass                                                                # FIXME
+        # return matrix
+        return self
     # end def
 
 
@@ -499,6 +516,8 @@ class SudokuMatrix (Matrix):
         self.algo_shuffle_5()
         # shuffle horizontal bands
         self.algo_shuffle_6()
+        # return matrix
+        return self
     # end def
 
 
@@ -720,6 +739,8 @@ class SudokuMatrix (Matrix):
         if __DEBUG__ and __debug__:
             print("\n[DEBUG]\tcurrent matrix state:", self, "\n")
         # end if
+        # return matrix
+        return self
     # end def
 
 
@@ -736,6 +757,8 @@ class SudokuMatrix (Matrix):
             # relocate (row, column)
             _cell.relocate(_i // _bl, _i % _bl)
         # end for
+        # return matrix
+        return self
     # end def
 
 
@@ -786,6 +809,8 @@ class SudokuMatrix (Matrix):
         self.set_answer_values(kw.get("answers"))
         # update eventual UI display
         self.on_matrix_update(**kw)
+        # return matrix
+        return self
     # end def
 
 
@@ -801,6 +826,8 @@ class SudokuMatrix (Matrix):
         # end for
         # update eventual UI display
         self.on_matrix_update(**kw)
+        # return matrix
+        return self
     # end def
 
 
@@ -815,6 +842,8 @@ class SudokuMatrix (Matrix):
         # end for
         # update eventual UI display
         self.on_matrix_update(*args, **kw)
+        # return matrix
+        return self
     # end def
 
 
@@ -825,7 +854,7 @@ class SudokuMatrix (Matrix):
             self.reveal();
         """
         # internal def
-        self.__set_cells(self, answers, "set_answer_value")
+        return self.__set_cells(self, answers, "set_answer_value")
     # end def
 
 
@@ -838,7 +867,7 @@ class SudokuMatrix (Matrix):
             more detail;
         """
         # internal def
-        self.__set_cells(
+        return self.__set_cells(
             self.get_column_cells(column), values, "set_value"
         )
     # end def
@@ -850,7 +879,7 @@ class SudokuMatrix (Matrix):
             class doc for more detail;
         """
         # internal def
-        self.__set_cells(self, items, "set_items")
+        return self.__set_cells(self, items, "set_items")
     # end def
 
 
@@ -862,7 +891,9 @@ class SudokuMatrix (Matrix):
             is out of matrix' bounds; see class doc for more detail;
         """
         # internal def
-        self.__set_cells(self.get_row_cells(row), values, "set_value")
+        return self.__set_cells(
+            self.get_row_cells(row), values, "set_value"
+        )
     # end def
 
 
@@ -873,7 +904,7 @@ class SudokuMatrix (Matrix):
             for more detail;
         """
         # internal def
-        self.__set_cells(self, values, "set_value")
+        return self.__set_cells(self, values, "set_value")
     # end def
 
 
@@ -891,7 +922,13 @@ class SudokuMatrix (Matrix):
                 "should never be less than 17."
             )
         # end if
+
         pass                                                                # FIXME
+
+        # update eventual UI display
+        self.on_matrix_update()
+        # return matrix
+        return self
     # end def
 
 
@@ -916,6 +953,8 @@ class SudokuMatrix (Matrix):
             # update eventual UI display
             self.on_matrix_update()
         # end if
+        # return matrix
+        return self
     # end def
 
 
