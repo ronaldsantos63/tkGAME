@@ -162,6 +162,8 @@ def lers2_sudoku_grid (base_sequence=None):
 
 def rotate_left (sequence, inplace=False):
     """
+        *DEPRECATED* - essentially kept for educational purpose;
+
         rotates @sequence from right to left; if @inplace == True,
         rotates @sequence object itself (must be a mutable list or at
         least a subclass of it in this case); returns copy of rotated
@@ -187,6 +189,8 @@ def rotate_left (sequence, inplace=False):
 
 def rotate_right (sequence, inplace=False):
     """
+        *DEPRECATED* - essentially kept for educational purpose;
+
         rotates @sequence from left to right; if @inplace == True,
         rotates @sequence object itself (must be a mutable list or
         at least a subclass of it in this case); returns copy of
