@@ -61,6 +61,60 @@ def algo_lers_2 (base_sequence):
 # end def
 
 
+def is_correct_grid (grid_data, base_sequence=None):
+    """
+        returns True if @grid_data sequence list of items is fully
+        compliant with all Sudoku policies (each ITEM appears only ONCE
+        in a given UNIT), False otherwise; parameter @base_sequence
+        allows to know which ITEMS to compare; will be set to classical
+        Sudoku [1..9] sequence by default, if omitted;
+    """
+    # ensure subscriptable
+    _matrix = tuple(grid_data)
+    # get base sequence
+    _base = set(base_sequence or range(1, 10))
+    # verify global harmony
+    if set(_matrix) != _base: return False
+    # verify more detailed
+    _rows = _columns = _base_len = _bl = len(_base)
+    _chutes = _box_size = _bs = _bl**0.5
+    # do we have a correct Sudoku grid?
+    if _bs != int(_bs):
+        raise ValueError(
+            "invalid Sudoku grid size: {0} x {0}".format(_bl)
+        )
+    # end if
+    # reset value
+    _bs = int(_bs)
+    # browse rows
+    for _row in range(_rows):
+        # not good?
+        if set(_matrix[_row * _columns:(_row + 1) * _columns]) != _base:
+            # failed
+            return False
+        # end if
+    # end for
+    # browse columns
+    for _column in range(_columns):
+        # not good?
+        if set(_matrix[_column::_cols]) != _base:
+            # failed
+            return False
+        # end if
+    # end for
+    # browse boxes
+    for _box in self.get_boxes():
+        # not good?
+        if set([_c.get_value() for _c in _box]) != _base:
+            # failed
+            return False
+        # end if
+    # end for
+    # succeeded
+    return True
+# end def
+
+
 def rotate_left (sequence, inplace=False):
     """
         rotates @sequence from right to left; if @inplace == True,
@@ -1311,7 +1365,7 @@ if __name__ == "__main__":
     # grid generation test
     matrix = SudokuMatrix()
     # let's make some tests
-    for n in range(1000):
+    for n in range(10):
         # generate grid
         t = timeit(matrix.generate, number=1)
         print("[LERS2] grid generated in: {:0.6f} sec".format(t))
@@ -1331,4 +1385,7 @@ if __name__ == "__main__":
         .format(mean(data))
     )
     print("\n[SUCCESS] all grids have been tested OK.")
+    data = algo_lers_2(range(1,10))
+    is_correct_grid(data)
+    print("test in {:0.6f} sec".format(timeit(lambda:is_correct_grid(data), number=1)))
 # end if
