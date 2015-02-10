@@ -427,13 +427,77 @@ class SudokuMatrix (Matrix):
     # end def
 
 
-    @staticmethod
-    def algo_shuffle_1 (matrix):
+    def algo_shuffle_1 (self):
         """
             Sudoku grid generation shuffle algorithm;
             complexity level 1: does nothing;
+            see class doc for more detail;
         """
-        return matrix
+        pass
+    # end def
+
+
+    def algo_shuffle_2 (self):
+        """
+            Sudoku grid generation shuffle algorithm;
+            complexity level 2: shuffles columns into a random stack;
+            see class doc for more detail;
+        """
+        pass
+    # end def
+
+
+    def algo_shuffle_3 (self):
+        """
+            Sudoku grid generation shuffle algorithm;
+            complexity level 3: shuffles rows into a random band;
+            see class doc for more detail;
+        """
+        pass
+    # end def
+
+
+    def algo_shuffle_4 (self):
+        """
+            Sudoku grid generation shuffle algorithm;
+            complexity level 4: shuffles columns into a random stack
+            and rows into a random band;
+            see class doc for more detail;
+        """
+        # shuffle columns into a random stack
+        self.algo_shuffle_2()
+        # shuffles rows into a random band
+        self.algo_shuffle_3()
+    # end def
+
+
+    def algo_shuffle_5 (self):
+        """
+            Sudoku grid generation shuffle algorithm;
+            complexity level 5: shuffles vertical stacks;
+        """
+        pass
+    # end def
+
+
+    def algo_shuffle_6 (self):
+        """
+            Sudoku grid generation shuffle algorithm;
+            complexity level 6: shuffles horizontal bands;
+        """
+        pass
+    # end def
+
+
+    def algo_shuffle_7 (self):
+        """
+            Sudoku grid generation shuffle algorithm;
+            complexity level 7: shuffles stacks and bands;
+        """
+        # shuffle vertical stacks
+        self.algo_shuffle_5()
+        # shuffle horizontal bands
+        self.algo_shuffle_6()
     # end def
 
 
@@ -458,7 +522,7 @@ class SudokuMatrix (Matrix):
         """
             generates a Sudoku-compliant fully playable matrix;
             parameter @level allows to choose a level of generation
-            complexity (1..9); this generating method uses a Leonhard
+            complexity (1..7); this generating method uses a Leonhard
             Euler's latin square improved algorithm;
         """
         # set random seed sequence
@@ -472,7 +536,7 @@ class SudokuMatrix (Matrix):
         # level of complexity management
         try:
             # set matrix' morphs
-            exec("self.algo_shuffle_{}(_answers)".format(level))
+            exec("self.algo_shuffle_{}()".format(level))
         # unsupported level
         except:
             # warn user
@@ -482,10 +546,10 @@ class SudokuMatrix (Matrix):
                 .format(level)
             )
         # end try
-        # renumber cells after shuffling
-        self.renumber_cells()
+        # relocate cells after shuffling operations
+        self.relocate_cells()
         # update eventual UI display
-        self.on_matrix_update(**kw)
+        self.on_matrix_update()
         # return matrix
         return self
     # end def
@@ -570,6 +634,22 @@ class SudokuMatrix (Matrix):
         if __DEBUG__ and __debug__:
             print("\n[DEBUG]\tcurrent matrix state:", self, "\n")
         # end if
+    # end def
+
+
+    def relocate_cells (self, *args, **kw):
+        """
+            event handler: relocates all matrix' cells to fit their
+            actual location in matrix e.g. after some shuffling
+            operations;
+        """
+        # inits
+        _bl = self.base_len
+        # browse cells
+        for _i, _cell in enumerate(self):
+            # relocate (row, column)
+            _cell.relocate(_i // _bl, _i % _bl)
+        # end for
     # end def
 
 
@@ -881,6 +961,17 @@ class SudokuMatrixCell (list):
         """
         # put your own code in subclass
         pass
+    # end def
+
+
+    def relocate (self, row, column):
+        """
+            simply relocates current cell to new (@row, @column) matrix
+            location;
+        """
+        # relocate
+        self.row = row
+        self.column = column
     # end def
 
 
