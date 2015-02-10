@@ -34,6 +34,97 @@ __DEBUG__ = False
 
 # module scope function defs
 
+def euler_latin_square (base_sequence=None):
+    """
+        Leonhard Euler's historical 'Latin Square' generation
+        algorithm; latin squares are known to fit only the two first
+        rules of Sudoku: ITEMS must appear only ONCE in each ROW and in
+        each COLUMN; but latin squares do generally *NOT* fit the third
+        rule: ITEMS must appear only ONCE in each BOX region; latin
+        squares are therefore quite good crash tests for Sudoku
+        verifying algorithms;
+    """
+    # ensure subscriptable
+    _base = tuple(base_sequence or range(1, 10))
+    # nb of items
+    _bl = len(_base)
+    # return latin square
+    return [
+        _base[(_i + _i // _bl) % _bl]
+        for _i in range(_bl**2)
+    ]
+# end def
+
+
+def is_correct_grid (grid_data, base_sequence=None):
+    """
+        returns True if @grid_data sequence list of items is fully
+        compliant with all Sudoku policies (each ITEM appears only ONCE
+        in a given UNIT), False otherwise; parameter @base_sequence
+        allows to know which ITEMS to compare; will be set to classical
+        Sudoku [1..9] sequence by default, if omitted;
+    """
+    # ensure subscriptable
+    _matrix = tuple(grid_data)
+    # get base sequence
+    _base = set(base_sequence or range(1, 10))
+    print("verifying harmony")
+    # verify global harmony
+    if set(_matrix) != _base: return False
+    # verify more detailed
+    _size = _bl = len(_base)
+    _chutes = _box_size = _bs = _bl**0.5
+    # do we have a correct Sudoku grid?
+    if _bs != int(_bs):
+        raise ValueError(
+            "invalid Sudoku grid size: {0} x {0}".format(_bl)
+        )
+    # end if
+    # reset value
+    _bs = int(_bs)
+    print("verifying rows")
+    # browse rows
+    for _row in range(_size):
+        # not good?
+        if set(_matrix[_row * _size:(_row + 1) * _size]) != _base:
+            # failed
+            return False
+        # end if
+    # end for
+    print("verifying columns")
+    # browse columns
+    for _column in range(_size):
+        # not good?
+        if set(_matrix[_column::_size]) != _base:
+            # failed
+            return False
+        # end if
+    # end for
+    print("verifying boxes")
+    # get boxes
+    _boxes = [
+        [
+            _matrix[(_r0 * _bs + _row) * _bl + _c0 * _bs + _column]
+            for _row in range(_bs)
+            for _column in range(_bs)
+        ]
+        for _r0 in range(_bs)
+        for _c0 in range(_bs)
+    ]
+    # browse boxes
+    for _box in _boxes:
+        # not good?
+        if set(_box) != _base:
+            # failed
+            return False
+        # end if
+    # end for
+    print("all is OK.")
+    # succeeded
+    return True
+# end def
+
+
 def lers2_sudoku_grid (base_sequence=None):
     """
         Leonhard Euler and Raphaël Seban (LERS) algorithm (v2);
@@ -58,60 +149,6 @@ def lers2_sudoku_grid (base_sequence=None):
         _base[(_i + _bs * (_i // _bl) + _i // _ca) % _bl]
         for _i in range(_bl**2)
     ]
-# end def
-
-
-def is_correct_grid (grid_data, base_sequence=None):
-    """
-        returns True if @grid_data sequence list of items is fully
-        compliant with all Sudoku policies (each ITEM appears only ONCE
-        in a given UNIT), False otherwise; parameter @base_sequence
-        allows to know which ITEMS to compare; will be set to classical
-        Sudoku [1..9] sequence by default, if omitted;
-    """
-    # ensure subscriptable
-    _matrix = tuple(grid_data)
-    # get base sequence
-    _base = set(base_sequence or range(1, 10))
-    # verify global harmony
-    if set(_matrix) != _base: return False
-    # verify more detailed
-    _rows = _columns = _base_len = _bl = len(_base)
-    _chutes = _box_size = _bs = _bl**0.5
-    # do we have a correct Sudoku grid?
-    if _bs != int(_bs):
-        raise ValueError(
-            "invalid Sudoku grid size: {0} x {0}".format(_bl)
-        )
-    # end if
-    # reset value
-    _bs = int(_bs)
-    # browse rows
-    for _row in range(_rows):
-        # not good?
-        if set(_matrix[_row * _columns:(_row + 1) * _columns]) != _base:
-            # failed
-            return False
-        # end if
-    # end for
-    # browse columns
-    for _column in range(_columns):
-        # not good?
-        if set(_matrix[_column::_cols]) != _base:
-            # failed
-            return False
-        # end if
-    # end for
-    # browse boxes
-    for _box in self.get_boxes():
-        # not good?
-        if set([_c.get_value() for _c in _box]) != _base:
-            # failed
-            return False
-        # end if
-    # end for
-    # succeeded
-    return True
 # end def
 
 
@@ -723,8 +760,8 @@ class SudokuMatrix (Matrix):
             self.get_box_cells(
                 _row * self.box_size, _column * self.box_size
             )
-            for _row in range(self.rows // self.box_size)
-            for _column in range(self.columns // self.box_size)
+            for _row in range(self.box_size)
+            for _column in range(self.box_size)
         ]
     # end def
 
@@ -1385,7 +1422,8 @@ if __name__ == "__main__":
         .format(mean(data))
     )
     print("\n[SUCCESS] all grids have been tested OK.")
-    data = lers2_sudoku_grid(range(1,10))
-    is_correct_grid(data)
+    data = latin_square()
+    print("\n".join(map(str, list(data[i*9:(1+i)*9] for i in range(9)))))
     print("test in {:0.6f} sec".format(timeit(lambda:is_correct_grid(data), number=1)))
+    print("grid is correct:", is_correct_grid(data))
 # end if
