@@ -34,7 +34,7 @@ __DEBUG__ = False
 
 # module scope function defs
 
-def algo_lers_2 (base_sequence):
+def lers2_sudoku_grid (base_sequence=None):
     """
         Leonhard Euler and Raphaël Seban (LERS) algorithm (v2);
         optimized version of SudokuMatrix.algo_euler_latin_square()
@@ -46,7 +46,7 @@ def algo_lers_2 (base_sequence):
         about 10 times faster than LERS1;
     """
     # ensure subscriptable
-    _base = tuple(base_sequence)
+    _base = tuple(base_sequence or range(1, 10))
     # nb of items
     _bl = len(_base)
     # box size = sqrt(_bl)
@@ -461,11 +461,11 @@ class SudokuMatrix (Matrix):
     # end def
 
 
-    def algo_lers_2 (self, base_sequence):
+    def algo_lers2 (self, base_sequence):
         """
             LERS2 algorithm adaptation to fit current class' needs;
-            please, see algo_lers_2() module function def on top of
-            this file for more detail;
+            please, see lers2_sudoku_grid() module function def on top
+            of this file for more detail;
         """
         # ensure subscriptable
         _base = tuple(base_sequence)
@@ -621,7 +621,7 @@ class SudokuMatrix (Matrix):
         # set grid answer values
         # + reset cell contents
         # all at once
-        self.algo_lers_2(_seed)
+        self.algo_lers2(_seed)
         # level of complexity management
         try:
             # set matrix' morphs
@@ -1385,7 +1385,7 @@ if __name__ == "__main__":
         .format(mean(data))
     )
     print("\n[SUCCESS] all grids have been tested OK.")
-    data = algo_lers_2(range(1,10))
+    data = lers2_sudoku_grid(range(1,10))
     is_correct_grid(data)
     print("test in {:0.6f} sec".format(timeit(lambda:is_correct_grid(data), number=1)))
 # end if
