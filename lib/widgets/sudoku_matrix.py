@@ -1291,5 +1291,5 @@ if __name__ == "__main__":
         "\n[STATS] average grid generation time: {:0.6f} sec"
         .format(mean(data))
     )
-    print("\n[SUCCESS] all has been tested OK.")
+    print("\n[SUCCESS] all grids have been tested OK.")
 # end if
