@@ -57,12 +57,12 @@ def euler_latin_square (base_sequence=None):
 # end def
 
 
-def fancy_grid (data):
+def fancy_grid (data, size=9):
     """
         simply formats matrix data to show up fancier on stdout;
     """
     return "\n".join(
-        map(str, (data[i * 9:(i + 1) * 9] for i in range(9)))
+        map(str, (data[i * size:(i + 1) * size] for i in range(size)))
     )
 # end def
 
