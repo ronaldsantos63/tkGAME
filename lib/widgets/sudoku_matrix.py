@@ -432,7 +432,7 @@ class SudokuMatrix (Matrix):
             Sudoku grid generation shuffle algorithm;
             complexity level 1: does nothing;
         """
-        pass
+        pass # this one is NORMAL
     # end def
 
 
@@ -442,7 +442,7 @@ class SudokuMatrix (Matrix):
             complexity level 2: shuffles columns into a random stack;
             see class doc for more detail;
         """
-        pass
+        pass                                                                # FIXME
     # end def
 
 
@@ -452,7 +452,7 @@ class SudokuMatrix (Matrix):
             complexity level 3: shuffles rows into a random band; see
             class doc for more detail;
         """
-        pass
+        pass                                                                # FIXME
     # end def
 
 
@@ -475,7 +475,7 @@ class SudokuMatrix (Matrix):
             complexity level 5: shuffles stacks; see class doc for more
             detail;
         """
-        pass
+        pass                                                                # FIXME
     # end def
 
 
@@ -485,7 +485,7 @@ class SudokuMatrix (Matrix):
             complexity level 6: shuffles bands; see class doc for more
             detail;
         """
-        pass
+        pass                                                                # FIXME
     # end def
 
 
