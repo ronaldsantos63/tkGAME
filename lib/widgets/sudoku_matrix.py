@@ -889,6 +889,9 @@ class SudokuMatrixSolver (SudokuMatrix):
             was quite sufficient to comply with Sudoku's third rule:
             all distinct items must appear only once into a box region;
 
+            this algorithm (LERS1) was found on Monday 9th, 2015, in
+            about 5 minutes;
+
             I made this (while rotating left sequence at each step):
 
                    +--row0          1 2 3 4 5 6 7 8 9   (1)
@@ -902,24 +905,50 @@ class SudokuMatrixSolver (SudokuMatrix):
              +------->row8          9 1 2 3 4 5 6 7 8           (9)
 
             This Euler improved algorithm allows 9! = 362,880 distinct
-            playable grids; of course, you can mix this with matrix
-            vertical/horizontal morphs on chutes and many other mixups,
-            but I think adding simply to this a variable number of
-            GIVENS for each distinct grid will probably provide hours
-            and hours of pleasant game!
+            playable Sudoku grids; of course, you can mix this with
+            matrix vertical / horizontal morphs on chutes and many
+            other mixups, but I think simply adding to this a variable
+            number of GIVENS for each distinct generated grid will
+            probably provide hours and hours of pleasant game!
         """
         # ensure mutable list
-        _seq = list(seed)
-        _c = self.chutes
+        _base = list(seed)
+        _bl = len(_base)        # nb of items
+        _bs = int(_bl**0.5)     # box size = sqrt(_bl)
         # browse rows into a band chute
-        for _r0 in range(_c):
+        for _r0 in range(_bs):
             # browse rows by band-to-band jumps
-            for _r1 in range(_c):
+            for _r1 in range(_bs):
                 # set row cells' unique values
                 self.set_row_values(
-                    _r0 + _r1 * _c, rotate_left(_seq, inplace=True)
+                    _r0 + _r1 * _bs, rotate_left(_base, inplace=True)
                 )
             # end for
+        # end for
+    # end def
+
+
+    def algo_lers_2 (self, seed):
+        """
+            Leonhard Euler and Raphaël Seban (LERS) algorithm (v2);
+            optimized version of self.algo_euler_latin_square() (LERS1)
+            generation method; this algorithm (LERS2) was fitted on
+            Tuesday 10th, 2015, in about 3 hours (including tests);
+            LERS2 uses base sequence simple index reading (no sequence
+            rotation) and a 1-pass loop to generate a fully playable
+            Sudoku grid between 9! = 362,880 distinct possibilities;
+            LERS2 algorithm is about 10 times faster than LERS1;
+        """
+        # ensure subscriptable
+        _base = tuple(seed)
+        _bl = len(_base)        # nb of items
+        _bs = int(_bl**0.5)     # box size = sqrt(_bl)
+        _ca = _bl * _bs         # chute rectangle area (constant)
+        # browse cells with index
+        for _i, _cell in enumerate(self):
+            _cell.set_value(
+                _base[(_i + _bs * (_i // _bl) + _i // _ca) % _bl]
+            )
         # end for
     # end def
 
@@ -1088,19 +1117,27 @@ class SudokuMatrixSolver (SudokuMatrix):
     # end def
 
 
-    def generate (self):
+    def generate (self, level=1):
         """
-            generates a Sudoku-compliant fully playable matrix; this
-            generating method uses Leonhard Euler's latin square
-            algorithm (slightly improved by myself);
+            generates a Sudoku-compliant fully playable matrix;
+            parameter @level allows to choose a level of generation
+            complexity (1..9); this generating method uses Leonhard
+            Euler's latin square algorithms (slightly improved by
+            myself);
         """
         # lib import
         from random import shuffle
         # set random seed sequence
         _seq = list(self.base_sequence)
         shuffle(_seq)
-        # apply Leonhard Euler's improved algorithm
-        self.algo_euler_latin_square(_seq)
+        # level of complexity
+        if level == 1:
+            # apply Leonhard Euler's improved algorithm
+            self.algo_euler_latin_square(_seq)
+        elif level == 2:
+            # try this, baby!
+            self.algo_lers_2(_seq)
+        # end if
         # return matrix
         return self
     # end def
@@ -1260,13 +1297,21 @@ if __name__ == "__main__":
     from timeit import timeit
     # solver test
     matrix = SudokuMatrixSolver()
-    # let's make some big tests
-    for n in range(1000):
-        # generation delay
-        print(
-            "grid generated in: {:0.6f} sec"
-            .format(timeit(matrix.generate, number=1))
-        )
+    # let's make some tests
+    for n in range(10):
+        # show sample
+        #~ print(matrix.generate())
+        # algorithms
+        lers1 = lambda:matrix.generate(1)
+        lers2 = lambda:matrix.generate(2)
+        # timing tasks
+        t1 = timeit(lers1, number=1)
+        t2 = timeit(lers2, number=1)
+        # generation delays
+        print("[LERS1]\tgrid generated in: {:0.6f} sec".format(t1))
+        print("[LERS2]\tgrid generated in: {:0.6f} sec".format(t2))
+        print("ratio LERS1 / LERS2: {:0.6f}".format(t1/t2))
+        print("ratio LERS2 / LERS1: {:0.6f}".format(t2/t1))
         # verify correct grid
         if not matrix.verify_correct():
             print(matrix)
