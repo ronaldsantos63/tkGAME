@@ -42,7 +42,8 @@ def euler_latin_square (base_sequence=None):
         each COLUMN; but latin squares do generally *NOT* fit the third
         rule of Sudoku: ITEMS must appear only ONCE in each BOX region;
         latin squares are therefore quite good crash tests for Sudoku
-        grid validation algorithms;
+        grid validation algorithms; this function returns a Python list
+        object filled with latin square data;
     """
     # ensure subscriptable
     _base = tuple(base_sequence or range(1, 10))
@@ -53,6 +54,16 @@ def euler_latin_square (base_sequence=None):
         _base[(_i + _i // _bl) % _bl]
         for _i in range(_bl**2)
     ]
+# end def
+
+
+def fancy_grid (data):
+    """
+        simply formats matrix data to show up fancier on stdout;
+    """
+    return "\n".join(
+        map(str, (data[i * 9:(i + 1) * 9] for i in range(9)))
+    )
 # end def
 
 
@@ -68,7 +79,6 @@ def is_correct_grid (grid_data, base_sequence=None):
     _matrix = tuple(grid_data)
     # get base sequence
     _base = set(base_sequence or range(1, 10))
-    print("verifying harmony")
     # verify global harmony
     if set(_matrix) != _base: return False
     # verify more detailed
@@ -82,7 +92,6 @@ def is_correct_grid (grid_data, base_sequence=None):
     # end if
     # reset value
     _bs = int(_bs)
-    print("verifying rows")
     # browse rows
     for _row in range(_size):
         # not good?
@@ -91,7 +100,6 @@ def is_correct_grid (grid_data, base_sequence=None):
             return False
         # end if
     # end for
-    print("verifying columns")
     # browse columns
     for _column in range(_size):
         # not good?
@@ -100,26 +108,24 @@ def is_correct_grid (grid_data, base_sequence=None):
             return False
         # end if
     # end for
-    print("verifying boxes")
     # get boxes
     _boxes = [
-        [
+        set(
             _matrix[(_r0 * _bs + _row) * _bl + _c0 * _bs + _column]
             for _row in range(_bs)
             for _column in range(_bs)
-        ]
+        )
         for _r0 in range(_bs)
         for _c0 in range(_bs)
     ]
     # browse boxes
     for _box in _boxes:
         # not good?
-        if set(_box) != _base:
+        if _box != _base:
             # failed
             return False
         # end if
     # end for
-    print("all is OK.")
     # succeeded
     return True
 # end def
@@ -1401,8 +1407,9 @@ if __name__ == "__main__":
     data = list()
     # grid generation test
     matrix = SudokuMatrix()
+    print("\nTesting:", matrix.__class__.__name__, "\n")
     # let's make some tests
-    for n in range(10):
+    for n in range(20):
         # generate grid
         t = timeit(matrix.generate, number=1)
         print("[LERS2] grid generated in: {:0.6f} sec".format(t))
@@ -1422,8 +1429,34 @@ if __name__ == "__main__":
         .format(mean(data))
     )
     print("\n[SUCCESS] all grids have been tested OK.")
-    data = latin_square()
-    print("\n".join(map(str, list(data[i*9:(1+i)*9] for i in range(9)))))
-    print("test in {:0.6f} sec".format(timeit(lambda:is_correct_grid(data), number=1)))
-    print("grid is correct:", is_correct_grid(data))
+
+    # trying with Euler's latin square
+
+    print("\nTrying with Euler's latin square (module function):\n")
+    data = euler_latin_square()
+    print(fancy_grid(data))
+    print(
+        "\ngenerated grid in {:0.6f} sec"
+        .format(timeit(euler_latin_square, number=1))
+    )
+    print(
+        "\nverified grid in {:0.6f} sec"
+        .format(timeit(lambda:is_correct_grid(data), number=1))
+    )
+    print("\ngrid is correct:", is_correct_grid(data))
+
+    # trying with LERS2 Sudoku grid module's function
+
+    print("\nTrying with LERS2 Sudoku grid (module function):\n")
+    data = lers2_sudoku_grid()
+    print(fancy_grid(data))
+    print(
+        "\ngenerated grid in {:0.6f} sec"
+        .format(timeit(lers2_sudoku_grid, number=1))
+    )
+    print(
+        "\nverified grid in {:0.6f} sec"
+        .format(timeit(lambda:is_correct_grid(data), number=1))
+    )
+    print("\ngrid is correct:", is_correct_grid(data))
 # end if
