@@ -1311,7 +1311,6 @@ if __name__ == "__main__":
         print("[LERS1]\tgrid generated in: {:0.6f} sec".format(t1))
         print("[LERS2]\tgrid generated in: {:0.6f} sec".format(t2))
         print("ratio LERS1 / LERS2: {:0.6f}".format(t1/t2))
-        print("ratio LERS2 / LERS1: {:0.6f}".format(t2/t1))
         # verify correct grid
         if not matrix.verify_correct():
             print(matrix)
