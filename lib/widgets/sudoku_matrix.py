@@ -429,8 +429,8 @@ class SudokuMatrix (Matrix):
 
     def algo_shuffle_1 (self):
         """
-            Sudoku grid generation shuffle algorithm; complexity level
-            1: does nothing; see class doc for more detail;
+            Sudoku grid generation shuffle algorithm;
+            complexity level 1: does nothing;
         """
         pass
     # end def
@@ -438,9 +438,9 @@ class SudokuMatrix (Matrix):
 
     def algo_shuffle_2 (self):
         """
-            Sudoku grid generation shuffle algorithm; complexity level
-            2: shuffles columns into a random stack; see class doc for
-            more detail;
+            Sudoku grid generation shuffle algorithm;
+            complexity level 2: shuffles columns into a random stack;
+            see class doc for more detail;
         """
         pass
     # end def
@@ -448,9 +448,9 @@ class SudokuMatrix (Matrix):
 
     def algo_shuffle_3 (self):
         """
-            Sudoku grid generation shuffle algorithm; complexity level
-            3: shuffles rows into a random band; see class doc for more
-            detail;
+            Sudoku grid generation shuffle algorithm;
+            complexity level 3: shuffles rows into a random band; see
+            class doc for more detail;
         """
         pass
     # end def
@@ -458,9 +458,9 @@ class SudokuMatrix (Matrix):
 
     def algo_shuffle_4 (self):
         """
-            Sudoku grid generation shuffle algorithm; complexity level
-            4: shuffles columns into a random stack and rows into a
-            random band; see class doc for more detail;
+            Sudoku grid generation shuffle algorithm;
+            complexity level 4: shuffles columns into a random stack
+            and rows into a random band; see class doc for more detail;
         """
         # shuffle columns into a random stack
         self.algo_shuffle_2()
@@ -471,8 +471,9 @@ class SudokuMatrix (Matrix):
 
     def algo_shuffle_5 (self):
         """
-            Sudoku grid generation shuffle algorithm; complexity level
-            5: shuffles stacks; see class doc for more detail;
+            Sudoku grid generation shuffle algorithm;
+            complexity level 5: shuffles stacks; see class doc for more
+            detail;
         """
         pass
     # end def
@@ -480,8 +481,9 @@ class SudokuMatrix (Matrix):
 
     def algo_shuffle_6 (self):
         """
-            Sudoku grid generation shuffle algorithm; complexity level
-            6: shuffles bands; see class doc for more detail;
+            Sudoku grid generation shuffle algorithm;
+            complexity level 6: shuffles bands; see class doc for more
+            detail;
         """
         pass
     # end def
@@ -489,9 +491,9 @@ class SudokuMatrix (Matrix):
 
     def algo_shuffle_7 (self):
         """
-            Sudoku grid generation shuffle algorithm; complexity level
-            7: shuffles stacks and bands; see class doc for more
-            detail;
+            Sudoku grid generation shuffle algorithm;
+            complexity level 7: shuffles stacks and bands; see class
+            doc for more detail;
         """
         # shuffle vertical stacks
         self.algo_shuffle_5()
