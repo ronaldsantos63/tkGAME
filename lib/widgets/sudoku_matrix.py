@@ -526,7 +526,7 @@ class SudokuMatrix (Matrix):
         """
         # set random seed sequence
         _seed = list(self.base_sequence)
-        # with 9 items: 9! = 362,880 possibilities
+        # base seed with 9 items: 9! = 362,880 grid possibilities
         random.shuffle(_seed)
         # set grid answer values
         # + reset cell contents
