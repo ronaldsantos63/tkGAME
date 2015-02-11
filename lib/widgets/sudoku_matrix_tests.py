@@ -109,7 +109,8 @@ def test_main (level=1, qty=10):
     # grid generation test
     matrix = SudokuMatrix()
     # stats data inits
-    data = list()
+    data1 = list()
+    data2 = list()
     print("\n" + "-" * 60)
     print("\nTesting: {}".format(matrix.__class__.__name__))
     print("\nGeneration complexity level:", level)
@@ -118,15 +119,14 @@ def test_main (level=1, qty=10):
     for n in range(qty):
         # generate grid
         t = timeit(lambda:matrix.generate(level), number=1)
-        if not(n % (qty // 10 or 1)):
-            print("[LERS2] grid generated in: {:0.6f} sec".format(t))
-            print(
-                "[CHECK] verified in: {:0.6f} sec"
-                .format(timeit(matrix.verify_correct, number=1))
-            )
-        # end if
         # add to stats data
-        data.append(t)
+        data1.append(t)
+        if not(n % (qty // 5 or 1)):
+            print("[LERS2] grid generated in: {:0.6f} sec".format(t))
+            t = timeit(matrix.verify_correct, number=1)
+            data2.append(t)
+            print("[CHECK] verified in: {:0.6f} sec".format(t))
+        # end if
         # reveal answer
         matrix.reveal()
         # verify: erroneous grid?
@@ -136,10 +136,14 @@ def test_main (level=1, qty=10):
             exit(1)
         # end if
     # end for
-    print("\n[TOTAL] nb of generated grids:", qty)
+    print("\n[STATS] nb of generated grids:", qty)
     print(
         "\n[STATS] grid generation mean time: {:0.6f} sec"
-        .format(mean(data))
+        .format(mean(data1))
+    )
+    print(
+        "[STATS] grid verification mean time: {:0.6f} sec"
+        .format(mean(data2))
     )
     print("\n[SUCCESS] all grids have been tested OK.")
 # end def
