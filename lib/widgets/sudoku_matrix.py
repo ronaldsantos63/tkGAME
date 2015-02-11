@@ -639,7 +639,14 @@ class SudokuMatrix (Matrix):
             complexity level 3: shuffles rows into a random band; see
             class doc for more detail;
         """
-        pass                                                                # FIXME
+        # get random band index
+        _index = random.randrange(self.chutes)
+        # get band rows
+        _rows = self.get_band(_index)
+        # shuffle columns
+        random.shuffle(_rows)
+        # reset band
+        self.set_band(_index, _rows)
         # return matrix
         return self
     # end def
@@ -1076,6 +1083,33 @@ class SudokuMatrix (Matrix):
         return self.__set_cells(
             self.get_row_cells(row), values, "set_value"
         )
+    # end def
+
+
+    def set_band (self, index, rows):
+        """
+            sets @index band contents with @rows sequential list of row
+            cells; use this method with CAUTION, as it may lead to
+            unpredictable behaviour in matrix; will raise IndexError if
+            @index is out of bounds; see class doc for more detail;
+        """
+        # ensure inbounds
+        self.ensure_inbounds_chute(index)
+        # ensure list
+        rows = list(rows)
+        # get starting row
+        _r0 = index * self.chutes
+        # alias
+        _cols = self.columns
+        # browse indexed rows
+        for _i, _row in enumerate(rows[:self.chutes]):
+            # reset row contents
+            self[(_r0 + _i)*_cols:(_r0 + _i + 1)*_cols] = _row[:_cols]
+        # end for
+        # update eventual UI display
+        self.on_matrix_update()
+        # return matrix
+        return self
     # end def
 
 
@@ -1549,10 +1583,10 @@ if __name__ == "__main__":
         print("\n[SUCCESS] all grids have been tested OK.")
     # end def
 
-    #~ test_main(level=2, qty=20)
+    test_main(level=3, qty=20)
 
     # detailed testing of shuffle algorithms
-    def test_shuffle (qty=10):
+    def test_shuffle (algo=2, qty=10):
         print("\n" + "-" * 60)
         print("\nTesting shuffle algorithms\n")
         matrix = SudokuMatrix()
@@ -1566,8 +1600,11 @@ if __name__ == "__main__":
         )
         # force shuffling
         for i in range(qty):
-            print("\n({}): shuffling matrix".format(i + 1))
-            matrix.algo_shuffle_2()
+            print(
+                "\n({}): shuffling matrix with algo_shuffle_{}()"
+                .format(i + 1, algo)
+            )
+            exec("matrix.algo_shuffle_{}()".format(algo))
             print(fancy_grid(matrix))
             print(
                 "matrix is correct: {}"
@@ -1576,7 +1613,7 @@ if __name__ == "__main__":
         # end for
     # end def
 
-    test_shuffle(qty=5)
+    test_shuffle(algo=3, qty=5)
 
     # trying with Euler's latin square
 
