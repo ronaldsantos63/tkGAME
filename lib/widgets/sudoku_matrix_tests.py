@@ -120,6 +120,10 @@ def test_main (level=1, qty=10):
         t = timeit(lambda:matrix.generate(level), number=1)
         if not(n % (qty // 10 or 1)):
             print("[LERS2] grid generated in: {:0.6f} sec".format(t))
+            print(
+                "[CHECK] verified in: {:0.6f} sec"
+                .format(timeit(matrix.verify_correct, number=1))
+            )
         # end if
         # add to stats data
         data.append(t)

@@ -1250,43 +1250,10 @@ class SudokuMatrix (Matrix):
             returns True if current matrix is fully compliant with all
             Sudoku policies, False otherwise;
         """
-        # inits
-        _base = set(self.base_sequence)
-        _matrix = [_cell.get_value() for _cell in self]
-        # verify global harmony
-        if set(_matrix) != _base:
-            # failed
-            return False
-        # end if
-        # verify more detailed
-        _rows = self.rows
-        _cols = self.columns
-        # browse rows
-        for _row in range(_rows):
-            # not good?
-            if set(_matrix[_row*_cols:(_row+1)*_cols]) != _base:
-                # failed
-                return False
-            # end if
-        # end for
-        # browse columns
-        for _column in range(_cols):
-            # not good?
-            if set(_matrix[_column::_cols]) != _base:
-                # failed
-                return False
-            # end if
-        # end for
-        # browse boxes
-        for _box in self.get_boxes():
-            # not good?
-            if set([_c.get_value() for _c in _box]) != _base:
-                # failed
-                return False
-            # end if
-        # end for
-        # succeeded
-        return True
+        return is_correct_grid(
+            [_cell.get_value() for _cell in self],
+            base_sequence=self.base_sequence
+        )
     # end def
 
 # end class SudokuMatrix
