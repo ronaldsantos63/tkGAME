@@ -38,6 +38,15 @@ print("\n--- BEGIN TEST SESSION ---")
 # -------------------------- MODULE FUNCTION DEFS ----------------------
 
 
+def test_all_main_levels (till=7):
+    till = max(1, min(7, till))
+    for _i in range(1, 1 + till):
+        # try main test with level in 1..7
+        test_main(level=_i, qty=10)
+    # end for
+# end def
+
+
 # main test
 def test_main (level=1, qty=20):
     # grid generation test
@@ -142,7 +151,7 @@ def test_lers2_module ():
 
 # ----------------------------- NOW TESTING -------------------------
 
-test_main(level=4, qty=20)
+test_all_main_levels(till=7)
 
 #~ test_shuffle(algo=4, qty=5)
 
