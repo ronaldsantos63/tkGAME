@@ -52,7 +52,7 @@ def test_cells_locations (algo_level=9):
     #~ matrix.algo_shuffle_7()
     # browse indexed cells
     for _i, _cell in enumerate(matrix):
-        # carriage return at column end
+        # carriage return at columns end
         if _i and not _i % matrix.columns: print()
         # show cell location
         print((_cell.row, _cell.column), end="")
