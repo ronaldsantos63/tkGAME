@@ -607,8 +607,9 @@ class SudokuMatrix (Matrix):
     def algo_shuffle_0 (self):
         """
             Sudoku grid generation shuffle algorithm;
-            complexity level 0: chooses a random shuffle level between
-            available levels;
+            complexity level 0: chooses by itself a random level
+            between all available shuffle algorithm levels (including
+            subclass additional algo levels);
         """
         # look for subclass additional algorithms
         # last known + 1
@@ -618,8 +619,10 @@ class SudokuMatrix (Matrix):
             # go next
             i += 1
         # end while
+        print("i =", i)
         # choose random level
         i = random.randrange(i)
+        print("i =", i)
         # call shuffle level
         exec("self.algo_shuffle_{}()".format(i))
         # return matrix
@@ -811,8 +814,11 @@ class SudokuMatrix (Matrix):
         """
             generates a Sudoku-compliant fully playable matrix;
             parameter @level allows to choose a level of generation
-            complexity (1..9); this generating method uses a Leonhard
-            Euler's latin square improved algorithm;
+            complexity (1..9); if @level < 1, generation method will
+            choose by itself a random complexity level between all
+            available algorithm levels (including additional subclass
+            algo levels); this generating method uses a Leonhard
+            Euler's latin square improved algorithm (LERS2);
         """
         # set random seed sequence
         _seed = list(self.base_sequence)
@@ -822,6 +828,9 @@ class SudokuMatrix (Matrix):
         # + reset cell contents
         # all at once
         self.algo_lers2(_seed)
+        # ensure level is at least 0
+        # level 0 chooses a random level itself
+        level = max(0, int(level))
         # level of complexity management
         try:
             # set matrix' morphs
