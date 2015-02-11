@@ -739,6 +739,16 @@ class SudokuMatrix (Matrix):
     # end def
 
 
+    def get_bands (self):
+        """
+            retrieves sequential list of bands, from top to bottom; see
+            class doc for more detail;
+        """
+        # return bands
+        return [self.get_band(_i) for _i in range(self.chutes)]
+    # end def
+
+
     def get_box_cells (self, row, column):
         """
             retrieves all cells of (@row, @column) relied box in
@@ -812,6 +822,16 @@ class SudokuMatrix (Matrix):
         # end for
         # return cells
         return _list
+    # end def
+
+
+    def get_stacks (self):
+        """
+            retrieves sequential list of stacks, from left to right;
+            see class doc for more detail;
+        """
+        # return bands
+        return [self.get_stack(_i) for _i in range(self.chutes)]
     # end def
 
 
