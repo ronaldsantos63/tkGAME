@@ -357,6 +357,22 @@ class Matrix (list):
     # end def
 
 
+    def on_matrix_update (self, *args, **kw):
+        """
+            event handler: updates eventual GUI display of matrix; hook
+            method to be reimplemented in subclass;
+        """
+        # put your own code in subclass
+        pass
+        # debugging
+        if __DEBUG__ and __debug__:
+            print("\n[DEBUG]\tcurrent matrix state:", self, "\n")
+        # end if
+        # return matrix
+        return self
+    # end def
+
+
     def reset (self, **kw):
         """
             resets matrix to fit new @kw keyword arguments;
@@ -373,6 +389,8 @@ class Matrix (list):
         # end if
         # must reset contents to reflect changes
         self.reset_contents(**kw)
+        # return matrix
+        return self
     # end def
 
 
@@ -395,6 +413,10 @@ class Matrix (list):
                 for _column in range(self.columns)
             ]
         )
+        # update eventual UI display
+        self.on_matrix_update(**kw)
+        # return matrix
+        return self
     # end def
 
 
@@ -412,6 +434,10 @@ class Matrix (list):
         limit = min(len(values), self.rows * self.columns)
         # reset limited values
         self[:limit] = values[:limit]
+        # update eventual UI display
+        self.on_matrix_update(**kw)
+        # return matrix
+        return self
     # end def
 
 # end class Matrix
@@ -885,22 +911,6 @@ class SudokuMatrix (Matrix):
             + self.get_column_cells(column)
             + self.get_box_cells(row, column)
         )
-    # end def
-
-
-    def on_matrix_update (self, *args, **kw):
-        """
-            event handler: updates eventual GUI display of matrix; hook
-            method to be reimplemented in subclass;
-        """
-        # put your own code in subclass
-        pass
-        # debugging
-        if __DEBUG__ and __debug__:
-            print("\n[DEBUG]\tcurrent matrix state:", self, "\n")
-        # end if
-        # return matrix
-        return self
     # end def
 
 
