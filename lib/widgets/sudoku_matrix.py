@@ -356,8 +356,8 @@ class Matrix (list):
 
     def on_matrix_update (self, *args, **kw):
         """
-            event handler: updates eventual GUI display of matrix; hook
-            method to be reimplemented in subclass;
+            event handler: updates eventual UI/GUI display of matrix;
+            hook method to be reimplemented in subclass;
         """
         # put your own code in subclass
         pass
@@ -414,6 +414,14 @@ class Matrix (list):
         self.on_matrix_update(**kw)
         # return matrix
         return self
+    # end def
+
+
+    def set_items (self, items):
+        """
+            alias for self.set_values(values);
+        """
+        return self.set_values(items)
     # end def
 
 
