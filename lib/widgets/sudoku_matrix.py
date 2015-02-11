@@ -670,8 +670,8 @@ class SudokuMatrix (Matrix):
     def algo_shuffle_5 (self):
         """
             Sudoku grid generation shuffle algorithm;
-            complexity level 5: shuffles stacks; see class doc for more
-            detail;
+            complexity level 5: shuffles stacks themselves; see class
+            doc for more detail;
         """
         pass                                                                # FIXME
         # return matrix
@@ -682,8 +682,8 @@ class SudokuMatrix (Matrix):
     def algo_shuffle_6 (self):
         """
             Sudoku grid generation shuffle algorithm;
-            complexity level 6: shuffles bands; see class doc for more
-            detail;
+            complexity level 6: shuffles bands themselves; see class
+            doc for more detail;
         """
         pass                                                                # FIXME
         # return matrix
@@ -1583,7 +1583,7 @@ if __name__ == "__main__":
         print("\n[SUCCESS] all grids have been tested OK.")
     # end def
 
-    test_main(level=3, qty=20)
+    #~ test_main(level=3, qty=20)
 
     # detailed testing of shuffle algorithms
     def test_shuffle (algo=2, qty=10):
@@ -1606,14 +1606,16 @@ if __name__ == "__main__":
             )
             exec("matrix.algo_shuffle_{}()".format(algo))
             print(fancy_grid(matrix))
-            print(
-                "matrix is correct: {}"
-                .format(matrix.verify_correct())
-            )
+            ok = matrix.verify_correct()
+            print("matrix is correct: {}".format(ok))
+            if not ok:
+                print("\n[ERROR] matrix is INCORRECT!")
+                return
+            # end if
         # end for
     # end def
 
-    test_shuffle(algo=3, qty=5)
+    test_shuffle(algo=4, qty=5)
 
     # trying with Euler's latin square
 
