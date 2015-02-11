@@ -604,6 +604,29 @@ class SudokuMatrix (Matrix):
     # end def
 
 
+    def algo_shuffle_0 (self):
+        """
+            Sudoku grid generation shuffle algorithm;
+            complexity level 0: chooses a random shuffle level between
+            available levels;
+        """
+        # look for subclass additional algorithms
+        # last known + 1
+        i = 10
+        # does next actually exist?
+        while getattr(self, "algo_shuffle_{}".format(i), False):
+            # go next
+            i += 1
+        # end while
+        # choose random level
+        i = random.randrange(i)
+        # call shuffle level
+        exec("self.algo_shuffle_{}()".format(i))
+        # return matrix
+        return self
+    # end def
+
+
     def algo_shuffle_1 (self):
         """
             Sudoku grid generation shuffle algorithm;

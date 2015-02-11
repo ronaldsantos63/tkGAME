@@ -199,9 +199,9 @@ def test_shuffle (algo=2, qty=10):
 # session start
 print("\n--- BEGIN TEST SESSION ---")
 
-test_main_all_levels(till=9, qty=100)
+#~ test_main_all_levels(till=9, qty=100)
 
-#~ test_shuffle(algo=9, qty=3)
+test_shuffle(algo=0, qty=3)
 
 #~ for level in range(1, 10): test_cells_locations(level)
 
