@@ -1553,7 +1553,7 @@ if __name__ == "__main__":
     # detailed testing of shuffling algorithms
 
     def test_shuffling ():
-        print("\nTesting shuffling algorithms\n")
+        print("\nTesting shuffle algorithms\n")
         matrix = SudokuMatrix()
         matrix.generate()
         matrix.reveal()
