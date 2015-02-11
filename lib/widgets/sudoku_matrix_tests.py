@@ -80,12 +80,14 @@ def test_main (level=1, qty=10):
     print("\n" + "-" * 60)
     print("\nTesting: {}".format(matrix.__class__.__name__))
     print("\nGeneration complexity level:", level)
-    print()
+    print("\nMeasure samples:")
     # let's make some tests
     for n in range(qty):
         # generate grid
         t = timeit(lambda:matrix.generate(level), number=1)
-        print("[LERS2] grid generated in: {:0.6f} sec".format(t))
+        if not(n % (qty // 10 or 1)):
+            print("[LERS2] grid generated in: {:0.6f} sec".format(t))
+        # end if
         # add to stats data
         data.append(t)
         # reveal answer
@@ -99,14 +101,14 @@ def test_main (level=1, qty=10):
     # end for
     print("\n[TOTAL] nb of generated grids:", qty)
     print(
-        "\n[STATS] average grid generation time: {:0.6f} sec"
+        "\n[STATS] grid generation mean time: {:0.6f} sec"
         .format(mean(data))
     )
     print("\n[SUCCESS] all grids have been tested OK.")
 # end def
 
 
-def test_main_all_levels (till=7, qty=10):
+def test_main_all_levels (till=9, qty=10):
     # browse levels
     for _i in range(1, 1 + till):
         # try main test
@@ -156,9 +158,9 @@ def test_shuffle (algo=2, qty=10):
 # session start
 print("\n--- BEGIN TEST SESSION ---")
 
-#~ test_main_all_levels(till=7, qty=10)
+test_main_all_levels(till=9, qty=100)
 
-test_shuffle(algo=7, qty=1)
+#~ test_shuffle(algo=9, qty=3)
 
 #~ test_euler_latin_square()
 

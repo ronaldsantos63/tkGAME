@@ -722,6 +722,36 @@ class SudokuMatrix (Matrix):
     # end def
 
 
+    def algo_shuffle_8 (self):
+        """
+            Sudoku grid generation shuffle algorithm;
+            complexity level 8: shuffles stacks and rows in a random
+            band; see class doc for more detail;
+        """
+        # shuffle vertical stacks
+        self.algo_shuffle_5()
+        # shuffle rows in a random band
+        self.algo_shuffle_3()
+        # return matrix
+        return self
+    # end def
+
+
+    def algo_shuffle_9 (self):
+        """
+            Sudoku grid generation shuffle algorithm;
+            complexity level 9: shuffles columns in a random stack and
+            bands; see class doc for more detail;
+        """
+        # shuffle columns in a random stack
+        self.algo_shuffle_2()
+        # shuffle horizontal bands
+        self.algo_shuffle_6()
+        # return matrix
+        return self
+    # end def
+
+
     def ensure_inbounds_chute (self, index):
         """
             ensures @index is actually into matrix' chute bounds;
@@ -758,7 +788,7 @@ class SudokuMatrix (Matrix):
         """
             generates a Sudoku-compliant fully playable matrix;
             parameter @level allows to choose a level of generation
-            complexity (1..7); this generating method uses a Leonhard
+            complexity (1..9); this generating method uses a Leonhard
             Euler's latin square improved algorithm;
         """
         # set random seed sequence
