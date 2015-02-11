@@ -611,7 +611,7 @@ class SudokuMatrix (Matrix):
             between all available shuffle algorithm levels (including
             subclass additional levels);
         """
-        # look for subclass additional algorithms
+        # look for subclass additional algorithm levels
         # last known + 1
         i = 10
         # does next level actually exist?
