@@ -620,7 +620,15 @@ class SudokuMatrix (Matrix):
             complexity level 2: shuffles columns into a random stack;
             see class doc for more detail;
         """
-        pass                                                                # FIXME
+        # get random stack index
+        _index = random.randrange(self.chutes)
+        _index = 0                                      # debugging
+        # get stack columns
+        _columns = self.get_stack(_index)
+        # shuffle columns
+        random.shuffle(_columns)
+        # reset stack
+        self.set_stack(_index, _columns)
         # return matrix
         return self
     # end def
@@ -1072,6 +1080,31 @@ class SudokuMatrix (Matrix):
     # end def
 
 
+    def set_stack (self, index, columns):
+        """
+            sets @index stack contents with @columns sequential list of
+            column cells; use this method with CAUTION, as it may lead
+            to unpredictable behaviour in matrix; will raise IndexError
+            if @index is out of bounds; see class doc for more detail;
+        """
+        # ensure inbounds
+        self.ensure_inbounds_chute(index)
+        # ensure list
+        columns = list(columns)
+        # get starting column
+        _c0 = index * self.chutes
+        # browse indexed columns
+        for _i, _column in enumerate(columns[:self.chutes]):
+            # reset column contents
+            self[_c0 + _i::self.columns] = _column[:self.rows]
+        # end for
+        # update eventual UI display
+        self.on_matrix_update()
+        # return matrix
+        return self
+    # end def
+
+
     def set_values (self, values):
         """
             sets matrix' cells with unique value (or None) for each
@@ -1481,60 +1514,105 @@ if __name__ == "__main__":
     from statistics import mean
     # get chronometer
     from timeit import timeit
-    # stats data inits
-    data = list()
-    # grid generation test
-    matrix = SudokuMatrix()
-    print("\nTesting: {}\n".format(matrix.__class__.__name__))
-    # let's make some tests
-    for n in range(20):
-        # generate grid
-        t = timeit(matrix.generate, number=1)
-        print("[LERS2] grid generated in: {:0.6f} sec".format(t))
-        # add to stats data
-        data.append(t)
-        # reveal answer
+    # main test
+    def test_main ():
+        # stats data inits
+        data = list()
+        # grid generation test
+        matrix = SudokuMatrix()
+        level = 2
+        print("\nTesting: {}".format(matrix.__class__.__name__))
+        print("\nGeneration complexity level:", level)
+        print()
+        # let's make some tests
+        for n in range(20):
+            # generate grid
+            t = timeit(lambda:matrix.generate(level), number=1)
+            print("[LERS2] grid generated in: {:0.6f} sec".format(t))
+            # add to stats data
+            data.append(t)
+            # reveal answer
+            matrix.reveal()
+            # verify: erroneous grid?
+            if not matrix.verify_correct():
+                print(matrix)
+                print("\n[ERROR] incorrect grid!")
+                return
+            # end if
+        # end for
+        print("\n[TOTAL] nb of generated grids:", n + 1)
+        print(
+            "\n[STATS] average grid generation time: {:0.6f} sec"
+            .format(mean(data))
+        )
+        print("\n[SUCCESS] all grids have been tested OK.")
+    # end def
+
+    #~ test_main()
+
+    # detailed testing of shuffling algorithms
+
+    def test_shuffling ():
+        print("\nTesting shuffling algorithms\n")
+        matrix = SudokuMatrix()
+        matrix.generate()
         matrix.reveal()
-        # verify: erroneous grid?
-        if not matrix.verify_correct():
-            print(matrix)
-            exit("\n[ERROR] incorrect grid!")
-        # end if
-    # end for
-    print("\n[TOTAL] nb of generated grids:", n + 1)
-    print(
-        "\n[STATS] average grid generation time: {:0.6f} sec"
-        .format(mean(data))
-    )
-    print("\n[SUCCESS] all grids have been tested OK.")
+        print(">>> genuine matrix:")
+        print(fancy_grid(matrix))
+        print(
+            "matrix is correct: {}"
+            .format(matrix.verify_correct())
+        )
+        # force shuffling
+        for i in range(6):
+            print("\nshuffling matrix")
+            matrix.algo_shuffle_2()
+            print(fancy_grid(matrix))
+            print(
+                "matrix is correct: {}"
+                .format(matrix.verify_correct())
+            )
+        # end for
+    # end def
+
+    test_shuffling()
 
     # trying with Euler's latin square
 
-    print("\nTrying with Euler's latin square (module function):\n")
-    data = euler_latin_square()
-    print(fancy_grid(data))
-    print(
-        "\ngenerated grid in {:0.6f} sec"
-        .format(timeit(euler_latin_square, number=1))
-    )
-    print(
-        "\nverified grid in {:0.6f} sec"
-        .format(timeit(lambda:is_correct_grid(data), number=1))
-    )
-    print("\ngrid is correct:", is_correct_grid(data))
+    def test_euler_latin_square ():
+        print("\nTrying with Euler's latin square (module function):\n")
+        data = euler_latin_square()
+        print(fancy_grid(data))
+        print(
+            "\ngenerated grid in {:0.6f} sec"
+            .format(timeit(euler_latin_square, number=1))
+        )
+        print(
+            "\nverified grid in {:0.6f} sec"
+            .format(timeit(lambda:is_correct_grid(data), number=1))
+        )
+        print("\ngrid is correct:", is_correct_grid(data))
+    # end def
+
+    #~ test_euler_latin_square()
 
     # trying with LERS2 Sudoku grid module's function
 
-    print("\nTrying with LERS2 Sudoku grid (module function):\n")
-    data = lers2_sudoku_grid()
-    print(fancy_grid(data))
-    print(
-        "\ngenerated grid in {:0.6f} sec"
-        .format(timeit(lers2_sudoku_grid, number=1))
-    )
-    print(
-        "\nverified grid in {:0.6f} sec"
-        .format(timeit(lambda:is_correct_grid(data), number=1))
-    )
-    print("\ngrid is correct:", is_correct_grid(data))
+    def test_lers2_module ():
+        print("\nTrying with LERS2 Sudoku grid (module function):\n")
+        data = lers2_sudoku_grid()
+        print(fancy_grid(data))
+        print(
+            "\ngenerated grid in {:0.6f} sec"
+            .format(timeit(lers2_sudoku_grid, number=1))
+        )
+        print(
+            "\nverified grid in {:0.6f} sec"
+            .format(timeit(lambda:is_correct_grid(data), number=1))
+        )
+        print("\ngrid is correct:", is_correct_grid(data))
+    # end def
+
+    #~ test_lers2_module()
+
 # end if
