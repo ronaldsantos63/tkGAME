@@ -50,10 +50,7 @@ def euler_latin_square (base_sequence=None):
     # base length (square size)
     _bl = len(_base)
     # return latin square
-    return [
-        _base[(_i + _i // _bl) % _bl]
-        for _i in range(_bl**2)
-    ]
+    return [_base[(_i + _i // _bl) % _bl] for _i in range(_bl**2)]
 # end def
 
 
