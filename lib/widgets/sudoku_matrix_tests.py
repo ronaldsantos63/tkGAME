@@ -35,6 +35,39 @@ from timeit import timeit
 # -------------------------- MODULE FUNCTION DEFS ----------------------
 
 
+# testing matrix' cells location correct numbering
+def test_cells_locations (algo_level=9):
+    print("\n" + "-" * 60)
+    print(
+        "\nVerifying all cells are correctly relocated "
+        "after a generate/shuffle operation"
+    )
+    print("\nUsing shuffle algo level:", algo_level)
+    print()
+    # inits
+    matrix = SudokuMatrix()
+    # make shufflings
+    matrix.generate(level=algo_level)
+    # put artificial error
+    #~ matrix.algo_shuffle_7()
+    # browse indexed cells
+    for _i, _cell in enumerate(matrix):
+        # carriage return at column end
+        if _i and not _i % matrix.columns: print()
+        # show cell location
+        print((_cell.row, _cell.column), end="")
+        # not the right location?
+        if _cell.row * matrix.columns + _cell.column != _i:
+            # notify error
+            print(" <-- ERROR!")
+            exit(1)
+        # end if
+    # end for
+    # succeeded
+    print("\n\nAll has been verified OK.")
+# end def
+
+
 # trying with Euler's latin square
 def test_euler_latin_square ():
     print("\n" + "-" * 60)
@@ -161,6 +194,10 @@ print("\n--- BEGIN TEST SESSION ---")
 test_main_all_levels(till=9, qty=100)
 
 #~ test_shuffle(algo=9, qty=3)
+
+#~ for level in range(1, 10): test_cells_locations(level)
+
+#~ test_cells_locations()
 
 #~ test_euler_latin_square()
 
