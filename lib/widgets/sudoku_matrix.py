@@ -292,6 +292,24 @@ class Matrix (list):
     # end def
 
 
+    def get_cell (self, row, column):
+        """
+            alias for self.at(row, column);
+        """
+        return self.at(row, column)
+    # end def
+
+
+    def get_cells (self):
+        """
+            simply returns self, as current class *IS* the matrix'
+            cells container;
+        """
+        # return matrix itself
+        return self
+    # end def
+
+
     def get_column_cells (self, column):
         """
             retrieves all @column cells from matrix; will raise
@@ -377,6 +395,23 @@ class Matrix (list):
                 for _column in range(self.columns)
             ]
         )
+    # end def
+
+
+    def set_values (self, values):
+        """
+            sets matrix contents with new @values item values, limited
+            to current self.rows and self.columns constraints;
+        """
+        # ensure list
+        values = list(values)
+        # ensure correctly filled up
+        # with default values
+        self.reset_contents()
+        # set limit
+        limit = min(len(values), self.rows * self.columns)
+        # reset limited
+        self[:limit] = values[:limit]
     # end def
 
 # end class Matrix
@@ -1435,7 +1470,7 @@ if __name__ == "__main__":
     data = list()
     # grid generation test
     matrix = SudokuMatrix()
-    print("\nTesting:", matrix.__class__.__name__, "\n")
+    print("\nTesting: {}\n".format(matrix.__class__.__name__))
     # let's make some tests
     for n in range(20):
         # generate grid
@@ -1487,4 +1522,20 @@ if __name__ == "__main__":
         .format(timeit(lambda:is_correct_grid(data), number=1))
     )
     print("\ngrid is correct:", is_correct_grid(data))
+    # testing Matrix
+    print("\n------- Testing Matrix() -------")
+    matrix = Matrix(rows=9, columns=9)
+    data = list()
+    for n in (0, 1, 10, 15, 80, 81, 82, 120):
+        print("\nTesting range({}):".format(n))
+        t = timeit(lambda:matrix.set_values(range(n)), number=1)
+        data.append(t)
+        print("\nset values in {:0.6f} sec".format(t))
+        print("\nmatrix length:", len(matrix))
+        print("matrix:", matrix)
+    # end for
+    print(
+        "\n[STATS] average execution time: {:0.6f} sec"
+        .format(mean(data))
+    )
 # end if
