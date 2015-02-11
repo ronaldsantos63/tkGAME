@@ -410,7 +410,7 @@ class Matrix (list):
         self.reset_contents()
         # set limit
         limit = min(len(values), self.rows * self.columns)
-        # reset limited
+        # reset limited values
         self[:limit] = values[:limit]
     # end def
 
