@@ -631,7 +631,7 @@ class SudokuMatrix (Matrix):
     def algo_shuffle_1 (self):
         """
             Sudoku grid generation shuffle algorithm;
-            complexity level 1: does nothing;
+            complexity level 1: keeps matrix unchanged (does nothing);
         """
         # return matrix
         return self

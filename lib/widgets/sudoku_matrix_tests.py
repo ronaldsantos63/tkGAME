@@ -113,8 +113,13 @@ def test_main (level=1, qty=10):
     data2 = list()
     print("\n" + "-" * 60)
     print("\nTesting: {}".format(matrix.__class__.__name__))
-    print("\nGeneration complexity level:", level)
-    print("\nMeasure samples:")
+    print(matrix.__doc__.replace("    ", " "))
+    print("Generation complexity level:", level)
+    print(
+        eval("matrix.algo_shuffle_{}.__doc__".format(level))
+        .replace("    ", " ")
+    )
+    print("Measure samples:")
     # let's make some tests
     for n in range(qty):
         # generate grid
@@ -151,7 +156,7 @@ def test_main (level=1, qty=10):
 
 def test_main_all_levels (till=9, qty=10):
     # browse levels
-    for _i in range(1, 1 + till):
+    for _i in range(till):
         # try main test
         test_main(level=_i, qty=qty)
     # end for
@@ -160,18 +165,19 @@ def test_main_all_levels (till=9, qty=10):
 
 # detailed testing of shuffle algorithms
 def test_shuffle (algo=2, qty=10):
+    # inits
     algo_name = "algo_shuffle_{}".format(algo)
     algo_method = "{}()".format(algo_name)
-    print("\n" + "-" * 60)
-    print("\nTesting shuffle algorithm: {}".format(algo_method))
+    # matrix inits
     matrix = SudokuMatrix()
-    # artificial subclass
-    #~ matrix.algo_shuffle_10 = matrix.algo_shuffle_3
-    #~ matrix.algo_shuffle_11 = matrix.algo_shuffle_2
-    #~ matrix.algo_shuffle_12 = matrix.algo_shuffle_1
     # generate answer grid
     matrix.generate()
     matrix.reveal()
+    # stdout
+    print("\n" + "-" * 60)
+    print("\nTesting: {}".format(matrix.__class__.__name__))
+    print(matrix.__doc__.replace("    ", " "))
+    print("Testing shuffle algorithm: {}".format(algo_method))
     print(
         eval("matrix.{}.__doc__".format(algo_name))
         .replace("    ", " ")
@@ -204,9 +210,11 @@ def test_shuffle (algo=2, qty=10):
 # session start
 print("\n--- BEGIN TEST SESSION ---")
 
+test_main(level=0, qty=1000)
+
 #~ test_main_all_levels(till=9, qty=100)
 
-test_shuffle(algo=0, qty=10)
+#~ test_shuffle(algo=0, qty=3)
 
 #~ for level in range(1, 10): test_cells_locations(level)
 
