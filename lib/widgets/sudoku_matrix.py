@@ -1522,20 +1522,4 @@ if __name__ == "__main__":
         .format(timeit(lambda:is_correct_grid(data), number=1))
     )
     print("\ngrid is correct:", is_correct_grid(data))
-    # testing Matrix
-    print("\n------- Testing Matrix() -------")
-    matrix = Matrix(rows=9, columns=9)
-    data = list()
-    for n in (0, 1, 10, 15, 80, 81, 82, 120):
-        print("\nTesting range({}):".format(n))
-        t = timeit(lambda:matrix.set_values(range(n)), number=1)
-        data.append(t)
-        print("\nset values in {:0.6f} sec".format(t))
-        print("\nmatrix length:", len(matrix))
-        print("matrix:", matrix)
-    # end for
-    print(
-        "\n[STATS] average execution time: {:0.6f} sec"
-        .format(mean(data))
-    )
 # end if
