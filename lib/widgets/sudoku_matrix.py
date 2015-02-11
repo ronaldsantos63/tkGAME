@@ -609,20 +609,18 @@ class SudokuMatrix (Matrix):
             Sudoku grid generation shuffle algorithm;
             complexity level 0: chooses by itself a random level
             between all available shuffle algorithm levels (including
-            subclass additional algo levels);
+            subclass additional levels);
         """
         # look for subclass additional algorithms
         # last known + 1
         i = 10
-        # does next actually exist?
+        # does next level actually exist?
         while getattr(self, "algo_shuffle_{}".format(i), False):
             # go next
             i += 1
         # end while
-        print("i =", i)
         # choose random level
-        i = random.randrange(i)
-        print("i =", i)
+        i = random.randrange(1, i)
         # call shuffle level
         exec("self.algo_shuffle_{}()".format(i))
         # return matrix

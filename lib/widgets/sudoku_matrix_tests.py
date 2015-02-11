@@ -165,6 +165,11 @@ def test_shuffle (algo=2, qty=10):
     print("\n" + "-" * 60)
     print("\nTesting shuffle algorithm: {}".format(algo_method))
     matrix = SudokuMatrix()
+    # artificial subclass
+    #~ matrix.algo_shuffle_10 = matrix.algo_shuffle_3
+    #~ matrix.algo_shuffle_11 = matrix.algo_shuffle_2
+    #~ matrix.algo_shuffle_12 = matrix.algo_shuffle_1
+    # generate answer grid
     matrix.generate()
     matrix.reveal()
     print(
@@ -201,7 +206,7 @@ print("\n--- BEGIN TEST SESSION ---")
 
 #~ test_main_all_levels(till=9, qty=100)
 
-test_shuffle(algo=0, qty=3)
+test_shuffle(algo=0, qty=10)
 
 #~ for level in range(1, 10): test_cells_locations(level)
 
