@@ -31,86 +31,8 @@ from statistics import mean
 # get chronometer
 from timeit import timeit
 
-# session start
-print("\n--- BEGIN TEST SESSION ---")
-
 
 # -------------------------- MODULE FUNCTION DEFS ----------------------
-
-
-def test_all_main_levels (till=7):
-    till = max(1, min(7, till))
-    for _i in range(1, 1 + till):
-        # try main test with level in 1..7
-        test_main(level=_i, qty=10)
-    # end for
-# end def
-
-
-# main test
-def test_main (level=1, qty=20):
-    # grid generation test
-    matrix = SudokuMatrix()
-    # stats data inits
-    data = list()
-    print("\n" + "-" * 60)
-    print("\nTesting: {}".format(matrix.__class__.__name__))
-    print("\nGeneration complexity level:", level)
-    print()
-    # let's make some tests
-    for n in range(qty):
-        # generate grid
-        t = timeit(lambda:matrix.generate(level), number=1)
-        print("[LERS2] grid generated in: {:0.6f} sec".format(t))
-        # add to stats data
-        data.append(t)
-        # reveal answer
-        matrix.reveal()
-        # verify: erroneous grid?
-        if not matrix.verify_correct():
-            print(matrix)
-            print("\n[ERROR] incorrect grid!")
-            return
-        # end if
-    # end for
-    print("\n[TOTAL] nb of generated grids:", qty)
-    print(
-        "\n[STATS] average grid generation time: {:0.6f} sec"
-        .format(mean(data))
-    )
-    print("\n[SUCCESS] all grids have been tested OK.")
-# end def
-
-
-# detailed testing of shuffle algorithms
-def test_shuffle (algo=2, qty=10):
-    print("\n" + "-" * 60)
-    print("\nTesting shuffle algorithms\n")
-    matrix = SudokuMatrix()
-    matrix.generate()
-    matrix.reveal()
-    print(">>> GENUINE matrix:")
-    print(fancy_grid(matrix))
-    print(
-        "matrix is correct: {}"
-        .format(matrix.verify_correct())
-    )
-    # force shuffling
-    for i in range(qty):
-        print(
-            "\n({}): shuffling matrix with algo_shuffle_{}()"
-            .format(i + 1, algo)
-        )
-        exec("matrix.algo_shuffle_{}()".format(algo))
-        print(fancy_grid(matrix))
-        ok = matrix.verify_correct()
-        print("matrix is correct: {}".format(ok))
-        if not ok:
-            print("\n[ERROR] matrix is INCORRECT!")
-            return
-        # end if
-    # end for
-# end def
 
 
 # trying with Euler's latin square
@@ -149,14 +71,98 @@ def test_lers2_module ():
 # end def
 
 
+# main test
+def test_main (level=1, qty=10):
+    # grid generation test
+    matrix = SudokuMatrix()
+    # stats data inits
+    data = list()
+    print("\n" + "-" * 60)
+    print("\nTesting: {}".format(matrix.__class__.__name__))
+    print("\nGeneration complexity level:", level)
+    print()
+    # let's make some tests
+    for n in range(qty):
+        # generate grid
+        t = timeit(lambda:matrix.generate(level), number=1)
+        print("[LERS2] grid generated in: {:0.6f} sec".format(t))
+        # add to stats data
+        data.append(t)
+        # reveal answer
+        matrix.reveal()
+        # verify: erroneous grid?
+        if not matrix.verify_correct():
+            print(matrix)
+            print("\n[ERROR] incorrect grid!")
+            exit(1)
+        # end if
+    # end for
+    print("\n[TOTAL] nb of generated grids:", qty)
+    print(
+        "\n[STATS] average grid generation time: {:0.6f} sec"
+        .format(mean(data))
+    )
+    print("\n[SUCCESS] all grids have been tested OK.")
+# end def
+
+
+def test_main_all_levels (till=7, qty=10):
+    # browse levels
+    for _i in range(1, 1 + till):
+        # try main test
+        test_main(level=_i, qty=qty)
+    # end for
+# end def
+
+
+# detailed testing of shuffle algorithms
+def test_shuffle (algo=2, qty=10):
+    algo_name = "algo_shuffle_{}".format(algo)
+    algo_method = "{}()".format(algo_name)
+    print("\n" + "-" * 60)
+    print("\nTesting shuffle algorithm: {}".format(algo_method))
+    matrix = SudokuMatrix()
+    matrix.generate()
+    matrix.reveal()
+    print(
+        eval("matrix.{}.__doc__".format(algo_name))
+        .replace("    ", " ")
+    )
+    print(">>> GENUINE matrix:")
+    print(fancy_grid(matrix))
+    print("matrix is correct: {}".format(matrix.verify_correct()))
+    # force shuffling
+    for i in range(qty):
+        print(
+            "\n({}): shuffling matrix with {}"
+            .format(i + 1, algo_method)
+        )
+        exec("matrix.{}".format(algo_method))
+        print(fancy_grid(matrix))
+        ok = matrix.verify_correct()
+        print("matrix is correct: {}".format(ok))
+        if not ok:
+            print("\n[ERROR] matrix is INCORRECT!")
+            exit(1)
+        # end if
+    # end for
+# end def
+
+
+
 # ----------------------------- NOW TESTING -------------------------
 
-test_all_main_levels(till=7)
 
-#~ test_shuffle(algo=4, qty=5)
+# session start
+print("\n--- BEGIN TEST SESSION ---")
+
+#~ test_main_all_levels(till=7, qty=10)
+
+test_shuffle(algo=7, qty=1)
 
 #~ test_euler_latin_square()
 
 #~ test_lers2_module()
 
+# session end
 print("\n--- END OF TEST SESSION ---")
