@@ -622,7 +622,6 @@ class SudokuMatrix (Matrix):
         """
         # get random stack index
         _index = random.randrange(self.chutes)
-        _index = 0                                      # debugging
         # get stack columns
         _columns = self.get_stack(_index)
         # shuffle columns
@@ -1514,18 +1513,20 @@ if __name__ == "__main__":
     from statistics import mean
     # get chronometer
     from timeit import timeit
+    # title
+    print("--- TEST SESSION ---")
     # main test
-    def test_main ():
+    def test_main (level=1, qty=20):
         # stats data inits
         data = list()
         # grid generation test
         matrix = SudokuMatrix()
-        level = 2
+        print("\n" + "-" * 60)
         print("\nTesting: {}".format(matrix.__class__.__name__))
         print("\nGeneration complexity level:", level)
         print()
         # let's make some tests
-        for n in range(20):
+        for n in range(qty):
             # generate grid
             t = timeit(lambda:matrix.generate(level), number=1)
             print("[LERS2] grid generated in: {:0.6f} sec".format(t))
@@ -1540,7 +1541,7 @@ if __name__ == "__main__":
                 return
             # end if
         # end for
-        print("\n[TOTAL] nb of generated grids:", n + 1)
+        print("\n[TOTAL] nb of generated grids:", qty)
         print(
             "\n[STATS] average grid generation time: {:0.6f} sec"
             .format(mean(data))
@@ -1548,24 +1549,24 @@ if __name__ == "__main__":
         print("\n[SUCCESS] all grids have been tested OK.")
     # end def
 
-    #~ test_main()
+    #~ test_main(level=2, qty=20)
 
-    # detailed testing of shuffling algorithms
-
-    def test_shuffling ():
+    # detailed testing of shuffle algorithms
+    def test_shuffle (qty=10):
+        print("\n" + "-" * 60)
         print("\nTesting shuffle algorithms\n")
         matrix = SudokuMatrix()
         matrix.generate()
         matrix.reveal()
-        print(">>> genuine matrix:")
+        print(">>> GENUINE matrix:")
         print(fancy_grid(matrix))
         print(
             "matrix is correct: {}"
             .format(matrix.verify_correct())
         )
         # force shuffling
-        for i in range(6):
-            print("\nshuffling matrix")
+        for i in range(qty):
+            print("\n({}): shuffling matrix".format(i + 1))
             matrix.algo_shuffle_2()
             print(fancy_grid(matrix))
             print(
@@ -1575,11 +1576,12 @@ if __name__ == "__main__":
         # end for
     # end def
 
-    test_shuffling()
+    test_shuffle(qty=5)
 
     # trying with Euler's latin square
 
     def test_euler_latin_square ():
+        print("\n" + "-" * 60)
         print("\nTrying with Euler's latin square (module function):\n")
         data = euler_latin_square()
         print(fancy_grid(data))
@@ -1599,6 +1601,7 @@ if __name__ == "__main__":
     # trying with LERS2 Sudoku grid module's function
 
     def test_lers2_module ():
+        print("\n" + "-" * 60)
         print("\nTrying with LERS2 Sudoku grid (module function):\n")
         data = lers2_sudoku_grid()
         print(fancy_grid(data))
@@ -1614,5 +1617,7 @@ if __name__ == "__main__":
     # end def
 
     #~ test_lers2_module()
+
+    print("\n--- END OF TEST SESSION ---")
 
 # end if
