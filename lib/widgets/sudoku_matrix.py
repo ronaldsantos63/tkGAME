@@ -731,7 +731,7 @@ class SudokuMatrix (Matrix):
         _list = list()
         # browse rows
         for _row in self.get_band(index):
-            # fill with row cells
+            # fill with cells
             _list.extend(_row)
         # end for
         # return cells
@@ -817,7 +817,7 @@ class SudokuMatrix (Matrix):
         _list = list()
         # browse columns
         for _column in self.get_stack(index):
-            # fill with column cells
+            # fill with cells
             _list.extend(_column)
         # end for
         # return cells
