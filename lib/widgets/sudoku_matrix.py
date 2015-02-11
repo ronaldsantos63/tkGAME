@@ -673,7 +673,15 @@ class SudokuMatrix (Matrix):
             complexity level 5: shuffles stacks themselves; see class
             doc for more detail;
         """
-        pass                                                                # FIXME
+        # get all stacks
+        _stacks = self.get_stacks()
+        # shuffle stacks in place
+        random.shuffle(_stacks)
+        # browse indexed stacks
+        for _i, _stack in enumerate(_stacks):
+            # reset each stack
+            self.set_stack(_i, _stack)
+        # end for
         # return matrix
         return self
     # end def
@@ -685,7 +693,15 @@ class SudokuMatrix (Matrix):
             complexity level 6: shuffles bands themselves; see class
             doc for more detail;
         """
-        pass                                                                # FIXME
+        # get all bands
+        _bands = self.get_bands()
+        # shuffle bands in place
+        random.shuffle(_bands)
+        # browse indexed bands
+        for _i, _band in enumerate(_bands):
+            # reset each band
+            self.set_band(_i, _band)
+        # end for
         # return matrix
         return self
     # end def
@@ -1583,7 +1599,7 @@ if __name__ == "__main__":
         print("\n[SUCCESS] all grids have been tested OK.")
     # end def
 
-    #~ test_main(level=3, qty=20)
+    test_main(level=4, qty=20)
 
     # detailed testing of shuffle algorithms
     def test_shuffle (algo=2, qty=10):
@@ -1615,7 +1631,7 @@ if __name__ == "__main__":
         # end for
     # end def
 
-    test_shuffle(algo=4, qty=5)
+    #~ test_shuffle(algo=4, qty=5)
 
     # trying with Euler's latin square
 
