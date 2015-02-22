@@ -60,9 +60,11 @@ Software has been:
 
 * MS-Windows:
 
-    * NOT YET TESTED;
+    * TESTED OK on Win 7 and 8 by
+    [Cyril Walle](https://github.com/GrosSacASac);
 
-Any feedback for any platform is still the welcome.
+Any [feedback](https://github.com/tarball69/tkGAME/issues) for any
+platform is still the welcome.
 
 
 ## FREEFULLWARE
