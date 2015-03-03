@@ -35,6 +35,15 @@ class TkGameCanvasTimer:
     TIMER_DELAY = 1000  # in milliseconds (must be an integer)
 
 
+    def __del__ (self):
+        """
+            class destructor;
+        """
+        # stop pending thread
+        self.stop()
+    # end def
+
+
     def __init__ (self, canvas, tag_or_id, delay=None):
         """
             class constructor;
@@ -133,7 +142,7 @@ class TkGameCanvasTimer:
 
     def start (self, *args, **kw):
         """
-            event handler: starts or restarts timer activity;
+            event handler: starts timer activity if not already done;
         """
         # no pending thread?
         if not self.thread_id:
