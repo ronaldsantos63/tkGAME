@@ -120,6 +120,17 @@ class TkGameCanvasTimer:
     # end def
 
 
+    def restart (self, *args, **kw):
+        """
+            event handler: resets and restarts timer activity;
+        """
+        # reset timer
+        self.reset(*args, **kw)
+        # restart timer
+        self.start(*args, **kw)
+    # end def
+
+
     def start (self, *args, **kw):
         """
             event handler: starts or restarts timer activity;
