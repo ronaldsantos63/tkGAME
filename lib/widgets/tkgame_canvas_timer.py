@@ -103,14 +103,21 @@ class TkGameCanvasTimer:
     # end def
 
 
+    def get_timing (self):
+        """
+            returns formatted string of current time count;
+        """
+        return self.get_time_format(self.time_count)
+    # end def
+
+
     def gui_update (self, *args, **kw):
         """
             event handler: update timer display on canvas;
         """
         # update display
         self.canvas.itemconfigure(
-            self.tag_or_id,
-            text=self.get_time_format(self.time_count),
+            self.tag_or_id, text=self.get_timing()
         )
     # end def
 
