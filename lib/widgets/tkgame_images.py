@@ -68,6 +68,21 @@ class TkGameImageManager:
     # end def
 
 
+    def get_image_by_name (self, images_dir, name):
+        """
+            returns the corresponding tkPhotoImage or None, otherwise;
+        """
+        # inits
+        _fname, _fext = OP.splitext(name)
+        # return image
+        return self.get_image(
+            self.get_image_fpath(
+                OP.join(images_dir, "{}.gif".format(_fname))
+            )
+        )
+    # end def
+
+
     def get_image_fpath (self, filename):
         """
             returns an absolute normalized file path from @filename
