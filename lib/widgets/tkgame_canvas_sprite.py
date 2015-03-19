@@ -38,6 +38,7 @@ class TkGameCanvasSprite:
     """
 
     # class constants
+    IMAGES_DIR = "images/sprites"
     EVENTS_GROUP = "Game"
 
     STATUS = {
@@ -59,7 +60,10 @@ class TkGameCanvasSprite:
         self.events = EM.get_event_manager()
         self.animations = AP.get_animation_pool()
         self.image_manager = IM.get_image_manager()
-        self.images_dir = kw.get("images_dir") or ""
+        self.images_dir = (
+            kw.get("images_dir") or
+            OP.join(self.IMAGES_DIR, self.sprite_name)
+        )
         self.role = kw.get("role") or ""
         self.locked = False
         self.started = False
@@ -120,9 +124,10 @@ class TkGameCanvasSprite:
         if not self.locked:
             # lock sprite to avoid unexpected events
             self.locked = True
-            # stop and lock animations
-            self.stop()
-            self.animations.lock(self.image_animation_loop)
+            # stop animations and free callback references
+            self.animations.release(self.image_animation_loop)
+            # hook method for more things to do
+            self.on_destroy(*args, **kw)
             # remove events before dying!
             self.unbind_events()
             # delete from canvas
@@ -171,13 +176,9 @@ class TkGameCanvasSprite:
         # end if
         # inits
         _status = self.STATUS[self.state]
-        _image = self.image_manager.get_image(
-            OP.abspath(
-                OP.join(
-                    self.images_dir,
-                    "{}_{}.gif".format(self.state, self.state_counter)
-                )
-            )
+        _image = self.image_manager.get_image_by_name(
+            self.images_dir,
+            "{}_{}".format(self.state, self.state_counter)
         )
         if _image:
             # update image
@@ -331,10 +332,20 @@ class TkGameCanvasSprite:
     # end def
 
 
+    def on_destroy (self, *args, **kw):
+        """
+            this is called at self.destroy(), just after animation
+            lockouts and before self.unbind_events(); hook method to be
+            reimplemented in subclass;
+        """
+        pass
+    # end def
+
+
     def on_sequence_end (self, *args, **kw):
         """
-            this is called once a status image sequence ends;
-            please, feel free to override this in your own subclasses;
+            this is called once a status image sequence ends; hook
+            method to be reimplemented in subclass;
         """
         pass
     # end def
@@ -342,8 +353,9 @@ class TkGameCanvasSprite:
 
     def on_start (self, *args, **kw):
         """
-            hook method to be reimplemented in subclass;
-            this happens just after self.start() has been called;
+            hook method to be reimplemented in subclass; this is called
+            at self.start(), just after self.setup() and before
+            self.bind_events();
         """
         # enter the loop
         self.update_image_animation_loop()
@@ -353,6 +365,7 @@ class TkGameCanvasSprite:
     def setup (self):
         """
             sets up sprite on canvas, if not already done;
+            this is called at most once at self.start();
         """
         # sets up sprite if not already done
         if not self.canvas_id:
@@ -385,7 +398,9 @@ class TkGameCanvasSprite:
 
     def start (self):
         """
-            starting sprite's image animation loop;
+            starting sprite's image animation loop; will call
+            respectively self.setup(), self.on_start() and finally
+            self.bind_events();
         """
         # not already running?
         if not self.started:
