@@ -64,7 +64,7 @@ class TkGameCanvasSprite:
             kw.get("images_dir") or
             OP.join(self.IMAGES_DIR, self.sprite_name)
         )
-        self.role = kw.get("role") or ""
+        self.role = kw.get("role") or str(self.sprite_name).lower()
         self.locked = False
         self.started = False
         self.__state = None
@@ -435,11 +435,11 @@ class TkGameCanvasSprite:
         if value in self.STATUS:
             # state has changed?
             if self.__state != value:
+                # new state inits
+                self.__state = value
                 # reset counter
                 self.state_counter = 0
             # end if
-            # new state inits
-            self.__state = value
             # update animation loop if started
             self.update_image_animation_loop()
             # notify system

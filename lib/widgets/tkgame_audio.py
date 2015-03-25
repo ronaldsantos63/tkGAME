@@ -77,6 +77,7 @@ def new_audio_player (*args, **kw):
 # end def
 
 
+
 class BaseAudioPlayer:
     """
         Generic asynchronous audio player class (interface);
@@ -103,6 +104,18 @@ class BaseAudioPlayer:
             read-only property for instance class name;
         """
         return self.__class__.__name__
+    # end def
+
+
+    def free_resources (self):
+        """
+            frees static memory resources before quitting app;
+        """
+        # must be implemented in subclasses
+        tron(
+            "{}.free_resources(): not implemented yet."
+            .format(self.classname)
+        )
     # end def
 
 
@@ -177,6 +190,137 @@ class BaseAudioPlayer:
 # end class BaseAudioPlayer
 
 
+
+class GstAudioPlayer (BaseAudioPlayer):
+    """
+        GNOME GStreamer audio playback wrapper class;
+
+        CAUTION: please, note this class throws sometimes an error
+        message on garbage collection: 'Segmentation fault (core
+        dumped)'; this is due to some illegal Tkinter use of GTK
+        GObjects WITHOUT using them into their legal Gtk.mainloop(), as
+        Tkinter also supports its own event mainloop(); unfortunately,
+        this is the price to pay to get some GStreamer audio with
+        Tkinter GUI environment (at this time);
+    """
+
+    # class constant defs
+    DEFAULT_VOLUME = 0.5
+
+
+    def __init__ (self, volume=None):
+        """ Class initialiser """
+        global GObject, Gst
+        # super class inits
+        super().__init__(volume)
+        # GStreamer1.0 support
+        import gi
+        gi.require_version("Gst", "1.0")
+        from gi.repository import GObject, Gst
+        # mandatory inits
+        GObject.threads_init()
+        Gst.init()
+        # this disables Gst's weird SIGSEGV communication maechanism
+        # see http://gstreamer.freedesktop.org/data/doc/gstreamer/head/gstreamer/html/gstreamer-Gst.html#gst-segtrap-set-enabled
+        # for more detail
+        Gst.segtrap_set_enabled(False)
+        # get audio player
+        self.player = Gst.ElementFactory.make("playbin")
+        self.set_volume(volume)
+        # debugging session
+        tron("audio player init'ed OK.")
+    # end def
+
+
+    def free_resources (self):
+        """
+            frees static memory resources before quitting app;
+        """
+        # do garbage collection first
+        self.on_garbage_collection()
+        # then free all static memory resources
+        Gst.deinit()
+        # debugging session
+        tron("freed static memory resources.")
+    # end def
+
+
+    def pause (self):
+        """
+            pauses audio data playback;
+        """
+        # suspend playback
+        self.player.set_state(Gst.State.PAUSED)
+        # debugging session
+        tron("paused audio playback.")
+    # end def
+
+
+    def play (self, uri, volume=None):
+        """
+            plays audio data retrieved from @uri with @volume;
+            resets player to avoid strange loops;
+        """
+        # reset player
+        self.stop()
+        # param controls
+        if ":" not in uri:
+            uri = "file://" + os.path.abspath(uri)
+        # end if
+        # debugging session
+        tron("playing audio data from URI:", uri)
+        # init player
+        self.set_volume(volume)
+        self.player.set_property("uri", uri)
+        self.player.set_state(Gst.State.PLAYING)
+    # end def
+
+
+    def resume (self):
+        """
+            resumes audio data playback;
+        """
+        # resume playback
+        self.player.set_state(Gst.State.PLAYING)
+        # debugging session
+        tron("resumed audio playback.")
+    # end def
+
+
+    def set_volume (self, volume=None):
+        """
+            sets volume of audio data playback;
+        """
+        # param controls
+        if not isinstance(volume, (int, float)):
+            volume = self.DEFAULT_VOLUME
+        # end if
+        self.volume = max(0.0, min(2.0, float(volume)))
+        self.player.set_property("volume", self.volume)
+        # debugging session
+        tron("set audio volume to:", self.volume)
+    # end def
+
+
+    def stop (self):
+        """
+            stops playback for eventual pending audio data;
+        """
+        # stop playing audio data
+        self.player.set_state(Gst.State.NULL)
+        # reset volume
+        self.set_volume(0)
+        # CAUTION:
+        # 'uri' property must be reset because of multiple calls
+        self.player.set_property("uri", "")
+        # debugging session
+        tron("stopped audio playback.")
+    # end def
+
+# end class GstAudioPlayer
+
+
+
 class SilentAudioPlayer (BaseAudioPlayer):
     """
         Dummy class for unsupported audio players;
@@ -193,6 +337,7 @@ class SilentAudioPlayer (BaseAudioPlayer):
     # end def
 
 # end class SilentAudioPlayer
+
 
 
 class WindowsAudioPlayer (BaseAudioPlayer):
@@ -247,73 +392,3 @@ class WindowsAudioPlayer (BaseAudioPlayer):
     # end def
 
 # end class WindowsAudioPlayer
-
-
-class GstAudioPlayer (BaseAudioPlayer):
-    """
-        GNOME GStreamer audio playback wrapper class;
-    """
-
-    def __init__ (self, volume=None):
-        """ Class initialiser """
-        global GObject, Gst
-        # super class inits
-        super().__init__(volume)
-        # GStreamer support
-        import gi
-        gi.require_version("Gst", "1.0")
-        from gi.repository import GObject, Gst
-        GObject.threads_init()
-        Gst.init()
-        self.player = Gst.ElementFactory.make("playbin")
-    # end def
-
-
-    def play (self, uri, volume=None):
-        """
-            plays audio data retrieved from @uri with @volume;
-            resets player to avoid strange loops;
-        """
-        # param controls
-        if ":" not in uri:
-            uri = "file://" + os.path.abspath(uri)
-        # end if
-        if volume is None:
-            volume = self.volume
-        # end if
-        volume = max(0.0, min(2.0, float(volume)))
-        # reset player
-        self.stop()
-        # debugging session
-        tron("playing audio data from URI:", uri)
-        # init player
-        self.player.set_property("uri", uri)
-        self.player.set_property("volume", volume)
-        self.player.set_state(Gst.State.PLAYING)
-    # end def
-
-
-    def set_volume (self, volume):
-        """
-            sets volume of audio data playback;
-        """
-        # param controls
-        self.volume = max(0.0, min(2.0, float(volume)))
-        self.player.set_property("volume", self.volume)
-    # end def
-
-
-    def stop (self):
-        """
-            stops playback for eventual pending audio data;
-        """
-        # stop playing audio data
-        self.player.set_state(Gst.State.NULL)
-        # CAUTION:
-        # 'uri' property must be reset because of multiple calls
-        self.player.set_property("uri", "")
-        # debugging session
-        tron("stopped audio playback.")
-    # end def
-
-# end class GstAudioPlayer
